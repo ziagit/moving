@@ -14,10 +14,32 @@ export default {
 </script>
 
 <style lang="scss">
+.react-code-input {
+  input {
+    font-family: "Roboto" !important;
+  }
+}
+.input-tel__input {
+  border: none !important;
+  border-bottom: 1px solid #000 !important;
+}
+.input-tel__input:focus {
+  outline: none !important;
+  border: none !important;
+}
+#MazPhoneNumberInput-46_phone_number {
+}
 .shipper-payment-method {
   .md-dialog-container {
     min-height: 614px !important;
+    min-width: 485px !important;
     padding: 20px !important;
+  }
+  .md-checkbox {
+    margin: 0 !important;
+    .md-checkbox-4p0bbz4d8 {
+      font-size: 11px !important;
+    }
   }
 }
 .google-address2 {
@@ -222,9 +244,8 @@ a {
   border-radius: 12px;
 }
 
-.no-shadow-bordered {
+.no-shadow {
   box-shadow: none;
-  border: 1px solid #ddd;
 }
 
 .md-menu-content {

@@ -1,28 +1,12 @@
 <template>
-  <div class="shipper-orders">
-    <md-card class="no-shadow-bordered">
+  <div>
+    <md-card>
       <md-card-header>
-        <div class="md-title md-primary">Orders</div>
-        <md-button to="/home" class="md-icon-button close-btn">
-          <md-icon>add</md-icon>
-          <md-tooltip>Create a new order</md-tooltip>
-        </md-button>
+        <div class="md-title">Orders</div>
       </md-card-header>
+      <md-divider></md-divider>
       <md-card-content>
-        <div v-if="tempOrder" class="temp-order">
-          <div>
-            <span>You have an new order in process</span>
-            <md-button @click="processOrder()">
-              Process
-              <md-tooltip>Process your order</md-tooltip>
-            </md-button>
-          </div>
-          <md-button @click="removeOrder()" class="md-icon-button btn-close">
-            <md-icon>close</md-icon>
-            <md-tooltip>Remove order</md-tooltip>
-          </md-button>
-        </div>
-        <table class="table" v-if="orders">
+        <table class="table" v-if="orders.length > 0">
           <thead>
             <tr>
               <th>Order</th>
@@ -66,7 +50,7 @@
         >
           <md-button to="/" class="md-icon-button md-raised">
             <md-icon>add</md-icon>
-            <md-tooltip>Get a free quote</md-tooltip>
+            <md-tooltip>Get a free order quotation</md-tooltip>
           </md-button>
         </md-empty-state>
       </md-card-content>
@@ -80,7 +64,7 @@ import functions from "../../services/functions";
 export default {
   name: "ShipperOrders",
   data: () => ({
-    orders: null,
+    orders: [],
     tempOrder: null,
   }),
   methods: {
@@ -109,43 +93,28 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.shipper-orders {
-  .md-card {
-    text-align: center;
-    overflow: auto;
-    .table {
-      width: 100%;
-      border-collapse: collapse;
+.md-card {
+  text-align: left;
+  .table {
+    width: 100%;
+    border-collapse: collapse;
 
-      th,
-      td {
-        border: 1px solid #ddd;
-        text-align: center;
-      }
-
-      .delivered {
-        color: green !important;
-      }
+    th,
+    td {
+      border: 1px solid #ddd;
+      text-align: center;
     }
 
-    .temp-order {
-      background: #e7ecf3;
-      border-radius: 5px;
-      padding-left: 5px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-
-      div {
-        display: flex;
-        align-items: center;
-      }
+    .delivered {
+      color: green !important;
     }
+  }
+}
 
-    .close-btn {
-      position: absolute;
-      top: 0;
-      right: 0;
+@media only screen and (max-width: 600px) {
+  .shipper-orders {
+    .md-card {
+      overflow: auto !important;
     }
   }
 }

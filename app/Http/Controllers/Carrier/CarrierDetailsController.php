@@ -49,7 +49,7 @@ class CarrierDetailsController extends Controller
         $this->validate($request, [
             'first_name' => 'required',
             'last_name' => 'required',
-            'phone' => 'required|unique:contacts',
+            'email' => 'required|unique:contacts',
             'country' => 'required',
             'state' => 'required',
             'city' => 'required',
@@ -58,7 +58,6 @@ class CarrierDetailsController extends Controller
             'employees' => 'required',
             'vehicles' => 'required',
             'rate' => 'required',
-            'phone' => 'required',
             'company' => 'required',
         ]);
         $contactId = $this->storeContact($request);
@@ -127,8 +126,8 @@ class CarrierDetailsController extends Controller
     {
         $contact = new Contact();
         $contact->name = $request->last_name;
-        $contact->phone = $request->phone;
-        $contact->email = JWTAuth::user()->email;
+        $contact->email = $request->email;
+        $contact->phone= JWTAuth::user()->phone;
         $contact->save();
         return $contact->id;
     }
@@ -178,7 +177,7 @@ class CarrierDetailsController extends Controller
         $this->validate($request, [
             'first_name' => 'required',
             'last_name' => 'required',
-            'phone' => 'required',
+            'email' => 'required',
             'country' => 'required',
             'state' => 'required',
             'city' => 'required',
@@ -186,7 +185,6 @@ class CarrierDetailsController extends Controller
             'address' => 'required',
             'employees' => 'required',
             'vehicles' => 'required',
-            'phone' => 'required',
             'company' => 'required',
         ]);
         $contactId = $this->updateContact($request);
@@ -253,8 +251,8 @@ class CarrierDetailsController extends Controller
     {
         $contact = Contact::find($request->contactId);
         $contact->name = $request->last_name;
-        $contact->phone = $request->phone;
-        $contact->email = JWTAuth::user()->email;
+        $contact->email = $request->email;
+        $contact->phone = JWTAuth::user()->phone;
         $contact->update();
         return $contact->id;
     }

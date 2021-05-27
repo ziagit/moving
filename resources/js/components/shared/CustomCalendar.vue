@@ -172,7 +172,6 @@ export default {
       axios
         .get("times/" + date)
         .then((res) => {
-          console.log("ddd", res.data);
           this.timeLoading = false;
           this.times = res.data;
           this.showTimes();
@@ -180,7 +179,7 @@ export default {
         .catch((err) => console.log(err));
     },
     buildTime(time) {
-      return services.getTimeRanges(time);
+      return time < 10 ? "0" + time + ":00" : time + ":00";
     },
     showTimes() {
       if (this.date.date) {
@@ -378,7 +377,7 @@ export default {
     cursor: pointer;
     box-shadow: 0 3px 1px -2px rgb(0 0 0 / 20%), 0 2px 2px 0 rgb(0 0 0 / 14%),
       0 1px 5px 0 rgb(0 0 0 / 12%);
-    font-size: 12px;
+    font-size: 14px;
   }
   .time:hover {
     box-shadow: none;

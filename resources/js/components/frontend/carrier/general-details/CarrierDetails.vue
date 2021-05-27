@@ -31,7 +31,7 @@
           </span>
           <br />
           <span class="md-subheading">
-            {{ carrier.contact.phone }}
+            {{ carrier.contact.email }}
             <span v-if="carrier.company !== 'null'" class="line">|</span>
             <span v-if="carrier.company !== 'null'">{{ carrier.website }}</span>
           </span>

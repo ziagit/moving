@@ -160,7 +160,7 @@
     <div class="confirming">
       <div>
         <div class="md-title">Please wait !</div>
-        <div>Your order is submitting...</div>
+        <div>Your order is processing...</div>
         <div class="break"></div>
         <Spinner />
       </div>
@@ -195,7 +195,7 @@ export default {
         .post("confirm", this.shipment)
         .then((res) => {
           localData.removeAll();
-          console.log("response: ", res.data);
+          console.log("order completed: ", res.data);
           this.$router.push("completion/" + res.data.uniqid);
         })
         .catch((err) => {
@@ -209,9 +209,8 @@ export default {
       this.shipment = await functions.buildOrder();
       this.shipment.moving_date.date = await functions.buildDate();
       this.shipment.moving_date.time = await functions.buildTime();
-      this.confirm();
-
       console.log("shipment: ", this.shipment);
+      this.confirm();
     },
   },
   created() {

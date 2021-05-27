@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Order;
+
 use App\Http\Controllers\Controller;
 use Exception;
 use Illuminate\Http\Request;
@@ -43,25 +44,26 @@ class CheckoutController extends Controller
 
     public function store(Request $request)
     {
-       // return response()->json($request);
+        // return response()->json($request);
         if (Auth::check() && Auth::user()->roles[0]->name === 'customer') {
+            return $orderId = $this->createEmptyOrder($request);
             if ($this->checkCustomer() === null) {
                 try {
                     $customer = Stripe::customers()->create([
                         'source' => $request->stripeToken,
                         'email' => $request->email,
                         'name' => $request->name_oncard,
-                        'description' => "Paied for shipment",
+                        'description' => "Payment for moving",
                     ]);
                     $this->updateUser($customer['id']);
                     return [
-                        'message' => 'Thank you! your card added successfully.', 
-                        'id' => null,
+                        'message' => 'Thank you! your card added successfully.',
+                        'id' => $orderId,
                         'status' => false,
                         'email' => $request->email
                     ];
                 } catch (Exception $e) {
-                    return response()->json(['message'=>$e],500);
+                    return response()->json(['message' => $e], 500);
                 }
             } else {
                 $customerId = $this->checkCustomer();
@@ -69,20 +71,19 @@ class CheckoutController extends Controller
                     'source' => $request->stripeToken,
                     'email' => $request->email,
                     'name' => $request->name_oncard,
-                    'description' => "Paied for shipment",
+                    'description' => "Moving payment",
                 ]);
                 return response()->json(
                     [
-                        'message' => 'Thank you! your card updated successfully.', 
-                        'id' => null,
+                        'message' => 'Thank you! your card updated successfully.',
+                        'id' => $orderId,
                         'status' => false,
-                        'email'=> $request->email
+                        'email' => $request->email
                     ]
-                    );
+                );
             }
-        } else {
-            return $this->charge($request);
         }
+        return null;
     }
 
     public function chargeCustomer(Request $request)
@@ -99,7 +100,7 @@ class CheckoutController extends Controller
                 $orderId = $this->createEmptyOrder($charge['id']);
                 return response()->json(
                     [
-                        'message' => 'Thank you! your payment was successful.', 
+                        'message' => 'Thank you! your payment was successful.',
                         'id' => $orderId,
                         'status' => true,
                         'email' => $request->email
@@ -109,16 +110,16 @@ class CheckoutController extends Controller
                 return $e;
             }
         } else {
-            $order = Order::where('uniqid',$request->id)->first();
+            $order = Order::where('uniqid', $request->id)->first();
             if (Stripe::charges()->find($order->charge_id)) {
                 return response()->json(
                     [
-                        'message' => 'You already paid for this order!', 
+                        'message' => 'You already paid for this order!',
                         'id' => $request->id,
                         'status' => true,
                         'email' => $request->email
                     ]
-                ); 
+                );
             }
         }
     }
@@ -136,21 +137,21 @@ class CheckoutController extends Controller
                 $orderId = $this->createEmptyOrder($charge['id']);
                 return response()->json(
                     [
-                        'message' => 'Thank you! your payment was successful.', 
+                        'message' => 'Thank you! your payment was successful.',
                         'id' => $orderId,
                         'status' => true,
                         'email' => $request->email
                     ]
-                    );
+                );
             } catch (CardErrorException $e) {
                 return $e;
             }
         } else {
-            $order = Order::where('uniqid',$request->orderId)->first();
+            $order = Order::where('uniqid', $request->orderId)->first();
             if (Stripe::charges()->find($order->charge_id)) {
                 return response()->json(
                     [
-                        'message' => 'You already paid for this order!', 
+                        'message' => 'You already paid for this order!',
                         'id' => $request->orderId,
                         'status' => true,
                         'email' => $request->email
@@ -178,29 +179,31 @@ class CheckoutController extends Controller
         $user->update();
         return true;
     }
-    public function createEmptyOrder($chargeId)
+    public function createEmptyOrder($request)
     {
+        return $request;
         $order = new Order();
-        $order->charge_id = $chargeId;
-        $order->uniqid ='TAO'.date('Ymd').rand();
+        $order->cost = $request->cost;
+        $order->charge_id = "charge id is this required?";
+        $order->uniqid = 'TAO' . date('Ymd') . rand();
         $order->save();
         return $order->uniqid;
     }
     public function checkPayment($id)
     {
-        $order = Order::where('uniqid',$id)->first();
+        $order = Order::where('uniqid', $id)->first();
         if ($order) {
             if (Stripe::charges()->find($order->charge_id)) {
                 return response()->json(
-                    ['message'=>'Thanks! your payment was successfull.', 'status'=>true]
+                    ['message' => 'Thanks! your payment was successfull.', 'status' => true]
                 );
             }
             return response()->json(
-                ['message'=>'Charge id not muching','status'=>false]
+                ['message' => 'Charge id not muching', 'status' => false]
             );
         }
         return response()->json(
-            ['message'=>'Order not found','status'=>false]
+            ['message' => 'Order not found', 'status' => false]
         );
     }
 

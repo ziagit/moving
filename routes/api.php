@@ -24,7 +24,8 @@ Route::group(['prefix'=>'moving'], function () {
   Route::post('reset-password', 'Auth\ResetPasswordController@reset');
 
   Route::group(['prefix' => 'auth', 'namespace' => 'Auth'], function () {
-    Route::post('signin', 'SignInController')->name('signin');
+    Route::post('verify', 'VerifyPhoneController');
+    Route::post('signin', 'SignInController');
     Route::post('signup', 'SignUpController');
   });//,'middleware'=>'verified'
   Route::group(['middleware' => 'auth:api','middleware' => 'status'], function () {
@@ -52,10 +53,10 @@ Route::group(['prefix'=>'moving'], function () {
       Route::resource('details', 'ShipperDetailsController');
       Route::resource('account', 'ShipperAccountController');
       Route::resource('orders', 'ShipperOrderController');
-
       Route::get('order-status', 'ShipperOrderController@status');
-      Route::get("card-details", 'CardController@getCustomer');
-      Route::get("charge-details", 'CardController@getCharges');
+      Route::post('create-customer', 'BillingController@createCustomer');
+      Route::get("card-details", 'BillingController@getCustomer');
+      Route::get("charge-details", 'BillingController@getCharges');
       Route::get('shipper-address', "ShipperAccountController@shipperAddress");
     });
     Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'role'], function () {
@@ -122,7 +123,7 @@ Route::group(['prefix'=>'moving'], function () {
   });
 
   Route::group(['namespace' => 'Order'], function () {
-    Route::post('charge', 'CheckoutController@store');
+    Route::post('create-customer', 'CheckoutController@store');
     Route::get('payment-status/{orderId}', 'CheckoutController@checkPayment');
     Route::get("check-payment/{id}", 'CheckoutController@checkPayment');
 
@@ -134,8 +135,8 @@ Route::group(['prefix'=>'moving'], function () {
     Route::get('moving-types', 'OrderController@movingTypes');
     Route::get('moving-supplies', 'OrderController@movingSupplies');
     Route::get('search-item', 'OrderController@searchItem');
-    Route::post('carriers-rate', 'CalculatorController@calculator')->name('carriers-rate');
-    Route::post('confirm', 'ShipmentController@store')->name('confirm');
+    Route::post('carriers-rate', 'CalculatorController@calculator');
+    Route::post('confirm', 'ShipmentController@store');
     Route::get('shipment-details/{id}', 'ShipmentController@show');
     Route::get('carrier-contacts/{id}', 'ShipmentController@carrierContacts');
   });
@@ -183,6 +184,8 @@ Route::group(['prefix'=>'moving'], function () {
   });
 
 Route::get("send-sms","SmsController@sendMessage");
+Route::post('get-code', 'PhoneVerificationController@getCode');
+Route::post('verify', 'PhoneVerificationController@verify');
 
 });
 

@@ -37,8 +37,8 @@
               <md-input type="text" v-model="form.last_name" required></md-input>
             </md-field>
             <md-field>
-              <label for="">Phone</label>
-              <md-input type="tel" v-model="form.phone" required></md-input>
+              <label for="">Email</label>
+              <md-input v-model="form.email" required></md-input>
             </md-field>
           </div>
           <div class="row">
@@ -173,7 +173,7 @@ export default {
       employees: null,
       vehicles: null,
       year_established: null,
-      phone: null,
+      email: null,
       addressId: null,
       contactId: null,
     },
@@ -234,7 +234,7 @@ export default {
       fd.append("city", this.form.city);
       fd.append("zip", this.form.zip);
       fd.append("address", this.form.address);
-      fd.append("phone", this.form.phone);
+      fd.append("email", this.form.email);
       fd.append("website", this.form.website);
       fd.append("company", this.form.company);
       fd.append("detail", this.form.detail);
@@ -263,7 +263,7 @@ export default {
         (res) => {
           this.form.first_name = res.data.first_name;
           this.form.last_name = res.data.last_name;
-          this.form.phone = res.data.contact.phone;
+          this.form.email = res.data.contact.email;
           this.form.website = res.data.website;
           this.form.company = res.data.company;
           this.form.detail = res.data.detail;

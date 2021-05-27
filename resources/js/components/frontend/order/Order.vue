@@ -95,7 +95,6 @@
                 <md-icon>edit</md-icon>
               </md-button>
             </li>
-
             <li v-if="selected.items">
               <div class="row">
                 <md-icon>list</md-icon>
@@ -110,7 +109,6 @@
                 <md-icon>edit</md-icon>
               </md-button>
             </li>
-
             <li v-if="selected.numberOfMovers">
               <div class="row">
                 <md-icon
@@ -158,9 +156,9 @@
                       "-" +
                       selected.date.date.date
                     }},
-                    {{ buildTime(selected.date.time ? selected.date.time.from : "") }}
+                    {{ buildTime(selected.date.time.from) }}
                     -
-                    {{ buildTime(selected.date.time ? selected.date.time.to : "") }}</span
+                    {{ buildTime(selected.date.time.to) }}</span
                   >
                 </div>
               </div>
@@ -216,7 +214,7 @@
                 <md-icon>edit</md-icon>
               </md-button>
             </li>
-            <md-divider></md-divider>
+            <md-divider v-if="selected.carrier"></md-divider>
             <li class="footer" v-if="selected.carrier">
               <div class="md-title">Total Price: ${{ selected.carrier.price }}</div>
             </li>
@@ -262,10 +260,10 @@ export default {
   },
   methods: {
     progress(prgValue) {
+      this.init();
       this.listSize();
       this.completedSteps = prgValue;
       this.percentage = Math.floor((prgValue * 100) / this.totalSteps);
-      this.init();
     },
     async originChanged(address, latlng) {
       this.$refs.drawRoute.setOrigin(address, latlng);
@@ -294,22 +292,21 @@ export default {
       this.selected["movingType"] = localData.read("moving-type");
       this.selected["movingSize"] = localData.read("moving-size");
       this.selected["vehicle"] = localData.read("vehicle");
-      this.selected["carrier"] = localData.read("carrier");
       this.selected["numberOfMovers"] = localData.read("number-of-movers");
       this.selected["date"] = localData.read("moving-date");
       this.selected["floors"] = localData.read("floors");
       this.selected["items"] = localData.read("moving-items");
       this.selected["supplies"] = functions.buildSupplies();
-      console.log("selected: ", this.selected);
-    },
-    edit(path) {
-      this.$router.push(path);
+      this.selected["carrier"] = localData.read("carrier");
+      console.log("car in local: ", this.selected.carrier);
     },
     progressTogal() {
       if (
         this.$router.currentRoute.path == "/order/movers" ||
         this.$router.currentRoute.path == "/order/moving-payment" ||
-        this.$router.currentRoute.path == "/order/card-details"
+        this.$router.currentRoute.path == "/order/card-details" ||
+        this.$router.currentRoute.path == "/order/contact" ||
+        this.$router.currentRoute.path == "/order/verify"
       ) {
         return false;
       } else {
@@ -329,7 +326,10 @@ export default {
       }, 1000);
     },
     buildTime(time) {
-      return functions.getTimeRanges(time);
+      return time < 10 ? "0" + time + ":00" : time + ":00";
+    },
+    edit(path) {
+      this.$router.push(path);
     },
   },
 };

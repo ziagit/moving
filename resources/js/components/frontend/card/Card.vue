@@ -5,14 +5,13 @@
       id="payment-form"
       enctype="multipart/form-data"
     >
-      <span class="md-display-1" v-if="!togal">Payment Information</span>
-      <span class="md-body-2" v-if="togal">Card Information</span>
-      <div v-if="authenticated && user.role[0].name === 'customer'">
-        <md-checkbox
-          class="md-primary"
-          :class="{ shipperTogal: togal }"
-          v-model="sameAddress"
-        >
+      <span class="md-display-1">Add your card information</span>
+
+      <div
+        style="text-align: left"
+        v-if="authenticated && user.role[0].name === 'customer' && user.email != null"
+      >
+        <md-checkbox class="md-primary" v-model="sameAddress">
           Is your billing address same to your profile address ?
           <md-icon class="md-primary">
             info
@@ -25,22 +24,11 @@
           <label>Name</label>
           <md-input type="text" v-model="form.name" required ref="focusable"></md-input>
         </md-field>
-        <md-field v-if="togal">
+        <md-field>
           <label>Email</label>
           <md-input type="email" v-model="form.email" required></md-input>
         </md-field>
       </div>
-      <div class="row">
-        <md-field v-if="!togal">
-          <label>Email</label>
-          <md-input type="email" v-model="form.email" required></md-input>
-        </md-field>
-        <md-field v-if="!togal">
-          <label>Phone</label>
-          <md-input type="number" v-model="form.phone" required></md-input>
-        </md-field>
-      </div>
-
       <GoogleAddress3
         v-on:google-valid-address="googleValidAddress"
         v-on:google-invalid-address="googleInvalidAddress"
@@ -91,7 +79,7 @@
       </div>
       <Spinner v-if="isSubmitting" />
       <div v-if="cardAdded">
-        <div>Your payment is processing...</div>
+        <div>Your payment is in process...</div>
       </div>
     </form>
     <Snackbar :data="snackbar" />
@@ -135,7 +123,6 @@ export default {
     form: {
       name: null,
       email: null,
-      phone: null,
       country: null,
       formatted_address: null,
       city: null,
@@ -154,13 +141,9 @@ export default {
       message: null,
       statusCode: null,
     },
-    togal: false,
   }),
   created() {
     localData.save("cr", this.$router.currentRoute.path);
-    this.$router.currentRoute.path == "/shipper/card"
-      ? (this.togal = true)
-      : (this.togal = false);
   },
   mounted: function () {
     card = this.elements.create("card", {
@@ -173,6 +156,7 @@ export default {
   watch: {
     sameAddress: function (value) {
       if (value) {
+        console.log("value: ", value);
         if (this.shipperExist === null) {
           axios
             .get("shipper/shipper-address")
@@ -184,7 +168,6 @@ export default {
               this.form.state = res.data.shipper_with_address.address.state;
               this.form.city = res.data.shipper_with_address.address.city;
               this.form.postalcode = res.data.shipper_with_address.address.zip;
-              this.form.phone = res.data.shipper_with_address.contact.phone;
               this.form.email = res.data.shipper_with_address.contact.email;
               this.shipperExist = res.data;
             })
@@ -196,7 +179,6 @@ export default {
           this.form.state = this.shipperExist.shipper_with_address.address.state;
           this.form.city = this.shipperExist.shipper_with_address.address.city;
           this.form.postalcode = this.shipperExist.shipper_with_address.address.zip;
-          this.form.phone = this.shipperExist.shipper_with_address.contact.phone;
           this.form.email = this.shipperExist.shipper_with_address.contact.email;
         }
       } else {
@@ -235,7 +217,6 @@ export default {
     getStripeToken: function () {
       if (
         this.form.name == null ||
-        this.form.phone == null ||
         this.form.email == null ||
         this.form.name_oncard == null ||
         this.form.formatted_address == null ||
@@ -243,7 +224,6 @@ export default {
         this.form.state == null ||
         this.form.city == null ||
         this.form.postalcode == null ||
-        !functions.phoneValidator(this.form.phone) ||
         !functions.emailValidator(this.form.email)
       ) {
         this.snackbar.message = "Invalide provided information!";
@@ -271,17 +251,15 @@ export default {
       }
       this.form.stripeToken = token.id;
       axios
-        .post("charge", this.form)
+        .post("shipper/create-customer", this.form)
         .then((res) => {
           if (this.$route.path == "/shipper/card") {
+            console.log("res xx: ", res.data);
             this.$emit("close-dialog", res.data);
           } else {
-            localData.save("bl", res.data);
-            if (this.authenticated && this.user.role[0].name == "customer") {
-              this.chargeCustomer();
-            } else {
-              this.$router.push("/confirmation");
-            }
+            console.log("Billing: ", res.data);
+            localData.save("shipper", res.data);
+            this.$router.push("/confirmation");
           }
         })
         .catch((err) => {
@@ -292,7 +270,7 @@ export default {
           this.togalMassage = err;
         });
     },
-    chargeCustomer() {
+    /*     chargeCustomer() {
       this.cardAdded = true;
       let carrier = localData.read("carrier");
       axios
@@ -310,7 +288,7 @@ export default {
           this.$router.push("/confirmation");
         })
         .catch((err) => (this.errorMassage = err));
-    },
+    }, */
   },
 };
 </script>

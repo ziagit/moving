@@ -2,15 +2,12 @@
   <div>
     <md-toolbar md-elevation="0" v-if="authenticated" class="custom-toolbar">
       <div class="row" v-if="authenticated">
-        <div class="img" @click="profile()">
-          <md-icon>person</md-icon>
-        </div>
+        <div class="img" @click="profile()"></div>
         <div class="break"></div>
-        <div class="name md-title">{{ user.name }}</div>
-        <div class="email">{{ user.email }}</div>
-        <span class="notification">
-          <Notifications v-on:hideSideMenu="togal()" />
-        </span>
+        <div class="text">
+          <div class="name md-list-item-text">{{ user.name }}</div>
+          <div class="email">{{ user.phone }}</div>
+        </div>
       </div>
     </md-toolbar>
     <md-list>
@@ -172,38 +169,26 @@ export default {
   display: flex;
   justify-content: center;
   .row {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    text-align: center;
-    align-items: center;
+    width: 100%;
     .img {
-      height: 60px;
-      width: 60px;
-      background: #fff;
+      margin: auto;
+      height: 68px;
+      width: 68px;
       text-align: center;
       align-items: center;
       display: flex;
       border-radius: 50px;
+      border: solid 1px #3333334d;
       cursor: pointer;
     }
-
-    .name {
-      color: #fff;
-      font-weight: 600;
-    }
-    .email {
-      color: #fff;
-      font-size: 11px;
-    }
-    .notification {
-      position: absolute;
-      right: 8px;
-      bottom: -5px;
-    }
-    .md-button {
-      color: #fff;
-      font-size: 20px !important;
+    .text {
+      text-align: left;
+      .name {
+        font-weight: 600;
+      }
+      .email {
+        font-size: 11px;
+      }
     }
   }
 }

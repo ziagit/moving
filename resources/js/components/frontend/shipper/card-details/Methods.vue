@@ -5,16 +5,7 @@
         <Card v-on:close-dialog="refresh" />
       </md-dialog-content>
     </md-dialog>
-
-    <md-table md-sort="zip" md-sort-order="asc" md-card>
-      <md-table-empty-state
-        md-label="No state found"
-        :md-description="`No state found for this query. Try a different search term or create a new state.`"
-      >
-        <md-button class="md-primary md-raised" @click="add()"
-          >Create new address</md-button
-        >
-      </md-table-empty-state>
+    <md-table v-if="cards" md-sort="zip" md-sort-order="asc" md-card>
       <md-table-row>
         <md-table-head></md-table-head>
         <md-table-head>Type</md-table-head>
@@ -36,7 +27,18 @@
         </md-table-cell>
       </md-table-row>
     </md-table>
-
+    <md-empty-state
+      v-else
+      class="md-primary"
+      md-icon="sentiment_satisfied_alt"
+      md-label="Not available"
+      md-description="Click + icon to add anew payment method"
+    >
+      <md-button @click="checkoutTogal = true" class="md-icon-button md-raised">
+        <md-icon>add</md-icon>
+        <md-tooltip>Get a new payment method</md-tooltip>
+      </md-button>
+    </md-empty-state>
     <Snackbar :data="snackbar" />
   </div>
 </template>
@@ -82,8 +84,7 @@ export default {
       axios
         .get("shipper/card-details")
         .then((res) => {
-          console.log("shipper crd", res.data.data);
-
+          console.log("shipper crd", res.data);
           if (res.data.data) {
             this.cards = res.data.data;
             this.dataLoading = false;

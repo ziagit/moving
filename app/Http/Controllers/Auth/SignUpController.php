@@ -5,17 +5,23 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\User;
-use App\Role;
-use Exception;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 
 class SignUpController extends Controller
 {
     public function __invoke(Request $data)
     {
-        if ($data->type === "mover" || $data->type === "customer") {
+        $user = User::where('id', $data->me)->where('verification_code', $data->code)->first();
+        if ($user) {
+            $user->phone_verified_at = date('Y-m-d h:i:s');
+            $user->update();
+            $token = Auth::login($user);
+            return response()->json($token);
+        }
+        return response()->json("Invalid code entered!", 404);
+
+
+        /*         if ($data->type === "mover" || $data->type === "customer") {
             $validator = Validator::make($data->only('email'), [
                 'email' => 'unique:users',
             ]);
@@ -52,6 +58,6 @@ class SignUpController extends Controller
             }
         } else {
             return response()->json(["message" => "Don't fuck with me 🖕"]);
-        }
+        } */
     }
 }

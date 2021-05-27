@@ -1,12 +1,13 @@
 <?php
 
 namespace App\Http\Controllers\Shipper;
+
 use App\Http\Controllers\Controller;
 use App\User;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class ShipperAccountController extends Controller
 {
@@ -17,7 +18,8 @@ class ShipperAccountController extends Controller
      */
     public function index()
     {
-        return Auth::user();
+        $user = JWTAuth::user();
+        return response()->json($user);
     }
 
     /**
@@ -39,7 +41,7 @@ class ShipperAccountController extends Controller
     public function store(Request $request)
     {
     }
-    
+
     /**
      * Display the specified resource.
      *
@@ -48,7 +50,6 @@ class ShipperAccountController extends Controller
      */
     public function show($id)
     {
-     
     }
 
     /**
@@ -71,16 +72,24 @@ class ShipperAccountController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validate($request,[
-            'name' => 'required',
-            'email' => 'required|email',
+        $this->validate($request, [
+            'avatar' => 'required',
         ]);
         $user = User::find($id);
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->password = Hash::make($request->password);
+        if ($request->hasFile('avatar')) {
+            $old_image_path = public_path('images/uploads/' . $user->avatar);
+            if (file_exists($old_image_path)) {
+                @unlink($old_image_path);
+            }
+            $file = $request->file('avatar');
+            $avatar_name = time() . '.' . $file->getClientOriginalName();
+            $file->move(public_path('images/uploads'), $avatar_name);
+        } else {
+            $avatar_name = $user->avatar;
+        }
+        $user->avatar = $avatar_name;
         $user->update();
-        return response()->json(['message'=>'Updated successfully!'],200);
+        return response()->json(['message' => 'Updated successfully!'], 200);
     }
 
     /**
@@ -94,8 +103,9 @@ class ShipperAccountController extends Controller
         //
     }
 
-    public function shipperAddress(){
-        $user = User::with('shipperWithAddress')->where('id', Auth::id())->first();
+    public function shipperAddress()
+    {
+        $user = User::with('shipperWithAddress')->where('id', JWTAuth::id())->first();
         return response()->json($user);
     }
 }

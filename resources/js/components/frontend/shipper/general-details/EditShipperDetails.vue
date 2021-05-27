@@ -1,12 +1,16 @@
 <template>
   <div>
-    <form @submit.prevent="update" enctype="multipart/form-data">
-      <md-card class="main-card">
-        <md-button @click="$router.back()" class="md-icon-button add-btn">
-          <md-icon>close</md-icon>
-          <md-tooltip>Cancel</md-tooltip>
-        </md-button>
-        <div class="shipper-details">
+    <md-card>
+      <form @submit.prevent="update" enctype="multipart/form-data">
+        <md-card-header>
+          <span class="md-title">Edit Account Details</span>
+          <md-button @click="$router.back()" class="md-icon-button add-btn">
+            <md-icon>close</md-icon>
+            <md-tooltip>Cancel</md-tooltip>
+          </md-button>
+        </md-card-header>
+
+        <md-card-content>
           <div class="row">
             <md-field>
               <label for="">First name</label>
@@ -22,6 +26,10 @@
               <md-input type="text" v-model="form.last_name" required></md-input>
             </md-field>
             <md-field>
+              <label for="">Email</label>
+              <md-input type="tel" v-model="form.email" required></md-input>
+            </md-field>
+            <md-field>
               <label for="">Phone</label>
               <md-input type="tel" v-model="form.phone" required></md-input>
             </md-field>
@@ -34,34 +42,14 @@
               :initialData="form.formatted_address"
               label="Full adddress"
             />
-
-            <md-field>
-              <label for="">Country</label>
-              <md-input v-model="form.country" required disabled></md-input>
-            </md-field>
-
-            <md-field>
-              <label for="">State</label>
-              <md-input v-model="form.state" required disabled></md-input>
-            </md-field>
-
-            <md-field>
-              <label for="">City</label>
-              <md-input v-model="form.city" required disabled></md-input>
-            </md-field>
-
-            <md-field>
-              <label for="">Postal code</label>
-              <md-input v-model="form.zip" required disabled></md-input>
-            </md-field>
           </div>
-        </div>
-        <Spinner v-if="isSubmitting" />
-        <md-button v-if="!isSubmitting" type="submit" class="md-primary md-small-fab"
-          >Done</md-button
-        >
-      </md-card>
-    </form>
+        </md-card-content>
+        <md-card-actions>
+          <Spinner v-if="isSubmitting" />
+          <md-button v-else type="submit" class="md-primary">Update</md-button>
+        </md-card-actions>
+      </form>
+    </md-card>
   </div>
 </template>
 
@@ -86,6 +74,7 @@ export default {
       city: null,
       zip: null,
       formatted_address: null,
+      email: null,
       phone: null,
       addressId: null,
       contactId: null,
@@ -137,6 +126,7 @@ export default {
           console.log("shipper o ted", res.data);
           this.form.first_name = res.data.first_name;
           this.form.last_name = res.data.last_name;
+          this.form.email = res.data.contact.email;
           this.form.phone = res.data.contact.phone;
           this.form.website = res.data.website;
           this.form.company = res.data.company;
@@ -164,43 +154,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.main-card {
-  padding: 30px;
-  text-align: center;
-  box-shadow: none;
-  border: solid 1px #ddd;
-
-  .shipper-logo {
-    text-align: center;
-    margin-top: -40px;
-
-    .md-large {
-      background: #ddd;
-    }
-
-    .select-logo {
-      position: absolute;
-    }
-  }
-
-  .row {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-
-    .md-field {
-      flex: 25%;
-    }
-  }
-
+.md-card {
+  text-align: left;
+  padding: 20px;
   .add-btn {
     position: absolute;
     top: 0;
     right: 0;
   }
-
-  .zip-address {
-    flex: 50%;
+  .md-card-actions {
+    text-align: right;
+    display: flex;
+    justify-content: flex-start;
   }
 }
 </style>

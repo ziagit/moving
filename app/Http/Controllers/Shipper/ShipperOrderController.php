@@ -1,10 +1,12 @@
 <?php
 
 namespace App\Http\Controllers\Shipper;
+
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Job;
 use App\Jobstatus;
+use App\Notifications\UserJobUpdated;
 use App\Order;
 use Illuminate\Http\Request;
 use App\User;
@@ -19,11 +21,11 @@ class ShipperOrderController extends Controller
      */
     public function index()
     {
-       
-      /*   $user = User::with('shipper')->find(Auth::id())->shipper->id;
+
+        /*   $user = User::with('shipper')->find(Auth::id())->shipper->id;
         return $user; */
         $shipper = User::with('shipper')->find(Auth::id())->shipper;
-        $order = Order::with('addresses')->where('shipper_id',$shipper->id)->orderBy('id','DESC')->get();
+        $order = Order::with('addresses')->where('shipper_id', $shipper->id)->orderBy('id', 'DESC')->get();
         return response()->json($order);
     }
 
@@ -56,10 +58,10 @@ class ShipperOrderController extends Controller
      */
     public function show($id)
     {
-        try{
-            $orders = Order::with('addresses','items','contact','movingtype','movingsize','officesize','movernumber','vehicle','supplies','jobWithStatus')->find($id);
+        try {
+            $orders = Order::with('addresses', 'items', 'contact', 'movingtype', 'movingsize', 'officesize', 'movernumber', 'vehicle', 'supplies', 'jobWithCarrier')->find($id);
             return response()->json($orders);
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return response()->json($e->getMessage());
         }
     }
@@ -87,23 +89,28 @@ class ShipperOrderController extends Controller
         $order = Order::find($id);
         $order->status = $request->status;
         $order->update();
-        return response()->json(['message'=>'Canceled successfully'],200);
-/*         if ($request->emails[0] !== $request->emails[1]) {
-            foreach ($request->emails as $email) {
-                $user = User::where('email', $email)->first();
-                if ($user) {
-                    return $this->notifyUser($user, $id);
-                }
-            }
-        } else {
-            $user = User::where('email', $request->emails[0])->first();
-            if ($user) {
-                return $this->notifyUser($user, $id);
-            }
+        $this->sms($request);
+        $user = User::where('email', $request->email)->first();
+        if ($user) {
+            return $user->notify(new UserJobUpdated($request));
         }
-        return $this->notifyShipper($request->emails, $id); */
+        return response()->json(['message' => 'Canceled successfully'], 200);
     }
-
+    public function sms($request)
+    {
+        try{
+            $nexmo = app('Nexmo\Client');
+            $nexmo->message()->send([
+                'to'   => $request->phone,
+                'from' => '+93793778030',
+                'text' => 'Dear partner this order is '.$request->status
+            ]);
+            return true;
+        }catch(Exception $e){
+            return $e->getMessage();
+        }
+  
+    }
     /**
      * Remove the specified resource from storage.
      *
@@ -113,8 +120,5 @@ class ShipperOrderController extends Controller
     public function destroy($id)
     {
         //
-    }
-    public function status(){
-        return Jobstatus::all()->last();
     }
 }

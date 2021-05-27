@@ -48,8 +48,8 @@
       </md-card>
       <div class="break"></div>
       <div class="break"></div>
-      <div class="book">
-        <md-button @click="book()" class="custom-button">Place order</md-button>
+      <div class="next">
+        <md-button @click="next()" class="custom-button">Place order</md-button>
       </div>
     </div>
     <Snackbar :data="snackbar" />
@@ -96,6 +96,11 @@ export default {
       }
     },
   },
+  created() {
+    this.init();
+    this.$emit("progress", 11);
+    localData.save("cr", this.$router.currentRoute.path);
+  },
   computed: {
     ...mapGetters({
       authenticated: "auth/authenticated",
@@ -114,12 +119,11 @@ export default {
     getCarrier(order) {
       Axios.post("carriers-rate", order)
         .then((res) => {
+          console.log("available mover", res.data);
           if (res.data.length === 0) {
             this.dataLoading = false;
             return;
           }
-          localData.save("carrier", res.data);
-
           this.carrier = res.data;
           this.dataLoading = false;
         })
@@ -131,15 +135,15 @@ export default {
         });
     },
 
-    book() {
+    next() {
+      localData.save("carrier", this.carrier);
       if (this.instructions) {
         localData.save("instructions", this.instructions);
       }
       if (this.authenticated && this.user.role[0].name === "customer") {
         this.$router.push("/order/moving-payment");
       } else {
-        console.log("user", this.user);
-        this.loginTogal = true;
+        this.$router.push("/order/contact");
         /*         this.$router.push({
           name: "signin",
           query: {
@@ -151,12 +155,6 @@ export default {
     refresh() {
       this.loginTogal = false;
     },
-  },
-
-  created() {
-    this.$emit("progress", 11);
-    this.init();
-    localData.save("cr", this.$router.currentRoute.path);
   },
 };
 </script>
@@ -190,7 +188,7 @@ export default {
       margin: 0;
     }
   }
-  .book {
+  .next {
     text-align: right;
     margin-right: 16px;
     min-width: 416px;
@@ -212,7 +210,7 @@ export default {
       min-width: 300px !important;
       margin: auto;
     }
-    .book {
+    .next {
       min-width: 300px !important;
     }
   }

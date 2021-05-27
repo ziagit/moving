@@ -3,150 +3,215 @@
     <md-dialog-confirm
       :md-active.sync="confirmDialog"
       md-title="Confirmation"
-      md-content="Please confirm your actions"
-      md-confirm-text="Ok"
-      md-cancel-text="Cancel"
+      md-content="Please confirm your action"
+      md-confirm-text="Agree"
+      md-cancel-text="Disagree"
       @md-cancel="onCancel"
       @md-confirm="onConfirm"
     />
 
-    <md-card class="no-shadow-bordered" v-if="order">
-      <md-card-header>
-        <div>
-          <div class="md-title md-primary">Order details</div>
-          <div class="job-id">
-            <span>{{ order.uniqid }}</span> |
-            <span>{{ order.pickup_date }}</span>
+    <md-card v-if="order" class="outer-card">
+      <md-card-header class="head">
+        <div class="status">
+          <span>Status: {{ order.status }}</span>
+          <div>
+            <div
+              v-if="
+                order.movingtype.code == 'appartment' || order.movingtype.code == 'office'
+              "
+            >
+              <Spinner v-if="isSubmitting" />
+              <div v-else>
+                <md-button
+                  :disabled="checkMovingTime(order.pickup_date, order.appointment_time)"
+                  class="custom-button"
+                  v-bind:class="{
+                    inactive: checkMovingTime(order.pickup_date, order.appointment_time),
+                  }"
+                  @click="(confirmDialog = true), (status = 'edit')"
+                  >Edit</md-button
+                >
+                <md-button
+                  :disabled="checkMovingTime(order.pickup_date, order.appointment_time)"
+                  class="custom-button"
+                  v-bind:class="{
+                    inactive: checkMovingTime(order.pickup_date, order.appointment_time),
+                  }"
+                  @click="(confirmDialog = true), (status = 'cancel')"
+                  >Cancel</md-button
+                >
+              </div>
+            </div>
+            <div>
+              <Spinner v-if="isSubmitting" />
+              <div v-else>
+                <md-button
+                  :disabled="checkItemTime(order.pickup_date, order.appointment_time)"
+                  class="custom-button"
+                  v-bind:class="{
+                    inactive: checkItemTime(order.pickup_date, order.appointment_time),
+                  }"
+                  @click="(confirmDialog = true), (status = 'edit')"
+                  >Edit</md-button
+                >
+                <md-button
+                  :disabled="checkItemTime(order.pickup_date, order.appointment_time)"
+                  class="custom-button"
+                  v-bind:class="{
+                    inactive: checkItemTime(order.pickup_date, order.appointment_time),
+                  }"
+                  @click="(confirmDialog = true), (status = 'cancel')"
+                  >Cancel</md-button
+                >
+              </div>
+            </div>
           </div>
         </div>
-
-        <md-button @click="$router.back()" class="md-icon-button close-btn">
-          <md-icon>close</md-icon>
-          <md-tooltip>Cancel</md-tooltip>
-        </md-button>
       </md-card-header>
       <md-card-content>
-        <div class="status">
-          <div v-if="order.status == 'Not picked'">
-            <Spinner v-if="canceling" />
-            <md-button v-else class="md-accent md-raised" @click="confirmDialog = true"
-              >Cancel</md-button
-            >
-          </div>
-          <span>Status: {{ order.status }}</span>
-        </div>
-        <div class="src-des">
-          <md-card class="src">
-            <md-card-content>
-              <h3 class="md-subheading md-primary">From</h3>
-              <div class="md-body-1">
-                Address:
-                {{ order.addresses[0].formatted_address }}
-              </div>
-
-              <div class="md-body-1">
-                Floor:
-                {{ order.floor_from == null ? "No stairs" : order.floor_from }}
-              </div>
-            </md-card-content>
-          </md-card>
-          <md-card class="des">
-            <md-card-content>
-              <h3 class="md-subheading md-primary">To</h3>
-              <div class="md-body-1">
-                Address:
-                {{ order.addresses[1].formatted_address }}
-              </div>
-
-              <div class="md-body-1">
-                Floor:
-                {{ order.floor_to == null ? "No stairs" : order.floor_to }}
-              </div>
-            </md-card-content>
-          </md-card>
-        </div>
-        <div class="src-des">
-          <md-card class="src">
-            <md-card-content>
-              <h3 class="md-subheading md-primary">Selected Supplies</h3>
-              <div v-if="order.supplies.length > 0">
-                <div
-                  class="md-body-1"
-                  v-for="(supply, index) in order.supplies"
-                  :key="index"
-                >
-                  {{ supply.name }}:
-                  {{ supply.pivot.number }}
+        <div class="cols">
+          <div class="col">
+            <md-card class="col1">
+              <md-card-header><span class="md-title">Order</span></md-card-header>
+              <md-card-content>
+                <div class="row">
+                  <span>Order: </span>
+                  <span>{{ order.uniqid }}</span>
                 </div>
-              </div>
-              <div v-else class="md-md-body-1">Not selected</div>
-            </md-card-content>
-          </md-card>
-          <md-card class="des">
-            <md-card-content>
-              <h3 class="md-subheading md-primary">Contact Details</h3>
-              <div class="md-body-1">Contact name: {{ order.contact.name }}</div>
-
-              <div class="md-body-1">Phone: {{ order.contact.phone }}</div>
-              <div class="md-body-1">Email: {{ order.contact.email }}</div>
-            </md-card-content>
-          </md-card>
-        </div>
-        <div class="src-des">
-          <md-card class="src">
-            <md-card-content>
-              <h3 class="md-subheading md-primary">Mover Details</h3>
-              <div class="md-body-1">
-                Name: {{ order.job_with_status.carrier.last_name }}
-              </div>
-              <div class="md-body-1">
-                Company: {{ order.job_with_status.carrier.company }}
-              </div>
-              <div class="md-body-1" v-if="order.vehicle">
-                Requested vehicle: {{ order.vehicle.name }}
-              </div>
-              <div class="md-body-1" v-if="order.movernumber">
-                Requested number of movers: {{ order.movernumber.number }}
-              </div>
-            </md-card-content>
-          </md-card>
-
-          <md-card class="des">
-            <md-card-content>
-              <h3 class="md-subheading md-primary">Other Information</h3>
-              <div class="md-body-1">Pickup date: {{ order.pickup_date }}</div>
-              <div class="md-body-1">
-                Appointment:
-                {{
-                  order.src_appointment_time != null
-                    ? order.appointment_time
-                    : "No selected"
-                }}
-              </div>
-              <div class="md-body-1" v-if="order.movingsize">
-                Moving size:
-                {{ order.movingsize.title }}
-              </div>
-
-              <div class="md-body-1">Instructions: {{ order.instructions }}</div>
-            </md-card-content>
-          </md-card>
-        </div>
-        <div class="src-des" v-if="order.items.length > 0">
-          <md-card class="des">
-            <md-card-content>
-              <h3 class="md-subheading md-primary">Selected Items</h3>
-              <div v-for="item in order.items" :key="item.id">
-                <div class="md-body-1">{{ item.name }}: {{ item.pivot.number }}</div>
-              </div>
-            </md-card-content>
-          </md-card>
-          <md-card class="des">
-            <md-card-content>
-              <h3 class="md-subheading md-primary">Total Cost</h3>
-              <div class="md-body-1">Total: ${{ order.cost }}</div>
-            </md-card-content>
-          </md-card>
+                <div class="row">
+                  <span>Placed on: </span>
+                  <span>{{ order.created_at }}</span>
+                </div>
+                <div class="row">
+                  <span>Pickup location: </span>
+                  <span>{{ order.addresses[0].formatted_address }}</span>
+                </div>
+                <div class="row">
+                  <span>Floor: </span>
+                  <span v-if="order.floor_from">{{ order.floor_from }}</span>
+                  <span v-else>No stairs</span>
+                </div>
+                <div class="row">
+                  <span>Destination: </span>
+                  <span>{{ order.addresses[1].formatted_address }}</span>
+                </div>
+                <div class="row">
+                  <span>Floor: </span>
+                  <span v-if="order.floor_to">{{ order.floor_to }}</span>
+                  <span v-else>No stairs</span>
+                </div>
+                <div class="row" v-if="order.movingtype.code == 'apartment'">
+                  <span>Moving size: </span>
+                  <span>{{ order.movingsize.title }}</span>
+                </div>
+                <div class="row" v-if="order.movingtype.code == 'office'">
+                  <span>Office size: </span>
+                  <span>{{ order.officesize.title }}</span>
+                </div>
+                <div class="row" v-if="order.vehicle">
+                  <span>Requested vehicle: </span>
+                  <span>{{ order.vehicle.name }}</span>
+                </div>
+                <div class="row" v-if="order.movernumber">
+                  <span>Number of movers: </span>
+                  <span>{{ order.movernumber.number }}</span>
+                </div>
+                <div class="row">
+                  <span>Schedualed date: </span>
+                  <span>{{ order.pickup_date }}</span>
+                </div>
+                <div class="row">
+                  <span>Time window: </span>
+                  <span>{{ order.appointment_time }}</span>
+                </div>
+                <div class="break"></div>
+                <div class="row">
+                  <span>Moving type: </span>
+                  <span>{{ order.movingtype.title }}</span>
+                </div>
+                <div class="break"></div>
+                <div class="row">
+                  <span>Instructions: </span>
+                  <span>{{ order.instructions }}</span>
+                </div>
+              </md-card-content>
+            </md-card>
+          </div>
+          <div class="col">
+            <md-card>
+              <md-card-header><span class="md-title">Supplies</span></md-card-header>
+              <md-card-content>
+                <div class="row">
+                  <span v-if="order.supplies.length > 0">
+                    <div
+                      v-for="(supply, index) in order.supplies"
+                      :key="index"
+                      class="list"
+                    >
+                      <span>{{ supply.name }}:</span>
+                      <span> {{ supply.pivot.number }}</span>
+                    </div>
+                  </span>
+                  <span v-else>Not selected</span>
+                </div>
+              </md-card-content>
+            </md-card>
+            <md-card v-if="order.items.length > 0">
+              <md-card-header><span class="md-title">Items</span></md-card-header>
+              <md-card-content>
+                <div class="row">
+                  <span>
+                    <div v-for="(item, index) in order.items" :key="index" class="list">
+                      <span>{{ item.name }}:</span>
+                      <span> {{ item.pivot.number }}</span>
+                    </div>
+                  </span>
+                </div>
+              </md-card-content>
+            </md-card>
+            <md-card>
+              <md-card-header><span class="md-title">Price</span></md-card-header>
+              <md-card-content>
+                <div class="row">
+                  <span>Total: </span>
+                  <span>${{ order.cost }}</span>
+                </div>
+                <div class="row">
+                  <span>Moving cost: </span>
+                  <span>${{ order.moving_cost }}</span>
+                </div>
+                <div class="row">
+                  <span>Travel cost: </span>
+                  <span>${{ order.travel_cost }}</span>
+                </div>
+                <div class="row">
+                  <span>Tax: </span>
+                  <span>${{ order.tax }}</span>
+                </div>
+                <div class="row">
+                  <span>Tips: </span>
+                  <span>${{ order.tips }}</span>
+                </div>
+              </md-card-content>
+            </md-card>
+            <md-card>
+              <md-card-header><span class="md-title">Mover contact</span></md-card-header>
+              <md-card-content>
+                <div class="row">
+                  <span>Name: </span>
+                  <span>{{ order.job_with_carrier.carrier_contact.contact.name }}</span>
+                </div>
+                <div class="row">
+                  <span>Email: </span>
+                  <span>{{ order.job_with_carrier.carrier_contact.contact.email }}</span>
+                </div>
+                <div class="row">
+                  <span>Phone: </span>
+                  <span>{{ order.job_with_carrier.carrier_contact.contact.phone }}</span>
+                </div>
+              </md-card-content>
+            </md-card>
+          </div>
         </div>
       </md-card-content>
     </md-card>
@@ -156,21 +221,42 @@
 <script>
 import Rate from "../rate/Rate";
 import Spinner from "../../../shared/Spinner";
+import services from "../../services/orderSchedualer";
 export default {
   name: "orderDetails",
+  components: {
+    Spinner,
+    Rate,
+  },
   data: () => ({
     order: null,
     notification: null,
     notificationId: null,
-    canceling: false,
+    isSubmitting: false,
     confirmDialog: false,
+    status: null,
   }),
+  watch: {
+    $route() {
+      this.notificationId = this.$store.state.shared.notificationId;
+      this.orderDetails();
+    },
+  },
+  created() {
+    this.orderDetails();
+    this.notificationId = this.$store.state.shared.notificationId;
+  },
   methods: {
+    checkMovingTime(date, time) {
+      return services.movingExpiration(date, time);
+    },
+    checkItemTime(date, time) {
+      return services.itemExpiration(date, time);
+    },
     orderDetails() {
       axios
         .get("shipper/orders/" + this.$route.params.id)
         .then((res) => {
-          console.log("order details ", res.data);
           this.order = res.data;
         })
         .catch((err) => {
@@ -190,44 +276,66 @@ export default {
     },
     onCancel() {},
     onConfirm() {
-      this.canceling = true;
-      axios
-        .put("shipper/orders/" + this.$route.params.id, {
-          status: "Canceled",
-        })
-        .then((res) => {
-          this.orderDetails();
-          this.canceling = false;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      this.isSubmitting = true;
+      if (this.status == "cancel") {
+        axios
+          .put("shipper/orders/" + this.$route.params.id, {
+            status: "Canceled",
+            phone: this.order.job_with_carrier.carrier_contact.contact.phone,
+            email: this.order.job_with_carrier.carrier_contact.contact.email,
+            jobId: this.order.job_with_carrier.id,
+          })
+          .then((res) => {
+            console.log("res: ", res.data);
+            this.orderDetails();
+            this.isSubmitting = false;
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      } else {
+        this.$router.push("/");
+      }
     },
     refresh() {
       this.rateTogal = false;
     },
   },
-  created() {
-    this.orderDetails();
-    this.notificationId = this.$store.state.shared.notificationId;
-  },
-  watch: {
-    $route() {
-      this.notificationId = this.$store.state.shared.notificationId;
-      this.orderDetails();
-    },
-  },
-  components: {
-    Spinner,
-    Rate,
-  },
 };
 </script>
 
 <style lang="scss" scoped>
-.no-shadow-bordered {
-  margin: 0 20px !important;
+.outer-card {
+  box-shadow: none;
+  .head {
+    margin: 0 !important;
+    padding: 10px 25px;
+  }
 }
+.cols {
+  display: flex;
+  justify-content: space-between;
+  .col {
+    flex: 1;
+    .md-card {
+      text-align: left;
+      .row {
+        display: flex;
+        > :first-child {
+          min-width: 132px;
+        }
+        .list {
+          display: flex;
+          justify-content: space-between;
+        }
+      }
+    }
+  }
+  .col1 {
+    height: 98%;
+  }
+}
+
 .md-card {
   text-align: center;
   margin: 0 20px;
@@ -240,50 +348,9 @@ export default {
   .md-card {
     margin: 5px;
   }
-
-  .src,
-  .des,
-  .items,
-  .order_detail {
+  .inactive {
+    background: #ddd;
     box-shadow: none;
-    border: 1px solid rgb(241, 241, 241);
-    text-align: left;
-  }
-
-  .order_detail {
-    margin-top: 11px;
-  }
-
-  .src-des {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-
-    .src {
-      flex: 1;
-    }
-
-    .des {
-      flex: 1;
-    }
-  }
-
-  .close-btn {
-    position: absolute;
-    top: 0;
-    right: 0;
-  }
-
-  .job-id {
-    span {
-      font-size: 11px;
-      margin: 0;
-      padding: 0;
-    }
-  }
-
-  .md-subheading {
-    font-size: 18px;
   }
 }
 </style>

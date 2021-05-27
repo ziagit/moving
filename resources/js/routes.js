@@ -62,6 +62,8 @@ import MovingSupplies from "./components/frontend/order/MovingSupplies";
 import MovingDate from "./components/frontend/order/MovingDate";
 import FewItems from "./components/frontend/order/FewItems";
 import Movers from "./components/frontend/order/Movers";
+import OrderContact from "./components/frontend/order/Contact";
+import VerifyContact from "./components/frontend/auth/VerifyContact";
 import MovingPayment from './components/frontend/order/MovingPayment'
 import CardDetails from "./components/frontend/card/Card";
 import MovingConfirmation from "./components/frontend/order/MovingConfirmation";
@@ -129,10 +131,16 @@ import ShipperFaqAdmin from "./components/backend/company/shipper-faq/FAQ";
 
 import store from "./store";
 
-import Test from "./components/Test";
-
 function webGuard(to, from, next) {
     if (!store.getters["auth/authenticated"]) {
+        next("/login");
+    } else {
+        next();
+    }
+}
+function adminGuard(to, from, next) {
+    var user = store.getters["auth/user"];
+    if (!store.getters["auth/authenticated"] || user.role[0].name != 'admin') {
         next("/login");
     } else {
         next();
@@ -152,10 +160,12 @@ export default new VueRouter({
                 { name: "home", path: "home", component: HomeContent },
                 { name: "about", path: "about", component: AboutUs },
                 { name: "contact", path: "contact", component: ContactUs },
-                { name: "help", path: "help", component: Help },
+                { name: "help", path: "help/:id", component: Help },
                 { name: "cities", path: "cities", component: CityList },
                 { name: "login", path: "login", component: Login },
                 { name: "register", path: "register", component: Register },
+                { name: "verify", path: "verify", component: VerifyContact },
+
                 {
                     path: "/reset-password/:token",
                     component: ResetPassword
@@ -234,6 +244,7 @@ export default new VueRouter({
                             component: FewItems
                         },
                         { name: "movers", path: "movers", component: Movers },
+                        { name: "contact", path: "contact", component: OrderContact },
                         {
                             name: "moving-payment",
                             path: "moving-payment",
@@ -651,7 +662,7 @@ export default new VueRouter({
                         }
                     ],
 
-                    beforeEnter: webGuard
+                    beforeEnter: adminGuard
                 }
             ]
         },

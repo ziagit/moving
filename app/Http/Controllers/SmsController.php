@@ -7,7 +7,7 @@ class SmsController extends Controller
 {
     public function sendMessage(){
       
-/*         $nexmo = app('Nexmo\Client');
+  /*       $nexmo = app('Nexmo\Client');
         $nexmo->message()->send([
             'to'   => '+93776994963',
             'from' => '+93793778030',

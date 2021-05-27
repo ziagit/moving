@@ -5,12 +5,10 @@
       <md-card class="main-card">
         <md-empty-state
           md-icon="devices_other"
-          md-label="Welcome to TingsApp"
-          md-description="Please complete your registeration"
+          md-label="Welcome to ThingsApp"
+          md-description="Please complete your rgisteration."
         >
-          <md-button @click="completRegisteration()" class="custom-button"
-            >Start</md-button
-          >
+          <md-button @click="submit" class="custom-button">Complete</md-button>
         </md-empty-state>
       </md-card>
     </div>
@@ -21,9 +19,21 @@
 <script>
 import Header from "../../shared/Header";
 import Footer from "../../shared/Footer";
+import Spinner from "../../shared/Spinner";
 import { mapGetters, mapActions } from "vuex";
 export default {
   name: "Welcome",
+  components: {
+    Spinner,
+  },
+  data: () => ({
+    form: {
+      code: null,
+      id: this.$route.params.id,
+    },
+    isSubmitting: false,
+  }),
+  created() {},
   computed: {
     ...mapGetters({
       authenticated: "auth/authenticated",
@@ -31,7 +41,10 @@ export default {
     }),
   },
   methods: {
-    completRegisteration() {
+    ...mapActions({
+      signUp: "auth/signUp",
+    }),
+    submit() {
       if (this.user.role[0].name == "customer") {
         this.$router.push("/shipper/profile/add");
       } else if (this.user.role[0].name == "mover") {

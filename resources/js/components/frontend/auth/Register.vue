@@ -7,27 +7,14 @@
           <div class="md-title">Register</div>
         </md-card-header>
         <md-card-content>
-          <Spinner v-if="isSubmitting" />
           <form @submit.prevent="submit" enctype="multipart/form-data">
             <md-field>
               <label>Name</label>
               <md-input v-model="form.name" required ref="focusable"></md-input>
             </md-field>
             <md-field>
-              <label>Email</label>
-              <md-input v-model="form.email" required></md-input>
-            </md-field>
-            <md-field>
-              <label>Password</label>
-              <md-input v-model="form.password" required type="password"></md-input>
-            </md-field>
-            <md-field>
-              <label>Confirm password</label>
-              <md-input
-                v-model="form.password_confirmation"
-                required
-                type="password"
-              ></md-input>
+              <label>Phone</label>
+              <md-input v-model="form.phone" required></md-input>
             </md-field>
             <div>
               <md-radio v-model="form.type" value="mover">Mover</md-radio>
@@ -38,7 +25,8 @@
                 <span>&#8226;</span> By clicking submit you will agree to our terms and
                 conditions.
               </p>
-              <md-button type="submit" class="custom-button">Submit</md-button>
+              <Spinner v-if="isSubmitting" />
+              <md-button v-else type="submit" class="custom-button">Submit</md-button>
             </div>
           </form>
           <div class="login">
@@ -58,14 +46,20 @@ import Spinner from "../../shared/Spinner";
 import Snackbar from "../../shared/Snackbar";
 import Header from "../../shared/Header";
 import Footer from "../../shared/Footer";
+import localData from "../services/localData";
+import functions from "../services/functions";
 export default {
   name: "SignUp",
+  components: {
+    Spinner,
+    Snackbar,
+    Header,
+    Footer,
+  },
   data: () => ({
     form: {
       name: null,
-      email: null,
-      password: null,
-      password_confirmation: null,
+      phone: null,
       type: "customer",
     },
     isSubmitting: false,
@@ -81,6 +75,33 @@ export default {
       signUp: "auth/signUp",
     }),
     submit() {
+      if (
+        this.form.phone == null ||
+        this.form.name == null ||
+        !functions.phoneValidator(this.form.phone)
+      ) {
+        this.snackbar.message = "Invalid phone number provided!";
+        this.snackbar.statusCode = 400;
+        this.snackbar.show = true;
+      } else {
+        this.isSubmitting = true;
+        axios
+          .post("auth/verify/", this.form)
+          .then((res) => {
+            localData.save("me", res.data);
+            this.isSubmitting = false;
+            this.$router.push("verify");
+          })
+          .catch((error) => {
+            console.log("errr", error.response);
+            this.isSubmitting = false;
+            this.snackbar.message = error.response.data.phone;
+            this.snackbar.statusCode = error.response.status;
+            this.snackbar.show = true;
+          });
+      }
+    },
+    /*     submit() {
       if (this.form.password !== this.form.password_confirmation) {
         this.snackbar.show = true;
         this.snackbar.statusCode = 400;
@@ -89,10 +110,12 @@ export default {
         this.isSubmitting = true;
         this.signUp(this.form)
           .then((res) => {
+            console.log("res", res.data);
             this.isSubmitting = false;
             this.$router.push("welcome");
           })
           .catch((error) => {
+            console.log("errr", error);
             this.isSubmitting = false;
             if (error.response.status === 409) {
               this.snackbar.statusCode = error.response.status;
@@ -104,16 +127,10 @@ export default {
             this.snackbar.show = true;
           });
       }
-    },
+    }, */
   },
   mounted() {
     this.$refs.focusable.$el.focus();
-  },
-  components: {
-    Spinner,
-    Snackbar,
-    Header,
-    Footer,
   },
 };
 </script>

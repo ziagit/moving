@@ -47,8 +47,8 @@ class Order extends Model
     {
         return $this->hasOne(Job::class);
     }
-    public function jobWithStatus(){
-        return $this->job()->with('carrier');
+    public function jobWithCarrier(){
+        return $this->job()->with('carrierContact');
     }
     public function earning()
     {

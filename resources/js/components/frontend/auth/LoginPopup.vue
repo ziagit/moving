@@ -55,9 +55,6 @@ export default {
     orderExist: false,
   }),
   methods: {
-    test() {
-      console.log("hi");
-    },
     ...mapActions({
       signIn: "auth/signIn",
     }),

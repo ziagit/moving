@@ -18,6 +18,9 @@ class Job extends Model
     {
         return $this->belongsTo(Carrier::class);
     }
+    public function carrierContact(){
+        return $this->carrier()->with('contact');
+    }
     public function earning(){
         return $this->hasOne(Earning::class);
     }

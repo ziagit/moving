@@ -3,20 +3,19 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+
 class SignInController extends Controller
 {
     public function __invoke(Request $request)
     {
-        if(!$token = Auth::attempt(['email'=>$request['email'],'password'=>$request['password'],'status'=>'active'])){
-            return response()->json(['message'=>'Incorrect credentials or your account is blocked!'],401);
+        $user = User::where('id', $request->me)->where('verification_code', $request->code)->first();
+        if ($user) {
+            $token = Auth::login($user);
+            return response()->json($token);
         }
-        return response()->json($token);
-
-/*         if(!$token = Auth::attempt($request->only('email', 'password'))){
-            return response()->json(['message'=>'The username or password is incorrect!'],401);
-        }
-        return response()->json($token); */
+        return response()->json("Invalid code entered!", 404);
     }
 }

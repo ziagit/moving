@@ -47,14 +47,14 @@ export default {
           type: "info",
         },
       ];
-      var iconBase = "https://maps.google.com/mapfiles/kml/shapes/";
+      /*      var iconBase = "https://maps.google.com/mapfiles/kml/shapes/";
       for (let i = 0; i < features.length; i++) {
         const marker = new google.maps.Marker({
           position: features[i].position,
           icon: iconBase + "parking_lot_maps.png", //icons[features[i].type].icon,
           map: map,
         });
-      }
+      } */
     },
     async setOrigin(from, latlng) {
       this.originLatLng = latlng;

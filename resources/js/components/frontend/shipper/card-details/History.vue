@@ -1,14 +1,6 @@
 <template>
   <div class="shipper-card">
-    <md-table md-sort="zip" md-sort-order="asc" md-card>
-      <md-table-empty-state
-        md-label="No state found"
-        :md-description="`No state found for this query. Try a different search term or create a new state.`"
-      >
-        <md-button class="md-primary md-raised" @click="add()"
-          >Create new address</md-button
-        >
-      </md-table-empty-state>
+    <md-table v-if="orders.length > 0" md-sort="zip" md-sort-order="asc" md-card>
       <md-table-row>
         <md-table-head>Order</md-table-head>
         <md-table-head>Date</md-table-head>
@@ -17,9 +9,17 @@
       <md-table-row v-for="(order, index) in orders" :key="index">
         <md-table-cell>{{ order.uniqid }}</md-table-cell>
         <md-table-cell>{{ order.pickup_date }}</md-table-cell>
-        <md-table-cell>{{ order.cost }}</md-table-cell>
+        <md-table-cell>${{ order.cost }}</md-table-cell>
       </md-table-row>
     </md-table>
+    <md-empty-state
+      v-else
+      class="md-primary"
+      md-icon="sentiment_satisfied_alt"
+      md-label="Not available"
+      md-description="There is no payment history"
+    >
+    </md-empty-state>
   </div>
 </template>
 
@@ -34,7 +34,7 @@ export default {
     Snackbar,
   },
   data: () => ({
-    orders: null,
+    orders: [],
     snackbar: {
       show: false,
       message: null,

@@ -23,6 +23,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Notification;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class ShipmentController extends Controller
 {
@@ -55,9 +56,7 @@ class ShipmentController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'billing' => 'required',
             'carrier' => 'required',
-            'contacts' => 'required',
             'from' => 'required',
             'to' => 'required',
             'moving_date' => 'required',
@@ -66,10 +65,8 @@ class ShipmentController extends Controller
             return response()->json($validator);
         }
         try {
-            $customerId = $this->storeCustomer($request->contacts);
-            if ($customerId) {
-                $order = $this->storeOrder($request, $customerId);
-                $job = $this->createNewJob($order->id, $customerId, $request->carrier);
+               $order = $this->storeOrder($request);
+                $job = $this->createNewJob($order->id, $request);
 
                 $user  = Carrier::with('user')->find($request->carrier['id'])->user;
 
@@ -79,19 +76,18 @@ class ShipmentController extends Controller
 
                 $user->notify(new JobCreated($job));
                 return response()->json($order);
-            }
         } catch (Exception $e) {
             return response()->json($e->getMessage());
         }
     }
-    public function storeOrder($request, $customerId)
+    public function storeOrder($request)
     {
         $floor_from = 0;
         $floor_to = 0;
-        $contactId = $this->storeContact($request->contacts);
+        $contactId = $this->contact($request);
+        $shipperId = $this->shipper($request);
         $addressIds = $this->storeAddress($request);
 
-        $order = Order::where('uniqid', $request->billing['id'])->first();
         if ($request->floors) {
             $floor_from = $request->floors['pickup'];
             $floor_to = $request->floors['destination'];
@@ -102,7 +98,9 @@ class ShipmentController extends Controller
 
         $number_of_movers = $request->number_of_movers ?  Movernumber::where('code', $request->number_of_movers['code'])->first()->id : null;
         $vehicle = $request->vehicle ? Vehicle::where('code', $request->vehicle['code'])->first()->id : null;
-
+        $order = new Order();
+        
+        $order->uniqid = 'TAO' . date('Ymd') . rand();
         $order->pickup_date = $request->moving_date['date'];
         $order->appointment_time = $request->moving_date['time'];
         $order->instructions = $request->instructions;
@@ -114,10 +112,12 @@ class ShipmentController extends Controller
         $order->movernumber_id = $number_of_movers;
         $order->vehicle_id = $vehicle;
         $order->cost = $request->carrier['price'];
-        $order->shipper_id = $customerId;
+        $order->travel_cost = $request->carrier['travel'];
+        $order->moving_cost = $request->carrier['gross'];
+        $order->tax = $request->carrier['tax'];
+        $order->shipper_id = $shipperId;
         $order->contact_id = $contactId;
-
-        $order->update();
+        $order->save();
         $order->addresses()->attach($addressIds);
         
         if($request->supplies){
@@ -140,16 +140,26 @@ class ShipmentController extends Controller
         return $order;
     }
 
-    public function storeContact($request)
+    public function contact($request)
     {
-        $contacts = [
-            'name' => $request['name'],
-            'phone' => $request['phone'],
-            'email' => $request['email']
-        ];
-        $id = Contact::insertGetId($contacts);
-        return $id;
+        if($request->contacts){
+            $contact = Contact::where('email',$request->contacts['email'])->first();
+            return $contact->id;
+        }
+        $user = JWTAuth::user()->id;
+        $shipper = Shipper::where('user_id',$user)->first();
+        return $shipper->contact_id;
+       
     }
+    public function shipper($request){
+        if($request->shipper){
+            return $request->shipper['shipper'];
+        }
+        $user = JWTAuth::user()->id;
+        $shipper = Shipper::where('user_id',$user)->first();
+        return $shipper->id;
+    }
+    
     public function storeAddress($request)
     {
         $addressIds = array();
@@ -180,28 +190,12 @@ class ShipmentController extends Controller
         return $addressIds;
     }
 
-    public function storeCustomer($data)
-    {
-        if (Auth::check() && auth()->user()->roles[0]->name === "customer") {
-            $shipper = User::with('shipper')->find(Auth::id())->shipper;
-            if ($shipper) {
-                return $shipper->id;
-            }
-            return false;
-        }
-        $shipper = new Shipper();
-        $shipper->first_name = $data['name'];
-        $shipper->save();
-
-        return $shipper->id;
-    }
-
-    public function createNewJob($order, $customerId, $carrier)
+    public function createNewJob($order, $request)
     {
         $job = new Job();
         $job->order_id = $order;
-        $job->shipper_id = $customerId;
-        $job->carrier_id = $carrier['id'];
+        $job->shipper_id = $this->shipper($request);
+        $job->carrier_id = $request->carrier['id'];
         $job->save();
         return $job;
     }

@@ -2,17 +2,17 @@
   <div>
     <md-toolbar md-elevation="0" v-if="authenticated" class="custom-toolbar">
       <div class="row" v-if="authenticated">
-        <div class="img" @click="profile()">
-          <md-icon>person</md-icon>
+        <div class="avatar" @click="profile()">
+          <img :src="'/images/uploads/avatar.svg'" width="80" alt="" />
         </div>
         <div class="break"></div>
-        <div class="name md-title">{{ user.name }}</div>
-        <div class="email">{{ user.email }}</div>
-        <span class="notification">
-          <Notifications v-on:hideSideMenu="togal()" />
-        </span>
+        <div class="text">
+          <div class="name md-list-item-text">{{ user.name }}</div>
+          <div class="email">{{ user.phone }}</div>
+        </div>
       </div>
     </md-toolbar>
+    <md-divider></md-divider>
     <md-list>
       <md-list-item @click="navigate('/')">
         <span
@@ -23,7 +23,7 @@
           >Home</span
         >
       </md-list-item>
-      <md-list-item @click="navigate('/help')">
+      <md-list-item @click="navigate('/help/shipper')">
         <span
           class="md-list-item-text"
           v-bind:class="{
@@ -122,42 +122,28 @@ export default {
   }
 }
 .custom-toolbar {
-  background: #ffa500;
+  background: #fff !important;
   height: 155px;
-  display: flex;
-  justify-content: center;
   .row {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    text-align: center;
-    align-items: center;
-    .img {
-      height: 60px;
-      width: 60px;
-      background: #fff;
+    width: 100%;
+    .avatar {
+      margin: auto;
       text-align: center;
       align-items: center;
       display: flex;
-      border-radius: 50px;
+      justify-content: center;
       cursor: pointer;
     }
-
-    .name {
-      color: #fff;
-      font-weight: 600;
-    }
-    .email {
-      color: #fff;
-      font-size: 11px;
-    }
-    .notification {
-      position: absolute;
-      right: 8px;
-      bottom: -5px;
+    .text {
+      text-align: left;
+      .name {
+        font-weight: 600;
+      }
+      .email {
+        font-size: 11px;
+      }
     }
     .md-button {
-      color: #fff;
       font-size: 20px !important;
     }
   }

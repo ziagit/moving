@@ -25,10 +25,11 @@ export default {
         sessionStorage.removeItem('moving-size');
         sessionStorage.removeItem('moving-type');
         sessionStorage.removeItem('id');
-        sessionStorage.removeItem('bl');
+        sessionStorage.removeItem('shipper');
         sessionStorage.removeItem('carrier');
         sessionStorage.removeItem('distance');
         sessionStorage.removeItem('duration');
+        sessionStorage.removeItem('me');
       return ;
     }
 }

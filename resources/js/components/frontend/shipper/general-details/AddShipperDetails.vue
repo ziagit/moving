@@ -1,8 +1,12 @@
 <template>
   <div>
-    <form @submit.prevent="submit" enctype="multipart/form-data">
-      <md-card class="main-card">
-        <div class="inputs-container">
+    <md-card>
+      <form @submit.prevent="submit" enctype="multipart/form-data">
+        <md-card-header>
+          <span class="md-title">Add Account Details</span>
+        </md-card-header>
+        <md-divider></md-divider>
+        <md-card-content>
           <div class="row">
             <md-field>
               <label for="">First name</label>
@@ -18,44 +22,22 @@
               <md-input type="text" v-model="form.last_name" required></md-input>
             </md-field>
             <md-field>
-              <label for="">Phone</label>
-              <md-input type="tel" v-model="form.phone" required></md-input>
+              <label for="">Email</label>
+              <md-input type="tel" v-model="form.email" required></md-input>
             </md-field>
-          </div>
-          <div class="row">
             <GoogleAddress3
               v-on:google-valid-address="googleValidAddress"
               v-on:google-invalid-address="googleInvalidAddress"
               :initialData="form.address"
               label="Full adddress"
             />
-
-            <md-field>
-              <label for="">Country</label>
-              <md-input v-model="form.country" required disabled></md-input>
-            </md-field>
-            <md-field>
-              <label for="">State</label>
-              <md-input v-model="form.state" required disabled></md-input>
-            </md-field>
-
-            <md-field>
-              <label for="">City</label>
-              <md-input v-model="form.city" required disabled></md-input>
-            </md-field>
-            <md-field>
-              <label for="">Postal code</label>
-              <md-input v-model="form.zip" required disabled></md-input>
-            </md-field>
           </div>
-        </div>
-        <Spinner v-if="isSubmitting" />
-        <md-button v-if="!isSubmitting" type="submit" class="md-primary md-small-fab"
-          >Save</md-button
-        >
-      </md-card>
-    </form>
-    <Snackbar :data="snackbar" />
+          <Spinner v-if="isSubmitting" />
+          <md-button v-else type="submit" class="md-primary md-small-fab">Save</md-button>
+        </md-card-content>
+      </form>
+      <Snackbar :data="snackbar" />
+    </md-card>
   </div>
 </template>
 
@@ -82,7 +64,7 @@ export default {
       city: null,
       zip: null,
       formatted_address: null,
-      phone: null,
+      email: null,
       website: null,
       company: null,
       detail: null,
@@ -134,7 +116,6 @@ export default {
         })
         .catch((error) => {
           this.isSubmitting = false;
-          console.log("err: ", error.response);
           this.snackbar.message = error.response.data.error;
           this.snackbar.statusCode = error.response.status;
           this.snackbar.show = true;
@@ -145,29 +126,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.main-card {
-  padding: 30px;
-  text-align: center;
-  box-shadow: none;
-  border: solid 1px #ddd;
-
-  .shipper-logo {
-    text-align: center;
-    margin-top: -40px;
-
-    .md-large {
-      background: #ddd;
-    }
-  }
+.md-card {
+  padding: 20px;
+  text-align: left;
 
   .row {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-
-    .md-field {
-      flex: 25%;
-    }
   }
 }
 </style>

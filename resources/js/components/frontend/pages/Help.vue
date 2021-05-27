@@ -21,9 +21,9 @@
     </div>
 
     <div class="section1">
-      <md-tabs>
+      <md-tabs :md-active-tab="tabId">
         <md-tab
-          id="tab-how-works"
+          id="how-works"
           md-label="How it Works"
           md-icon="help"
           @click="
@@ -36,7 +36,7 @@
           <FAQ />
         </md-tab>
         <md-tab
-          id="tab-partner"
+          id="partner"
           md-label="Partner"
           md-icon="directions_boat"
           @click="
@@ -49,7 +49,7 @@
           <CarrierFaq />
         </md-tab>
         <md-tab
-          id="tab-shipper"
+          id="shipper"
           md-label="Customer"
           md-icon="local_mall"
           @click="
@@ -82,11 +82,15 @@ export default {
       email: null,
       message: null,
     },
+    tabId: "how-works",
     header: "How it Works?",
     subheader: "Beginnerٌs guide to shipping from home on Shipbay",
     carrierToggal: false,
     shipperToggal: false,
   }),
+  created() {
+    this.tabId = this.$route.params.id;
+  },
   methods: {
     passData(header, subheader) {
       this.header = header;

@@ -45,7 +45,7 @@ class ShipperDetailsController extends Controller
         $validator = Validator::make($request->all(), [
             'first_name' => 'required',
             'last_name' => 'required',
-            'phone' => 'required|unique:contacts',
+            'email' => 'required|unique:contacts',
             'country' => 'required',
             'state' => 'required',
             'city' => 'required',
@@ -69,11 +69,14 @@ class ShipperDetailsController extends Controller
     }
 
     public function storeContact($request){
+        $user = JWTAuth::user();
         $contact = new Contact();
         $contact->name = $request->last_name;
-        $contact->phone = $request->phone;
-        $contact->email = JWTAuth::user()->email;
+        $contact->email = $request->email;
+        $contact->phone = $user->phone;
         $contact->save();
+        $user->email = $request->email;
+        $user->update();
         return $contact->id;
     }
     public function storeAddress($request){
@@ -121,7 +124,7 @@ class ShipperDetailsController extends Controller
         $this->validate($request, [
             'first_name' => 'required',
             'last_name' => 'required',
-            'phone' => 'required',
+            'email' => 'required',
             'country' => 'required',
             'state' => 'required',
             'city' => 'required',
@@ -138,16 +141,18 @@ class ShipperDetailsController extends Controller
         $shipper->contact_id = $contactId;
         $shipper->user_id = JWTAuth::user()->id;
         $shipper->update();
-
         return response()->json(["message" => "Updated successfully!"], 200);
     }
 
     public function updateContact($request){
+        $user = JWTAuth::user();
         $contact = Contact::find($request->contactId);
         $contact->name = $request->last_name;
-        $contact->phone = $request->phone;
-        $contact->email = JWTAuth::user()->email;
+        $contact->email = $request->email;
+        $contact->phone = $user->phone;
         $contact->update();
+        $user->email = $request->email;
+        $user->update();
         return $contact->id;
     }
     public function updateAddress($request){

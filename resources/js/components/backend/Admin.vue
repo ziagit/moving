@@ -11,8 +11,6 @@
 <script>
 import Footer from "../shared/Footer";
 import Header from "../shared/Header";
-import axios from "axios";
-import { mapGetters, mapActions } from "vuex";
 export default {
   name: "Admin",
   components: {

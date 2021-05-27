@@ -112,7 +112,7 @@ export default {
     },
 
     phoneValidator(phone) {
-        let pattern = /^[(]{0,1}[0-9]{3}[)]{0,1}[-\s\.]{0,1}[0-9]{3}[-\s\.]{0,1}[0-9]{4}$/;
+        let pattern = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
         if (phone.match(pattern)) {
             return true;
         } else {
@@ -144,17 +144,17 @@ export default {
         order["duration"] = await localData.read("duration");
         order["supplies"] = this.buildSupplies();
         order["carrier"] = await localData.read("carrier");
-        order["billing"] = await localData.read("bl");
+        order["shipper"] = await localData.read("shipper");
 
         return order;
     },
     buildDate() {
         let d = localData.read("moving-date");
-        return d.date.year + "-" + d.date.month + "-" + d.date.date;
+        return d.date.year + "-" + (d.date.month<10?"0"+d.date.month:d.date.month) + "-" + (d.date.date<10?"0"+d.date.date:d.date.date);
     },
     buildTime() {
         let t = localData.read("moving-date");
-        return this.getTimeRanges(t.time.from) + "-" + this.getTimeRanges(t.time.to);
+        return (t.time.from<10?'0'+t.time.from:t.time.from) + "-" + (t.time.to<10?'0'+t.time.to:t.time.to);
     },
     buildSupplies() {
         let supplies = localData.read("supplies");

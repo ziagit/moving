@@ -24,13 +24,13 @@ export default {
     },
     actions: {
         async signIn({ dispatch }, credentials) {
-           
             let response = await axios.post("auth/signin", credentials)
             return dispatch('attempt', response.data)
         },
 
         async signUp({ dispatch }, credentials) {
-            let response = await axios.post("auth/signup", credentials)
+            let response = await axios.post("auth/signup/", credentials)
+            console.log("yyy ",response.data)
             return dispatch('attempt', response.data)
         },
 
@@ -46,6 +46,8 @@ export default {
             //header will be set by subsciber here
             try {
                 let response = await axios.get('auth/me')
+            console.log("me is: ",response)
+
                 commit('SET_USER', response.data)
             } catch (e) {
                 commit('SET_TOKEN', null)

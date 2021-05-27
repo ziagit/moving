@@ -1,31 +1,30 @@
 <template>
-  <md-card class="no-shadow-bordered">
+  <md-card>
+    <md-card-header><span class="md-title">Account Details</span></md-card-header>
+    <md-divider></md-divider>
     <md-card-content>
       <div v-if="shipper">
         <div>
-          <h2>{{ shipper.last_name }}</h2>
-          <span class="md-subheading">
-            {{ shipper.first_name }}
-            <span class="line">|</span>
-            {{ shipper.last_name }}
-            <span class="line">|</span>
-            {{ shipper.address.formatted_address }}
-          </span>
-          <br />
-          <span class="md-subheading">
-            {{ shipper.address.country.name }}
-            <span class="line">|</span>
-            {{ shipper.address.state }}
-            <span class="line">|</span>
-            {{ shipper.address.city }}
-            <span class="line">|</span>
-            {{ shipper.address.zip }}
-          </span>
-          <br />
-          <span class="md-subheading">
-            {{ shipper.contact.phone }}
-          </span>
-          <br />
+          <div class="row">
+            <span>Firs name:</span>
+            <span>{{ shipper.first_name }}</span>
+          </div>
+          <div class="row">
+            <span>Last name:</span>
+            <span>{{ shipper.last_name }}</span>
+          </div>
+          <div class="row">
+            <span>Email:</span>
+            <span>{{ shipper.contact.email }}</span>
+          </div>
+          <div class="row">
+            <span>Phone:</span>
+            <span>{{ shipper.contact.phone }}</span>
+          </div>
+          <div class="row">
+            <span>Name:</span>
+            <span>{{ shipper.address.formatted_address }}</span>
+          </div>
         </div>
       </div>
       <md-empty-state
@@ -41,12 +40,8 @@
       </md-empty-state>
     </md-card-content>
     <md-card-actions>
-      <md-button
-        v-if="shipper"
-        :to="{ path: 'edit/' + shipper.id }"
-        class="md-primary md-icon-button"
-      >
-        <md-icon>edit</md-icon>
+      <md-button v-if="shipper" :to="{ path: 'edit/' + shipper.id }" class="md-primary">
+        Edit
         <md-tooltip>Edit profile</md-tooltip>
       </md-button>
     </md-card-actions>
@@ -83,15 +78,18 @@ export default {
 
 <style lang="scss" scoped>
 .md-card {
-  box-shadow: none;
-  text-align: center;
-  .md-display-1 {
-    font-size: 30px;
+  padding: 20px;
+  text-align: left;
+  .row {
+    display: flex;
+    > :first-child {
+      min-width: 100px;
+    }
   }
 
   .md-card-actions {
     display: flex;
-    justify-content: space-around;
+    justify-content: flex-start;
   }
 }
 </style>

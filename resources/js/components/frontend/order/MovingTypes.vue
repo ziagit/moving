@@ -80,7 +80,6 @@ export default {
     next() {
       if (this.selected != null) {
         localData.save("moving-type", this.selected);
-        console.log("slected: ", this.selected.code);
         switch (this.selected.code) {
           case "office":
             localData.remove("moving-items");

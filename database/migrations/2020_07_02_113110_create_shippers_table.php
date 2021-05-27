@@ -19,6 +19,7 @@ class CreateShippersTable extends Migration
             $table->string('last_name')->nullable();
             $table->unsignedInteger('contact_id')->nullable();
             $table->unsignedInteger('address_id')->nullable();
+            $table->string('stripe_customer_id')->nullable();
             $table->unsignedInteger('user_id')->nullable();
             $table->timestamps();
         });

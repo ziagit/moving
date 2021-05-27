@@ -4,16 +4,19 @@
       <div class="row">
         <ul>
           <li>
+            <a @click="navigate('/')"><b>Home</b></a>
+          </li>
+          <li>
             <a @click="navigate('/about')"><b>What is TingsApp</b></a>
           </li>
           <li>
             <a @click="navigate('/help')"><b>How it Works</b> </a>
           </li>
           <li>
-            <a @click="navigate('/login')"><b>My Account</b></a>
+            <a @click="navigate('/help')"><b>Help center</b> </a>
           </li>
           <li>
-            <a @click="navigate('/help')"><b>Help Center</b></a>
+            <a @click="navigate('/cities')"><b>Cities</b></a>
           </li>
         </ul>
       </div>
@@ -23,7 +26,7 @@
             <a @click="navigate('/help')"><b>Become a Mover</b></a>
           </li>
           <li>
-            <a @click="navigate('/cities')"><b>Cities</b></a>
+            <a @click="navigate('/login')"><b>My account</b></a>
           </li>
         </ul>
       </div>

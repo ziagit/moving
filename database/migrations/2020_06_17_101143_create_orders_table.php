@@ -15,22 +15,28 @@ class CreateOrdersTable extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->date('pickup_date')->nullable();
-            $table->string('appointment_time')->nullable();
+            $table->string('uniqid')->unique();
             $table->unsignedInteger('floor_from')->nullable();
             $table->unsignedInteger('floor_to')->nullable();
-            $table->unsignedInteger('movingtype_id')->nullable();
+            $table->date('pickup_date');
+            $table->string('appointment_time');
+            $table->unsignedInteger('movingtype_id');
             $table->unsignedInteger('movingsize_id')->nullable();
             $table->unsignedInteger('officesize_id')->nullable();
             $table->unsignedInteger('movernumber_id')->nullable();
             $table->unsignedInteger('vehicle_id')->nullable();
-            $table->double('cost')->nullable();
             $table->string('instructions')->nullable();
-            $table->string('charge_id');
-            $table->string('uniqid')->unique();
-            $table->string('status')->default('Not picked');
-            $table->unsignedInteger('shipper_id')->nullable();
-            $table->unsignedInteger('contact_id')->nullable();
+            $table->string('status')->default('New');
+            $table->double('cost');
+            $table->double('travel_cost');
+            $table->double('moving_cost');
+            $table->double('tax');
+            $table->double('tips')->nullable();
+
+            $table->string('charge_id')->nullable();
+
+            $table->unsignedInteger('shipper_id');
+            $table->unsignedInteger('contact_id');
          
             $table->timestamps();
         });

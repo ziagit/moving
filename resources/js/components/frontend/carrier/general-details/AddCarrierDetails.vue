@@ -32,8 +32,8 @@
               <md-input type="text" v-model="form.last_name" required></md-input>
             </md-field>
             <md-field>
-              <label for="">Phone</label>
-              <md-input type="number" v-model="form.phone" required :min="0"></md-input>
+              <label for="">Email</label>
+              <md-input type="text" v-model="form.email" required :min="0"></md-input>
             </md-field>
           </div>
           <div class="row">
@@ -170,7 +170,7 @@ export default {
       vehicles: null,
       rate: null,
       year_established: null,
-      phone: null,
+      email: null,
       website: null,
       company: null,
       detail: null,
@@ -232,7 +232,7 @@ export default {
       fd.append("city", this.form.city);
       fd.append("zip", this.form.zip);
       fd.append("address", this.form.address);
-      fd.append("phone", this.form.phone);
+      fd.append("email", this.form.email);
       fd.append("website", this.form.website);
       fd.append("company", this.form.company);
       fd.append("detail", this.form.detail);
