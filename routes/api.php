@@ -19,12 +19,12 @@ use Spatie\GoogleCalendar\Event;
 //Auth::routes(['verify' => true]);
 
 Route::group(['prefix'=>'moving'], function () {
+  Route::post('verify', 'Auth\VerifyPhoneController');
 
   Route::post('forgot-password', 'Auth\ResetPasswordController@forgot');
   Route::post('reset-password', 'Auth\ResetPasswordController@reset');
 
   Route::group(['prefix' => 'auth', 'namespace' => 'Auth'], function () {
-    Route::post('verify', 'VerifyPhoneController');
     Route::post('signin', 'SignInController');
     Route::post('signup', 'SignUpController');
   });//,'middleware'=>'verified'
@@ -182,10 +182,6 @@ Route::group(['prefix'=>'moving'], function () {
     event(new NewMessage('Hi from from Vuejs'));
     return ;
   });
-
-Route::get("send-sms","SmsController@sendMessage");
-Route::post('get-code', 'PhoneVerificationController@getCode');
-Route::post('verify', 'PhoneVerificationController@verify');
 
 });
 

@@ -79,7 +79,6 @@ export default {
       this.form.phone = v.isValid ? v.formattedNumber : null;
     },
     submit() {
-      console.log("thisf fomr", this.form);
       if (!this.authenticated) {
         if (!this.form.phone) {
           this.snackbar.message = "Invalid phone number provided!";
@@ -88,8 +87,9 @@ export default {
         } else {
           this.dataLoading = true;
           axios
-            .post("auth/verify/", this.form)
+            .post("verify/", this.form)
             .then((res) => {
+              console.log("res: ", res.data);
               localData.save("me", res.data);
               this.isSubmitting = false;
               this.$router.push("verify");

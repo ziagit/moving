@@ -30,7 +30,6 @@ export default {
 
         async signUp({ dispatch }, credentials) {
             let response = await axios.post("auth/signup/", credentials)
-            console.log("yyy ",response.data)
             return dispatch('attempt', response.data)
         },
 

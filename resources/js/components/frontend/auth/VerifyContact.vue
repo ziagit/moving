@@ -14,7 +14,7 @@
             :loading="false"
             class="input"
             :fields="4"
-            :fieldWidth="115"
+            :fieldWidth="80"
             v-on:change="onChange"
             v-on:complete="verify"
           />
