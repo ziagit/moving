@@ -1,11 +1,12 @@
 <template>
   <div>
-    <md-card md-theme="orange-card">
+    <md-card>
       <md-card-header>
-        <div class="md-title">Earning History</div>
+        <span class="md-title">Earning History</span>
       </md-card-header>
+      <md-divider></md-divider>
       <md-card-content>
-        <table class="table" v-if="earnings.length != 0">
+        <table class="table" v-if="earnings.length > 0">
           <thead>
             <tr>
               <th rowspan="2">Job</th>
@@ -111,22 +112,16 @@ export default {
 
 <style lang="scss" scoped>
 .md-card {
-  box-shadow: none;
-  text-align: center;
-  margin: 0;
-  .md-card-content {
-    overflow-x: auto;
-  }
-
+  text-align: left;
   .table {
     width: 100%;
     border-collapse: collapse;
-    min-width: 900px;
     overflow: auto;
 
     th,
     td {
       border: 1px solid #ddd;
+      text-align: center;
     }
     .body {
       tr {
@@ -150,6 +145,11 @@ export default {
   text-align: left;
   .md-body-2 {
     color: #ffa500;
+  }
+}
+@media only screen and (max-width: 1150px) {
+  .table {
+    overflow-x: auto;
   }
 }
 </style>

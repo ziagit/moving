@@ -1,49 +1,51 @@
 <template>
   <div>
-    <div class="company">
-      <img :src="'/images/uploads/transparent.svg'" width="100" alt="" />
+    <!--     <div class="company">
       <div class="break"></div>
       <div class="md-display-1">
         {{ jobs.length > 0 ? jobs[0].carrier.company : "No data availabe" }}
       </div>
-    </div>
-    <div class="break"></div>
-    <div class="break"></div>
+    </div> -->
+
     <md-card>
-      <md-card-header>({{ currentYear }}) Graph</md-card-header>
+      <md-card-header>
+        <span class="md-title">({{ currentYear }}) Activity Board</span>
+      </md-card-header>
+      <md-divider></md-divider>
+
       <md-card-content>
         <GChart type="LineChart" :data="performanceData" :options="performanceOptions" />
-      </md-card-content>
-      <div class="break"></div>
-      <div class="break"></div>
-      <div class="list">
-        <div class="md-title">Overall Activities</div>
-        <div class="md-body-1">
-          Received Jobs: <b>{{ total }}</b>
-        </div>
-        <div class="md-body-1">
-          Completed Jobs: <b>{{ completed }}</b>
-        </div>
-        <div class="md-body-1">
-          Canceled/declined Jobs: <b>{{ canceled }}</b>
-        </div>
-        <div class="md-body-1">
-          Pending Jobs: <b>{{ pending }}</b>
-        </div>
+        <div class="break"></div>
+        <div class="break"></div>
+        <div class="list">
+          <div class="md-title">Overall Activities</div>
+          <div class="md-body-1">
+            Received Jobs: <b>{{ total }}</b>
+          </div>
+          <div class="md-body-1">
+            Completed Jobs: <b>{{ completed }}</b>
+          </div>
+          <div class="md-body-1">
+            Canceled/declined Jobs: <b>{{ canceled }}</b>
+          </div>
+          <div class="md-body-1">
+            Pending Jobs: <b>{{ pending }}</b>
+          </div>
 
-        <div style="display: flex" v-if="jobs.length > 0">
-          <span>My value in the market: </span>
-          <StarRating
-            v-if="jobs"
-            v-model="jobs[0].carrier.votes"
-            :star-size="18"
-            :read-only="true"
-          />
+          <div style="display: flex" v-if="jobs.length > 0">
+            <span>My value in the market: </span>
+            <StarRating
+              v-if="jobs"
+              v-model="jobs[0].carrier.votes"
+              :star-size="18"
+              :read-only="true"
+            />
+          </div>
         </div>
-        <div class="break"></div>
-        <div class="break"></div>
-        <md-button class="custom-button" to="/carrier/history">My job board</md-button>
-      </div>
+      </md-card-content>
+      <md-card-actions>
+        <md-button class="md-primary" to="/carrier/history">My job board</md-button>
+      </md-card-actions>
     </md-card>
   </div>
 </template>
@@ -114,18 +116,15 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.company {
-  img {
-    padding: 10px;
-    border-radius: 50px;
-    box-shadow: rgba(0, 0, 0, 0.12) 0px 4px 16px;
-  }
-}
 .md-card {
-  box-shadow: none;
-}
-.list {
   text-align: left;
-  padding-left: 69px;
+  .list {
+    text-align: left;
+    padding-left: 47px;
+  }
+  .md-card-actions {
+    display: flex;
+    justify-content: flex-start;
+  }
 }
 </style>

@@ -224,7 +224,8 @@ export default {
       var day = dateObject.getDay();
       var date = dateObject.getDate();
       var year = dateObject.getFullYear();
-      for (var i = dateObject.getDate(); i < dateObject.getDate() + 5; i++) {
+      var daysInMonth = new Date(year, month, 0).getDate();
+      for (var i = dateObject.getDate(); i < daysInMonth + 1; i++) {
         this.cal.push({
           day: services.getDaysName(day),
           date: date,

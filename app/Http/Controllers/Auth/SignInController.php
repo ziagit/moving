@@ -9,10 +9,12 @@ use Illuminate\Support\Facades\Auth;
 
 class SignInController extends Controller
 {
-    public function __invoke(Request $request)
+    public function __invoke(Request $data)
     {
-        $user = User::where('id', $request->me)->where('verification_code', $request->code)->first();
+        $user = User::where('id', $data->me)->where('verification_code', $data->code)->first();
         if ($user) {
+            $user->phone_verified_at = date('Y-m-d h:i:s');
+            $user->update();
             $token = Auth::login($user);
             return response()->json($token);
         }

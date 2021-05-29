@@ -4,12 +4,16 @@
       <md-table-row>
         <md-table-head>Order</md-table-head>
         <md-table-head>Date</md-table-head>
-        <md-table-head>Amount</md-table-head>
+        <md-table-head>Order cost</md-table-head>
+        <md-table-head>Given tips</md-table-head>
+        <md-table-head>Total</md-table-head>
       </md-table-row>
       <md-table-row v-for="(order, index) in orders" :key="index">
         <md-table-cell>{{ order.uniqid }}</md-table-cell>
         <md-table-cell>{{ order.pickup_date }}</md-table-cell>
         <md-table-cell>${{ order.cost }}</md-table-cell>
+        <md-table-cell>${{ order.tips }}</md-table-cell>
+        <md-table-cell>${{ order.tips + order.cost }}</md-table-cell>
       </md-table-row>
     </md-table>
     <md-empty-state

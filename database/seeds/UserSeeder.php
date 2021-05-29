@@ -20,21 +20,21 @@ class UserSeeder extends Seeder
             [
                 'name' => 'Admin',
                 'email' => 'admin@gmail.com',
-                'phone' => '+93786431743',
+                'phone' => '+12502000000',
                 'phone_verified_at' => $today,
                 'password' => Hash::make('123'),
             ],
             [
                 'name' => 'Customer A',
                 'email' => 'customer@gmail.com',
-                'phone' => '+9398627640',
+                'phone' => '+12503000000',
                 'phone_verified_at' => $today,
                 'password' => Hash::make('123')
             ],
             [
                 'name' => 'Mover A',
                 'email' => 'mover@gmail.com',
-                'phone' => '+93775059616',
+                'phone' => '+12504000000',
                 'phone_verified_at' => $today,
                 'password' => Hash::make('123')
             ]

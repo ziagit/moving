@@ -72,7 +72,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      signUp: "auth/signUp",
+      signIn: "auth/signIn",
     }),
     onChange(v) {
       console.log("onChange ", v);
@@ -80,7 +80,7 @@ export default {
     verify(v) {
       this.isSubmitting = true;
       this.invalidCode = null;
-      this.signUp({ code: v, me: this.me })
+      this.signIn({ code: v, me: this.me })
         .then((res) => {
           this.isSubmitting = false;
           localData.remove("me");

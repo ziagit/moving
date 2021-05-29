@@ -80,7 +80,7 @@
           <span
             class="md-list-item-text"
             v-bind:class="{
-              active: $route.name == 'payment',
+              active: $route.name == 'details',
             }"
             >Payments</span
           >

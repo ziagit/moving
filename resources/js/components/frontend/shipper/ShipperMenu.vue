@@ -50,11 +50,11 @@
           >Orders</span
         >
       </md-list-item>
-      <md-list-item @click="navigate('/shipper/card')">
+      <md-list-item @click="navigate('/shipper/payments')">
         <span
           class="md-list-item-text"
           v-bind:class="{
-            active: $route.name == 'card',
+            active: $route.name == 'payments',
           }"
           >Payment</span
         >

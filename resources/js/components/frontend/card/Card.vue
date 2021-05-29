@@ -94,7 +94,7 @@ import Spinner from "../../shared/Spinner";
 import { mapGetters } from "vuex";
 import localData from "../services/localData";
 import functions from "../services/functions";
-//var stripe = Stripe(process.env.MIX_STRIPE_KEY);
+var stripe = Stripe(process.env.MIX_STRIPE_KEY);
 var style = {
   base: {
     color: "#32325d",

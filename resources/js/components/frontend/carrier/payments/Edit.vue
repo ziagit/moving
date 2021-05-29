@@ -2,62 +2,65 @@
   <div>
     <form @submit.prevent="update" enctype="multipart/form-data">
       <md-card class="main-card">
-        <md-button @click="$router.back()" class="md-icon-button add-btn">
-          <md-icon>close</md-icon>
-          <md-tooltip>Cancel</md-tooltip>
-        </md-button>
-        <h3>Edit Information</h3>
-        <div class="carrier-details">
-          <div class="row">
-            <md-field>
-              <md-select
-                v-model="form.currency"
-                :value="form.currency"
-                name="country"
-                id="country"
-                placeholder="Country"
-              >
-                <md-option value="CAD">CAD - Canadian Dollar</md-option>
-                <md-option value="USD">USD - US Dollar</md-option>
-              </md-select>
-            </md-field>
-            <md-field>
-              <label for="">Transit number</label>
-              <md-input type="text" v-model="form.transit_number" required></md-input>
-            </md-field>
-            <md-field>
-              <label for="">Institution number</label>
-              <md-input
-                type="number"
-                v-model="form.institution_number"
-                required
-                :min="0"
-              ></md-input>
-            </md-field>
-            <md-field>
-              <label for="">Account number</label>
-              <md-input
-                type="number"
-                v-model="form.account_number"
-                required
-                :min="0"
-              ></md-input>
-            </md-field>
-            <md-field>
-              <label for="">Confirm account number</label>
-              <md-input
-                type="number"
-                v-model="form.confirm_account_number"
-                required
-                :min="0"
-              ></md-input>
-            </md-field>
-          </div>
-        </div>
-        <Spinner v-if="isSubmitting" />
-        <md-button v-if="!isSubmitting" type="submit" class="md-primary md-small-fab"
-          >Done</md-button
-        >
+        <md-card-header>
+          <span class="md-title">Edit Bank Information</span>
+          <md-button @click="$router.back()" class="md-icon-button add-btn">
+            <md-icon>close</md-icon>
+            <md-tooltip>Cancel</md-tooltip>
+          </md-button>
+        </md-card-header>
+        <md-divider></md-divider>
+        <md-card-content>
+          <md-field>
+            <md-select
+              v-model="form.currency"
+              :value="form.currency"
+              name="country"
+              id="country"
+              placeholder="Country"
+            >
+              <md-option value="CAD">CAD - Canadian Dollar</md-option>
+              <md-option value="USD">USD - US Dollar</md-option>
+            </md-select>
+          </md-field>
+          <md-field>
+            <label for="">Transit number</label>
+            <md-input type="text" v-model="form.transit_number" required></md-input>
+          </md-field>
+          <md-field>
+            <label for="">Institution number</label>
+            <md-input
+              type="number"
+              v-model="form.institution_number"
+              required
+              :min="0"
+            ></md-input>
+          </md-field>
+          <md-field>
+            <label for="">Account number</label>
+            <md-input
+              type="number"
+              v-model="form.account_number"
+              required
+              :min="0"
+            ></md-input>
+          </md-field>
+          <md-field>
+            <label for="">Confirm account number</label>
+            <md-input
+              type="number"
+              v-model="form.confirm_account_number"
+              required
+              :min="0"
+            ></md-input>
+          </md-field>
+        </md-card-content>
+        <md-card-actions>
+          <Spinner v-if="isSubmitting" />
+          <md-button v-if="!isSubmitting" type="submit" class="md-primary md-small-fab"
+            >Update</md-button
+          >
+        </md-card-actions>
       </md-card>
     </form>
     <Snackbar :data="snackbar" />
@@ -66,7 +69,6 @@
 
 <script>
 import axios from "axios";
-import { mapGetters } from "vuex";
 import Snackbar from "../../../shared/Snackbar";
 import Spinner from "../../../shared/Spinner";
 export default {
@@ -99,7 +101,6 @@ export default {
       axios
         .put("carrier/payments/" + this.$route.params.id, this.form)
         .then((res) => {
-          console.log("ressssssssssss", res.data);
           this.isSubmitting = false;
           this.$router.push("/carrier/payments");
         })
@@ -129,50 +130,20 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.main-card {
-  padding: 30px;
-  text-align: center;
-  box-shadow: none;
-  border: solid 1px #ddd;
-
-  .carrier-logo {
-    text-align: center;
-    margin-top: -40px;
-
-    .md-large {
-      background: #ddd;
-    }
-
-    .select-logo {
-      position: absolute;
-    }
+.md-card {
+  text-align: left;
+  .md-card-content {
+    padding: 20px;
   }
-
-  .row {
+  .md-card-actions {
     display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-
-    .md-field {
-      flex: 25%;
-    }
+    justify-content: flex-start;
   }
 
   .add-btn {
     position: absolute;
     top: 0;
     right: 0;
-  }
-}
-.company {
-  .row {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-
-    .md-field {
-      flex: 32%;
-    }
   }
 }
 </style>

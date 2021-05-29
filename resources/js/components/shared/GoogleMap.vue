@@ -4,8 +4,8 @@
   </div>
 </template>
 <script>
-/* const directionsService = new google.maps.DirectionsService();
-const directionsRenderer = new google.maps.DirectionsRenderer(); */
+const directionsService = new google.maps.DirectionsService();
+const directionsRenderer = new google.maps.DirectionsRenderer();
 import localData from "../frontend/services/localData";
 export default {
   name: "Map",

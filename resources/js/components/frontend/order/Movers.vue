@@ -1,11 +1,5 @@
 <template>
   <div class="select-carrier">
-    <md-dialog :md-active.sync="loginTogal">
-      <md-dialog-content>
-        <LoginPopup v-on:close-dialog="refresh" />
-      </md-dialog-content>
-    </md-dialog>
-
     <div v-show="dataLoading" class="loading">
       <Spinner />
       <span class="md-display-1">Calculating...</span>
@@ -65,7 +59,6 @@ import Spinner from "../../shared/Spinner";
 import Snackbar from "../../shared/Snackbar";
 import functions from "../services/functions";
 import localData from "../services/localData";
-import LoginPopup from "../auth/LoginPopup.vue";
 export default {
   name: "Movers",
   components: {
@@ -73,7 +66,6 @@ export default {
     CarrierInfo,
     Spinner,
     Snackbar,
-    LoginPopup,
   },
   data: () => ({
     carrier: null,

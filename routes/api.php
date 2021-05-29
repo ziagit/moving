@@ -18,7 +18,7 @@ use Spatie\GoogleCalendar\Event;
 */
 //Auth::routes(['verify' => true]);
 
-Route::group(['prefix'=>'moving'], function () {
+Route::group(['prefix' => 'moving'], function () {
   Route::post('verify', 'Auth\VerifyPhoneController');
 
   Route::post('forgot-password', 'Auth\ResetPasswordController@forgot');
@@ -27,8 +27,8 @@ Route::group(['prefix'=>'moving'], function () {
   Route::group(['prefix' => 'auth', 'namespace' => 'Auth'], function () {
     Route::post('signin', 'SignInController');
     Route::post('signup', 'SignUpController');
-  });//,'middleware'=>'verified'
-  Route::group(['middleware' => 'auth:api','middleware' => 'status'], function () {
+  }); //,'middleware'=>'verified'
+  Route::group(['middleware' => 'auth:api', 'middleware' => 'status'], function () {
     Route::group(['namespace' => 'Auth', 'prefix' => 'auth'], function () {
       Route::get('me', 'MeController');
       Route::post('signout', 'SignOutController');
@@ -45,9 +45,8 @@ Route::group(['prefix'=>'moving'], function () {
       Route::get('job-status', 'JobController@jobStatus');
       Route::post('rate-carrier', 'CarrierDetailsController@rate');
 
-      Route::resource('calendar','CalendarController');
-      Route::resource('dashboard','DashboardController');
-      
+      Route::resource('calendar', 'CalendarController');
+      Route::resource('dashboard', 'DashboardController');
     });
     Route::group(['namespace' => 'Shipper', 'prefix' => 'shipper'], function () {
       Route::resource('details', 'ShipperDetailsController');
@@ -58,6 +57,7 @@ Route::group(['prefix'=>'moving'], function () {
       Route::get("card-details", 'BillingController@getCustomer');
       Route::get("charge-details", 'BillingController@getCharges');
       Route::get('shipper-address', "ShipperAccountController@shipperAddress");
+      Route::resource('rating', 'RatingController');
     });
     Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'role'], function () {
       Route::resource('about', 'Pages\AboutController');
@@ -108,7 +108,7 @@ Route::group(['prefix'=>'moving'], function () {
       Route::resource('mover-number', 'Lookups\MovernumberController');
       Route::resource('moving-size', 'Lookups\MovingsizeController');
       Route::resource('few-items', 'Lookups\ItemController');
-      Route::get('search-item','Lookups\ItemController@search');
+      Route::get('search-item', 'Lookups\ItemController@search');
       Route::resource('moving-types', 'Lookups\MovingtypeController');
       Route::resource('office-sizes', 'Lookups\OfficesizeController');
       Route::resource('supply', 'Lookups\SupplyController');
@@ -161,8 +161,6 @@ Route::group(['prefix'=>'moving'], function () {
   Route::get("get-shipper-page", "PageController@carrierPage");
   Route::get("get-carrier-page", "PageController@shipperPage");
 
-  Route::resource('rating', 'Carrier\RatingController');
-  Route::resource('review', 'Carrier\ReviewController');
   Route::get("stripe-key", function () {
     return env("STRIPE_KEY");
   });
@@ -180,9 +178,6 @@ Route::group(['prefix'=>'moving'], function () {
   Route::get("test-event", function () {
     //return auth()->user()->roles[0]->name;
     event(new NewMessage('Hi from from Vuejs'));
-    return ;
+    return;
   });
-
 });
-
-

@@ -65,7 +65,8 @@ class ShipmentController extends Controller
             return response()->json($validator);
         }
         try {
-               $order = $this->storeOrder($request);
+            
+            $order = $this->storeOrder($request);
                 $job = $this->createNewJob($order->id, $request);
 
                 $user  = Carrier::with('user')->find($request->carrier['id'])->user;
@@ -92,6 +93,7 @@ class ShipmentController extends Controller
             $floor_from = $request->floors['pickup'];
             $floor_to = $request->floors['destination'];
         }
+        
         $moving_type = Movingtype::where('code',$request->moving_type['code'])->first()->id;
         $moving_size = $request->moving_type['code'] == 'apartment' ? Movingsize::where('code', $request->moving_size['code'])->first()->id : null;
         $office_size = $request->moving_type['code'] == 'office' ? Officesize::where('code', $request->moving_size['code'])->first()->id : null;

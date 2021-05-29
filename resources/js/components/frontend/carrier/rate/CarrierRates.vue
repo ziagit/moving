@@ -10,23 +10,13 @@
       @md-confirm="confirm"
     /> -->
 
-    <md-card md-theme="orange-card ">
+    <md-card>
+      <md-card-header>
+        <span class="md-title">Rate</span>
+      </md-card-header>
+      <md-divider></md-divider>
       <md-card-content>
-        <md-card class="rate no-shadow-bordered" v-if="rate">
-          <md-button
-            v-if="editTogal"
-            class="md-icon-button md-primary"
-            @click="editTogal = false"
-            ><md-icon>close</md-icon></md-button
-          >
-          <md-button
-            v-else
-            class="md-icon-button md-primary"
-            @click="edit()"
-            :autofocus="true"
-            ><md-icon>edit</md-icon></md-button
-          >
-
+        <div class="rate" v-if="rate">
           <div class="img">
             <img :src="'/images/uploads/mover-rate.svg'" width="400" alt="" />
           </div>
@@ -38,8 +28,11 @@
               >Update</md-button
             >
           </div>
-        </md-card>
+        </div>
       </md-card-content>
+      <md-card-actions>
+        <md-button class="md-primary" @click="edit()" :autofocus="true">Edit</md-button>
+      </md-card-actions>
     </md-card>
   </div>
 </template>
@@ -93,15 +86,11 @@ export default {
 
 <style lang="scss" scoped>
 .md-card {
-  box-shadow: none !important;
-  text-align: center;
-
+  text-align: left;
   .rate {
-    min-height: 300px;
     display: flex;
     justify-content: space-between;
     .img {
-      background: #ffa50024;
       padding: 30px;
       display: flex;
       justify-content: center;

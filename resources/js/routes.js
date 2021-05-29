@@ -19,8 +19,8 @@ import Privacy from "./components/frontend/pages/Privacy";
 import Terms from "./components/frontend/pages/Terms";
 import OurCarriers from "./components/frontend/pages/OurCarriers";
 import OurShippers from "./components/frontend/pages/OurShippers";
-import Rating from "./components/frontend/pages/review/Rating";
-import CarrierReviews from "./components/frontend/pages/review/CarrierReviews";
+import Rating from "./components/frontend/shipper/review/Rating";
+import CarrierReview from "./components/frontend/shipper/review/CarrierReview";
 
 import CarrierProfile from "./components/frontend/carrier/CarrierProfile";
 import CarrierDetails from "./components/frontend/carrier/general-details/CarrierDetails";
@@ -194,7 +194,7 @@ export default new VueRouter({
                 },
                 { name: "carriers", path: "/carriers", component: OurCarriers },
                 { name: "shippers", path: "/shippers", component: OurShippers },
-                { name: "rating", path: "/rating", component: Rating },
+                { name: "review", path: "/review/:id", component: CarrierReview },
                 {
                     name: "order",
                     path: "order",
@@ -267,11 +267,6 @@ export default new VueRouter({
                     path: "completion/:id",
                     component: MovingCompletion
                 },
-                {
-                    name: "reviews",
-                    path: "reviews/:id",
-                    component: CarrierReviews
-                },  
                 {
                     name: "carrier",
                     path: "carrier",
@@ -482,15 +477,20 @@ export default new VueRouter({
                             ]
                         },
                         {
-                            name: "card",
-                            path: "card",
+                            name: "payments",
+                            path: "payments",
                             component: ShipperCard
                         },
                         {
                             name: "expences",
                             path: "expences",
                             component: Expences
-                        }
+                        },
+                        {
+                            name: "reviews",
+                            path: "reviews",
+                            component: CarrierReview
+                        },  
                     ],
                     beforeEnter: webGuard
                 },

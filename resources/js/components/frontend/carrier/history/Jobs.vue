@@ -1,9 +1,10 @@
 <template>
   <div>
-    <md-card md-theme="orange-card">
+    <md-card>
       <md-card-header>
-        <div class="md-title md-primary">Job History</div>
+        <div class="md-title">Job History</div>
       </md-card-header>
+      <md-divider></md-divider>
       <md-card-content>
         <table class="table" v-if="jobs">
           <thead>
@@ -81,13 +82,7 @@ export default {
 
 <style lang="scss" scoped>
 .md-card {
-  box-shadow: none;
-  text-align: center;
-
-  .md-card-content {
-    overflow-x: auto;
-  }
-
+  text-align: left;
   .table {
     width: 100%;
     border-collapse: collapse;
@@ -95,6 +90,7 @@ export default {
     th,
     td {
       border: 1px solid #ddd;
+      text-align: center;
     }
 
     .canceled {

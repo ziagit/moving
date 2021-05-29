@@ -1,24 +1,36 @@
 <template>
   <md-card>
+    <md-card-header>
+      <div class="md-title">Bank Information</div>
+    </md-card-header>
+    <md-divider></md-divider>
     <md-card-content>
       <div v-if="payment">
-        <h1>Bank Information</h1>
-        <div><span class="md-body-2">Currency:</span> {{ payment.currency }}</div>
-        <div>
-          <span class="md-body-2">Transit number:</span> {{ payment.transit_number }}
+        <div class="row">
+          <span>Currency:</span>
+          <span>{{ payment.currency }}</span>
         </div>
-        <div>
-          <span class="md-body-2">Institution number:</span>
-          {{ payment.institution_number }}
+        <div class="row">
+          <span>Transit number:</span>
+          <span>{{ payment.transit_number }}</span>
         </div>
-        <div>
-          <span class="md-body-2"> Account number:</span> {{ payment.account_number }}
+        <div class="row">
+          <span>Institution number:</span>
+          <span>{{ payment.institution_number }}</span>
+        </div>
+        <div class="row">
+          <span>Currency:</span>
+          <span>{{ payment.account_number }}</span>
+        </div>
+        <div class="row">
+          <span>Account number:</span>
+          <span>{{ payment.account_number }}</span>
         </div>
       </div>
     </md-card-content>
     <md-card-actions v-if="payment">
-      <md-button :to="{ path: 'edit/' + 1 }" class="md-primary md-icon-button">
-        <md-icon>edit</md-icon>
+      <md-button :to="{ path: 'edit/' + 1 }" class="md-primary">
+        Edit
         <md-tooltip>Edit profile</md-tooltip>
       </md-button>
     </md-card-actions>
@@ -29,8 +41,8 @@
       md-label="Not available"
       md-description="Click + icon to add"
     >
-      <md-button to="add" class="md-icon-button md-raised">
-        <md-icon>add</md-icon>
+      <md-button to="add" class="md-primary">
+        Add
         <md-tooltip>Add </md-tooltip>
       </md-button>
     </md-empty-state>
@@ -67,27 +79,18 @@ export default {
 
 <style lang="scss" scoped>
 .md-card {
-  box-shadow: none;
-  text-align: center;
-
-  .md-card-actions {
-    display: flex;
-    justify-content: space-around;
+  text-align: left;
+  .md-card-content {
+    .md-card-actions {
+      display: flex;
+      justify-content: flex-start;
+    }
+    .row {
+      display: flex;
+      > :first-child {
+        min-width: 150px;
+      }
+    }
   }
-}
-
-.payment-logo {
-  text-align: center;
-  .md-avatar {
-    box-shadow: rgba(0, 0, 0, 0.12) 0px 4px 16px;
-    min-width: 84px;
-    min-height: 84px;
-    color: #ffa500;
-  }
-}
-
-.md-body-1 {
-  width: 50%;
-  margin: auto;
 }
 </style>

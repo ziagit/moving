@@ -49,7 +49,7 @@ class BillingController extends Controller
     public function getCharges()
     {
         $shipper = User::with('shipper')->find(Auth::id())->shipper;
-        $orders = Order::where('shipper_id', $shipper->id)->orderBy('id', 'DESC')->get();
+        $orders = Order::where('shipper_id', $shipper->id)->where('charge_id', '!=', null)->orderBy('id', 'DESC')->get();
         return $orders;
 
         $res = array();

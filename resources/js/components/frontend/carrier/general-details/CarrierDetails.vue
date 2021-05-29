@@ -1,67 +1,73 @@
 <template>
   <md-card>
+    <md-card-header>
+      <span class="md-title">Profile </span>
+    </md-card-header>
+    <md-divider></md-divider>
     <md-card-content v-if="carrier">
-      <div v-if="carrier.company !== 'null'" class="carrier-logo">
-        <md-avatar class="md-large">
-          <md-icon v-if="carrier.logo === 'undefined'">sentiment_satisfied_alt</md-icon>
-          <img v-else :src="'/images/uploads/' + carrier.logo" alt="Logo" />
-        </md-avatar>
-      </div>
-      <div class="break"></div>
-      <div class="break"></div>
       <div>
         <div>
-          <h1>{{ carrier.company }}</h1>
-          <span class="md-subheading">
-            {{ carrier.first_name }}
-            <span class="line">|</span>
-            {{ carrier.last_name }}
-            <span class="line">|</span>
-            {{ carrier.address.formatted_address }}
-          </span>
-          <br />
-          <span class="md-subheading">
-            {{ carrier.address.country }}
-            <span class="line">|</span>
-            {{ carrier.address.state }}
-            <span class="line">|</span>
-            {{ carrier.address.city }}
-            <span class="line">|</span>
-            {{ carrier.address.zip }}
-          </span>
-          <br />
-          <span class="md-subheading">
-            {{ carrier.contact.email }}
-            <span v-if="carrier.company !== 'null'" class="line">|</span>
-            <span v-if="carrier.company !== 'null'">{{ carrier.website }}</span>
-          </span>
-          <br />
-        </div>
-        <div v-if="carrier.company !== 'null'" class="md-body-1">
-          <br />
-          <span class="subheading">About company</span>
-          <p v-show="carrier.detail">{{ carrier.detail }}</p>
+          <div class="row">
+            <span>First name:</span>
+            <span>{{ carrier.first_name }}</span>
+          </div>
+          <div class="row">
+            <span>Last name:</span>
+            <span>{{ carrier.last_name }}</span>
+          </div>
+          <div class="row">
+            <span>Email:</span>
+            <span>{{ carrier.contact.email }}</span>
+          </div>
+          <div class="row">
+            <span>Phone:</span>
+            <span>{{ carrier.id }}</span>
+          </div>
+          <div class="row">
+            <span>Website:</span>
+            <span>{{ carrier.website }}</span>
+          </div>
+          <div class="row">
+            <span>Address:</span>
+            <span>{{ carrier.address.formatted_address }}</span>
+          </div>
+          <div class="row">
+            <span>Number of employees:</span>
+            <span>{{ carrier.address.employees }}</span>
+          </div>
+          <div class="row">
+            <span>Number of vehicles:</span>
+            <span>{{ carrier.address.vehicles }}</span>
+          </div>
+          <div class="row">
+            <span>Company name:</span>
+            <span>{{ carrier.company }}</span>
+          </div>
+          <div class="row">
+            <span>Established year:</span>
+            <span>{{ carrier.year_established }}</span>
+          </div>
+          <div class="row">
+            <span>More details:</span>
+            <span>{{ carrier.detail }}</span>
+          </div>
+          <div class="row">
+            <span>Insurance paper:</span>
+            <span>Not attached</span>
+          </div>
+          <div class="row">
+            <span>Business license:</span>
+            <span>Not attached</span>
+          </div>
         </div>
       </div>
     </md-card-content>
     <md-card-actions v-if="carrier">
-      <md-button :to="{ path: 'edit/' + 1 }" class="md-primary md-icon-button">
-        <md-icon>edit</md-icon>
+      <md-button :to="{ path: 'edit/' + 1 }" class="md-primary">
+        Edit
         <md-tooltip>Edit profile</md-tooltip>
       </md-button>
     </md-card-actions>
-    <md-empty-state
-      v-else
-      class="md-primary"
-      md-icon="sentiment_satisfied_alt"
-      md-label="Not available"
-      md-description="Click + icon to add"
-    >
-      <md-button to="add" class="md-icon-button md-raised">
-        <md-icon>add</md-icon>
-        <md-tooltip>Add new data</md-tooltip>
-      </md-button>
-    </md-empty-state>
   </md-card>
 </template>
 
@@ -105,27 +111,19 @@ export default {
 
 <style lang="scss" scoped>
 .md-card {
-  box-shadow: none;
-  text-align: center;
-
+  text-align: left;
+  .md-card-content {
+    padding: 20px;
+    .row {
+      display: flex;
+      > :first-child {
+        min-width: 200px;
+      }
+    }
+  }
   .md-card-actions {
     display: flex;
-    justify-content: space-around;
+    justify-content: flex-start;
   }
-}
-
-.carrier-logo {
-  text-align: center;
-  .md-avatar {
-    box-shadow: rgba(0, 0, 0, 0.12) 0px 4px 16px;
-    min-width: 84px;
-    min-height: 84px;
-    color: #ffa500;
-  }
-}
-
-.md-body-1 {
-  width: 50%;
-  margin: auto;
 }
 </style>

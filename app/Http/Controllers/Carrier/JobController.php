@@ -17,9 +17,11 @@ use App\Movingsize;
 use App\Officesize;
 use App\Order;
 use App\Rate;
+use App\Shipper;
 use App\Supply;
 use App\Vehicle;
 use Carbon\Carbon;
+use Cartalyst\Stripe\Laravel\Facades\Stripe;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -102,34 +104,36 @@ class JobController extends Controller
         $order->update();
         try {
             if ($request->status == 'Completed') {
-              return  $this->calculate($request, $id);
+                $this->calculate($request, $id);
                 $this->readNotification($request->notificationId);
+                $this->processPayment($request);
             }
+            $this->sms($request);
             $user = User::where('email', $request->email)->first();
             if ($user) {
-                return $this->notifyUser($user, $id);
+                $job = Job::with('orderDetail')->find($id);
+                return $user->notify(new UserJobUpdated($job));
             }
-            return $this->notifyShipper($request->email, $id);
         } catch (Exception $e) {
             return response()->json($e->getMessage());
         }
     }
-
-    public function notifyUser($user, $id)
+    public function sms($request)
     {
-        $job = Job::with('orderDetail')->find($id);
-
-        $user->notify(new UserJobUpdated($job));
-        return $job;
+        try {
+            $nexmo = app('Nexmo\Client');
+            $nexmo->message()->send([
+                'to'   => $request->phone,
+                'from' => '+93793778030',
+                'text' => 'Dear Customer this order is being' . $request->status
+            ]);
+            return true;
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
     }
 
-    public function notifyShipper($email, $id)
-    {
-        $job = Job::with('orderDetail')->find($id);
-        Notification::route('mail', $email)
-            ->notify(new JobUpdated($job));
-        return $job;
-    }
+
     public function readNotification($id)
     {
         $notification = auth()->user()->unreadNotifications->find($id);
@@ -202,7 +206,7 @@ class JobController extends Controller
         $earning->moving_cost = round($movingCost, 2);
         $earning->supplies_cost = round($suppliesCost, 2);
         $earning->service_fee = round($serviceFee, 2);
-        $earning->disposal_fee = round($disposalFee,2);
+        $earning->disposal_fee = round($disposalFee, 2);
         $earning->tingsapp_earning = round($tingsAppEarning, 2);
         $earning->received_gst = round($receivedGST, 2);
         $earning->paid_gst = round($paidGST, 2);
@@ -283,5 +287,26 @@ class JobController extends Controller
             }
         }
         return $total;
+    }
+    public function processPayment($request){
+        sleep(1);
+        $order = Order::find($request->order_id);
+        $shipper = Shipper::find($order->shipper_id);
+
+        $cost = $order->cost;
+        $tips = $order->tips;
+        $cost = $cost + $tips;
+
+        $charge = Stripe::charges()->create([
+            'amount' => $cost,
+            'currency' => 'USD',
+            'description' => 'Shipment costs',
+            'customer' => $shipper->stripe_customer_id
+        ]);
+        $order->charge_id = $charge['id'];
+        $order->update();
+        return response()->json('Payment proceed successfully!',200);
+
+
     }
 }

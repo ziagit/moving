@@ -36,7 +36,6 @@ export default {
 .carrier {
   .md-card {
     box-shadow: none;
-    max-width: 1000px;
     margin: 30px auto;
     min-height: calc(100vh - 117px);
     .md-card-content {
@@ -46,6 +45,18 @@ export default {
   }
 }
 
-@media only screen and (min-width: 650px) {
+@media only screen and (min-width: 600px) {
+  .carrier {
+    .tablet-menu {
+      display: flex !important;
+      text-align: left !important;
+    }
+
+    .md-card {
+      margin: auto;
+      margin-top: 20px;
+      width: 90%;
+    }
+  }
 }
 </style>

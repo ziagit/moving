@@ -83,6 +83,8 @@ export default {
     form: {
       formatted: null,
       phone: null,
+      name: "Customer",
+      type: "customer",
     },
 
     invalidCode: null,
@@ -124,7 +126,7 @@ export default {
         } else {
           this.isSubmitting = true;
           axios
-            .post("auth/verify/", this.form)
+            .post("verify/", this.form)
             .then((res) => {
               this.isSubmitting = false;
               this.me = res.data;

@@ -14,7 +14,14 @@
       <md-card-header class="head">
         <div class="status">
           <span>Status: {{ order.status }}</span>
-          <div>
+          <div class="outer-content">
+            <md-button
+              v-if="order.status == 'Completed'"
+              class="custom-button review"
+              @click="review(order.id)"
+              >Review</md-button
+            >
+
             <div
               v-if="
                 order.movingtype.code == 'appartment' || order.movingtype.code == 'office'
@@ -42,7 +49,7 @@
                 >
               </div>
             </div>
-            <div>
+            <div v-else>
               <Spinner v-if="isSubmitting" />
               <div v-else>
                 <md-button
@@ -188,7 +195,7 @@
                   <span>Tax: </span>
                   <span>${{ order.tax }}</span>
                 </div>
-                <div class="row">
+                <div class="row" v-if="order.tips">
                   <span>Tips: </span>
                   <span>${{ order.tips }}</span>
                 </div>
@@ -257,6 +264,7 @@ export default {
       axios
         .get("shipper/orders/" + this.$route.params.id)
         .then((res) => {
+          console.log("details: ", res.data);
           this.order = res.data;
         })
         .catch((err) => {
@@ -299,6 +307,9 @@ export default {
     },
     refresh() {
       this.rateTogal = false;
+    },
+    review(id) {
+      this.$router.push("/review/" + id);
     },
   },
 };
@@ -343,6 +354,12 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    .outer-content {
+      display: flex;
+      .review {
+        margin-right: 10px;
+      }
+    }
   }
 
   .md-card {

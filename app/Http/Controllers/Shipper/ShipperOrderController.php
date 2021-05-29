@@ -90,26 +90,29 @@ class ShipperOrderController extends Controller
         $order->status = $request->status;
         $order->update();
         $this->sms($request);
-        $user = User::where('email', $request->email)->first();
-        if ($user) {
-            return $user->notify(new UserJobUpdated($request));
+        try {
+            $user = User::where('email', $request->email)->first();
+            if ($user) {
+                return $user->notify(new UserJobUpdated($request));
+            }
+            return response()->json(['message' => 'Canceled successfully'], 200);
+        } catch (Exception $e) {
+            return $e->getMessage();
         }
-        return response()->json(['message' => 'Canceled successfully'], 200);
     }
     public function sms($request)
     {
-        try{
+        try {
             $nexmo = app('Nexmo\Client');
             $nexmo->message()->send([
                 'to'   => $request->phone,
                 'from' => '+93793778030',
-                'text' => 'Dear partner this order is '.$request->status
+                'text' => 'Dear partner this order is ' . $request->status
             ]);
             return true;
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return $e->getMessage();
         }
-  
     }
     /**
      * Remove the specified resource from storage.

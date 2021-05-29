@@ -67,7 +67,9 @@ export default {
       statusCode: null,
     },
     form: {
+      name: "Customer",
       phone: null,
+      type: "customer",
     },
     dataLoading: false,
   }),

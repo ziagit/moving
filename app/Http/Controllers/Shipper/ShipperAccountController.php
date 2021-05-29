@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\User;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -105,7 +106,7 @@ class ShipperAccountController extends Controller
 
     public function shipperAddress()
     {
-        $user = User::with('shipperWithAddress')->where('id', JWTAuth::id())->first();
+        $user = User::with('shipperWithAddress')->where('id', Auth::id())->first();
         return response()->json($user);
     }
 }

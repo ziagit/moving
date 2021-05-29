@@ -8,8 +8,7 @@
     </md-dialog>
     <md-card>
       <md-card-header>
-        <div style="width: 85px"></div>
-        <div class="md-title">Calendar</div>
+        <span class="md-title">Calendar</span>
         <div>
           <md-button class="md-icon-button md-primary">
             <img :src="'/images/uploads/google-calendar.svg'" width="25" alt="" />
@@ -21,6 +20,7 @@
           </md-button>
         </div>
       </md-card-header>
+      <md-divider></md-divider>
       <md-card-content>
         <Datepicker
           :inline="true"
@@ -93,7 +93,6 @@ export default {
 </script>
 <style scoped lang="scss">
 .md-card {
-  box-shadow: none;
   text-align: center;
   .md-card-header {
     display: flex;
