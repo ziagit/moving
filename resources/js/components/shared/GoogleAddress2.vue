@@ -228,9 +228,7 @@ export default {
       }
       return false;
     },
-    refresh() {
-      //
-    },
+
     getQuote() {
       if (this.form.from.formatted_address == this.form.to.formatted_address) {
         this.popupTogal = true;
@@ -294,7 +292,6 @@ export default {
         .get("state-cities")
         .then((res) => {
           this.supportedData = res.data;
-          console.log("sup", this.supportedData);
         })
         .catch((err) => console.log(err));
     },

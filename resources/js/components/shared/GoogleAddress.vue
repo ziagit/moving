@@ -1,5 +1,10 @@
 <template>
   <div class="container">
+    <md-dialog-alert
+      :md-active.sync="popupTogal"
+      md-title="Invalid Address"
+      :md-content="popupData"
+    />
     <input
       v-model="list.formatted_address"
       required
@@ -10,11 +15,14 @@
   </div>
 </template>
 <script>
+import validator from "../frontend/services/validator";
 export default {
   props: ["initialData", "label"],
   data: () => ({
-    supportedArea: "",
+    supportedData: "",
     supportTogal: false,
+    popupTogal: false,
+    popupData: null,
     list: {
       country: "",
       state: "",
@@ -33,6 +41,7 @@ export default {
     },
   },
   created() {
+    this.cities();
     if (this.initialData != null) {
       this.list.formatted_address = this.initialData;
     }
@@ -60,10 +69,10 @@ export default {
       };
       data.address_components.forEach((component) => {
         if (component.types.indexOf("administrative_area_level_1") > -1) {
-          if (component.short_name != "BC") {
-            $vm.invalidAddress(data);
-          } else {
+          if ($vm.checkState(component.short_name)) {
             $vm.validAddress(data, latlng);
+          } else {
+            $vm.invalidAddress(data);
           }
         }
       });
@@ -99,32 +108,35 @@ export default {
       this.$emit("google-valid-address", $vm.list, latlng);
     },
     invalidAddress(data) {
-      let components = data.address_components;
-      let $vm = this;
-      $vm.list.formatted_address = data.formatted_address;
-      components.forEach(function (component) {
-        let types = component.types;
-        if (types.indexOf("street_number") > -1) {
-          $vm.list.street_number = component.long_name;
+      console.log("invalid data: ", data);
+      this.popupTogal = true;
+      this.popupData = `The destination is out of our current service area. We are working on expanding our <a href="https://tingsapp.com/cities">coverage</a>`;
+    },
+    checkState(selected) {
+      for (let i = 0; i < this.supportedData.length; i++) {
+        if (this.supportedData[i].name == selected) {
+          return true;
         }
-        if (types.indexOf("route") > -1) {
-          $vm.list.street = component.long_name;
+      }
+      return false;
+    },
+    checkCity(selected) {
+      for (let i = 0; i < this.supportedData.length; i++) {
+        for (let j = i; j < this.supportedData[i].cities.length; j++) {
+          if (this.supportedData[i].cities[j].name == selected) {
+            return true;
+          }
         }
-        if (types.indexOf("locality") > -1) {
-          $vm.list.city = component.long_name;
-        }
-        if (types.indexOf("administrative_area_level_1") > -1) {
-          $vm.list.state = component.long_name;
-        }
-        if (types.indexOf("postal_code") > -1) {
-          $vm.list.zip = component.long_name;
-        }
-        if (types.indexOf("country") > -1) {
-          $vm.list.country = component.long_name;
-        }
-      });
-      $vm.list.isValid = false;
-      this.$emit("google-invalid-address", $vm.list);
+      }
+      return false;
+    },
+    cities() {
+      axios
+        .get("state-cities")
+        .then((res) => {
+          this.supportedData = res.data;
+        })
+        .catch((err) => console.log(err));
     },
   },
 };

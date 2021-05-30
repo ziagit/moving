@@ -6,18 +6,18 @@
       </md-card-header>
       <md-divider></md-divider>
       <md-card-content>
-        <div>
+        <form @submit.prevent="update">
           <Spinner v-if="isSubmitting" />
           <md-field v-else>
             <label>Select file</label>
-            <md-file v-model="avatar" @change="onChange" />
+            <md-file @change="onChange" />
           </md-field>
-        </div>
+        </form>
       </md-card-content>
       <md-card-actions>
-        <md-button @click="save()" class="md-primary">
-          Save
-          <md-tooltip>Save avatar</md-tooltip>
+        <md-button type="submit" class="md-primary">
+          Update
+          <md-tooltip>Update avatar</md-tooltip>
         </md-button>
       </md-card-actions>
     </md-card>
@@ -27,7 +27,7 @@
 import Spinner from "../../../shared/Spinner";
 import axios from "axios";
 export default {
-  name: "ShipperAccountDetails",
+  name: "EditShipperAccount",
   components: {
     Spinner,
   },
@@ -39,7 +39,7 @@ export default {
     onChange(e) {
       this.avatar = e.target.files[0];
     },
-    save() {
+    update() {
       this.isSubmitting = true;
       let fd = new FormData();
       fd.append("avatar", this.avatar);

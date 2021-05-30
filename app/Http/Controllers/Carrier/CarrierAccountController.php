@@ -72,16 +72,24 @@ class CarrierAccountController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validate($request,[
-            'name' => 'required',
-            'email' => 'required|email',
+        $this->validate($request, [
+            'avatar' => 'required',
         ]);
         $user = User::find($id);
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->password = Hash::make($request->password);
+        if ($request->hasFile('avatar')) {
+            $old_image_path = public_path('images/pub/' . $user->avatar);
+            if (file_exists($old_image_path)) {
+                //@unlink($old_image_path);
+            }
+            $file = $request->file('avatar');
+            $avatar_name = time() . '.' . $file->getClientOriginalName();
+            $file->move(public_path('images/pub'), $avatar_name);
+        } else {
+            $avatar_name = $user->avatar;
+        }
+        $user->avatar = $avatar_name;
         $user->update();
-        return response()->json(['message'=>'Updated successfully!'],200);
+        return response()->json(['message' => 'Updated successfully!'], 200);
     }
 
     /**

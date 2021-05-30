@@ -62,22 +62,12 @@ class CarrierDetailsController extends Controller
         ]);
         $contactId = $this->storeContact($request);
         $addressId = $this->storeAddress($request);
-        try {
-            if ($request->hasFile('logo')) {
-                $file = $request->file('logo');
-                $logo_name = time() . '.' . $file->getClientOriginalName();
-                $file->move(public_path('images/uploads'), $logo_name);
-            } else {
-                $logo_name = "undefined";
-            }
-        } catch (Exception $e) {
-            die('File did not upload: ' . $e->getMessage());
-        }
+    
         try {
             if ($request->hasFile('insurance_papers')) {
                 $file = $request->file('insurance_papers');
                 $insurance_papers_name = time() . '.' . $file->getClientOriginalName();
-                $file->move(public_path('images/uploads'), $insurance_papers_name);
+                $file->move(public_path('images/pub'), $insurance_papers_name);
             } else {
                 $insurance_papers_name = "undefined";
             }
@@ -88,7 +78,7 @@ class CarrierDetailsController extends Controller
             if ($request->hasFile('business_license')) {
                 $file = $request->file('business_license');
                 $business_license_name = time() . '.' . $file->getClientOriginalName();
-                $file->move(public_path('images/uploads'), $business_license_name);
+                $file->move(public_path('images/pub'), $business_license_name);
             } else {
                 $business_license_name = "undefined";
             }
@@ -109,7 +99,6 @@ class CarrierDetailsController extends Controller
         $carrier->website = $request->website;
         $carrier->company = $request->company;
         $carrier->detail = $request->detail;
-        $carrier->logo = $logo_name;
         $carrier->address_id = $addressId;
         $carrier->contact_id = $contactId;
         $carrier->user_id = JWTAuth::user()->id;
@@ -191,39 +180,27 @@ class CarrierDetailsController extends Controller
         $addressId = $this->updateAddress($request);
         $carrier = Carrier::find($id);
 
-        if ($request->hasFile('logo')) {
-
-            $old_image_path = public_path('images/uploads/' . $carrier->logo);
-            if (file_exists($old_image_path)) {
-                @unlink($old_image_path);
-            }
-            $file = $request->file('logo');
-            $logo_name = time() . '.' . $file->getClientOriginalName();
-            $file->move(public_path('images/uploads'), $logo_name);
-        } else {
-            $logo_name = $carrier->logo;
-        }
         if ($request->hasFile('insurance_papers')) {
 
-            $old_image_path = public_path('images/uploads/' . $carrier->insurance_papers);
+            $old_image_path = public_path('images/pub/' . $carrier->insurance_papers);
             if (file_exists($old_image_path)) {
                 @unlink($old_image_path);
             }
             $file = $request->file('insurance_papers');
             $insurance_papers_name = time() . '.' . $file->getClientOriginalName();
-            $file->move(public_path('images/uploads'), $insurance_papers_name);
+            $file->move(public_path('images/pub'), $insurance_papers_name);
         } else {
             $logo_name = $carrier->insurance_papers;
         }
         if ($request->hasFile('business_license')) {
 
-            $old_image_path = public_path('images/uploads/' . $carrier->business_license);
+            $old_image_path = public_path('images/pub/' . $carrier->business_license);
             if (file_exists($old_image_path)) {
                 @unlink($old_image_path);
             }
             $file = $request->file('business_license');
             $business_license_name = time() . '.' . $file->getClientOriginalName();
-            $file->move(public_path('images/uploads'), $business_license_name);
+            $file->move(public_path('images/pub'), $business_license_name);
         } else {
             $logo_name = $carrier->business_license;
         }
@@ -243,7 +220,6 @@ class CarrierDetailsController extends Controller
         $carrier->contact_id = $contactId;
         $carrier->user_id = JWTAuth::user()->id;
         $carrier->update();
-
         return response()->json(["message" => "Updated successfully!"], 200);
     }
 

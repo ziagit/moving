@@ -31,7 +31,11 @@
       </div>
       <div class="right">
         <md-card>
-          <GoogleMap ref="drawRoute" :newSize="initSize" />
+          <GoogleMap
+            ref="drawRoute"
+            :newSize="initSize"
+            v-on:refresh-price="refreshPrice"
+          />
           <ul class="selected" id="ul_o" v-if="selected">
             <li v-if="selected.from">
               <div class="row">
@@ -214,9 +218,11 @@
                 <md-icon>edit</md-icon>
               </md-button>
             </li>
-            <md-divider v-if="selected.carrier"></md-divider>
-            <li class="footer" v-if="selected.carrier">
-              <div class="md-title">Total Price: ${{ selected.carrier.price }}</div>
+            <md-divider v-if="togal()"></md-divider>
+            <li v-if="togal()">
+              <div class="footer">
+                <span class="md-title">Price: ${{ selected.carrier.price }}</span>
+              </div>
             </li>
           </ul>
         </md-card>
@@ -232,7 +238,7 @@ import Header from "../../shared/Header";
 import Footer from "../../shared/Footer";
 import GoogleMap from "../../shared/GoogleMap";
 import localData from "../services/localData";
-import functions from "../services/functions";
+import builder from "../services/builder";
 import GoogleAddress from "../../shared/GoogleAddress.vue";
 export default {
   name: "Order",
@@ -270,20 +276,13 @@ export default {
       localData.save("from", address);
       await this.init();
       this.originTogal = false;
-      if (this.$route.path == "/order/movers") {
-        this.$refs.refreshPrice.rebuild();
-      }
     },
     async destinationChanged(address, latlng) {
       this.$refs.drawRoute.setDestination(address, latlng);
       localData.save("to", address);
       await this.init();
       this.destinationTogal = false;
-      if (this.$route.path == "/order/movers") {
-        this.$refs.refreshPrice.rebuild();
-      }
     },
-
     init() {
       this.selected["from"] = localData.read("from");
       this.selected["to"] = localData.read("to");
@@ -296,9 +295,8 @@ export default {
       this.selected["date"] = localData.read("moving-date");
       this.selected["floors"] = localData.read("floors");
       this.selected["items"] = localData.read("moving-items");
-      this.selected["supplies"] = functions.buildSupplies();
+      this.selected["supplies"] = builder.buildSupplies();
       this.selected["carrier"] = localData.read("carrier");
-      console.log("car in local: ", this.selected.carrier);
     },
     progressTogal() {
       if (
@@ -330,6 +328,18 @@ export default {
     },
     edit(path) {
       this.$router.push(path);
+    },
+    togal() {
+      if (this.selected.carrier) {
+        if (this.$route.path != "/order/movers") {
+          return true;
+        }
+      }
+    },
+    refreshPrice() {
+      if (this.$route.path == "/order/movers") {
+        this.$refs.refreshPrice.rebuild();
+      }
     },
   },
 };

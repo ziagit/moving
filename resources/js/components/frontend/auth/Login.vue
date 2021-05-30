@@ -21,6 +21,7 @@
               v-on:update="update"
               :border-radius="1"
             />
+            <!--     <input type="text" v-model="form.phone" /> -->
             <div class="break"></div>
             <div class="break"></div>
             <div class="action">

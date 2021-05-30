@@ -171,7 +171,7 @@
 
 <script>
 import axios from "axios";
-import functions from "../services/functions";
+import builder from "../services/builder";
 import Spinner from "../../shared/Spinner";
 import Snackbar from "../../shared/Snackbar";
 import TermsAndConditions from "../../shared/TermsAndConditions";
@@ -206,16 +206,15 @@ export default {
         });
     },
     async init() {
-      this.shipment = await functions.buildOrder();
-      this.shipment.moving_date.date = await functions.buildDate();
-      this.shipment.moving_date.time = await functions.buildTime();
+      this.shipment = await builder.buildOrder();
+      this.shipment.moving_date.date = await builder.buildDate();
+      this.shipment.moving_date.time = await builder.buildTime();
       console.log("shipment: ", this.shipment);
       this.confirm();
     },
   },
   created() {
     this.init();
-    /*this.checkPayment(); */
   },
   components: {
     Spinner,

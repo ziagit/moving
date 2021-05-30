@@ -31,7 +31,9 @@
         </div>
       </md-card-content>
       <md-card-actions>
-        <md-button class="md-primary" @click="edit()" :autofocus="true">Edit</md-button>
+        <md-button v-if="!editTogal" class="md-primary" @click="edit()" :autofocus="true"
+          >Edit</md-button
+        >
       </md-card-actions>
     </md-card>
   </div>

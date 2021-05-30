@@ -61,7 +61,6 @@ store.dispatch("auth/attempt", localStorage.getItem("token")).then(() => {
             Admin
         },
         mounted() {
-            console.log("mounted.");
             /*   window.onbeforeunload = function (e) {
                 e = e || window.event;
             

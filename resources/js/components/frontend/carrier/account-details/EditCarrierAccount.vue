@@ -1,123 +1,78 @@
 <template>
-  <div class="edit-account">
-    <md-card class="no-shadow-bordered">
+  <div class="account">
+    <md-card>
       <md-card-header>
-        <div class="md-title">Edit Account</div>
+        <div class="md-title">Change Logo</div>
         <md-button @click="$router.back()" class="md-icon-button close-btn">
           <md-icon>close</md-icon>
           <md-tooltip>Cancel</md-tooltip>
         </md-button>
       </md-card-header>
+      <md-divider></md-divider>
       <md-card-content>
-        <div class="edit-form">
-          <form @submit.prevent="update">
-            <md-field>
-              <label>Name</label>
-              <md-input v-model="form.name" required></md-input>
-            </md-field>
-            <md-field>
-              <label>Email</label>
-              <md-input v-model="form.email" required></md-input>
-            </md-field>
-            <div>
-              <md-switch v-model="passwordTogal">Change my password</md-switch>
-            </div>
-            <div v-if="passwordTogal">
-              <md-field>
-                <label>New password</label>
-                <md-input
-                  v-model="form.password"
-                  :required="passwordTogal"
-                  type="password"
-                ></md-input>
-              </md-field>
-              <md-field>
-                <label>Confirm password</label>
-                <md-input
-                  v-model="form.confirmPassword"
-                  :required="passwordTogal"
-                  type="password"
-                ></md-input>
-              </md-field>
-            </div>
-
-            <md-button type="submit">Done</md-button>
-          </form>
-        </div>
+        <form @submit.prevent="update">
+          <Spinner v-if="isSubmitting" />
+          <md-field v-else>
+            <label>Select file</label>
+            <md-file @change="onChange" />
+          </md-field>
+          <md-button type="submit" class="md-primary">Update</md-button>
+        </form>
       </md-card-content>
     </md-card>
-    <md-snackbar
-      class="required-feild-error"
-      :md-position="snackbar.position"
-      :md-duration="snackbar.isInfinity ? Infinity : snackbar.duration"
-      :md-active.sync="snackbar.show"
-      md-persistent
-    >
-      <span>{{ snackbar.message }}</span>
-      <span style="color: red">Status: {{ snackbar.statusCode }}</span>
-    </md-snackbar>
   </div>
 </template>
 <script>
-import axios from "axios";
-import { mapGetters } from "vuex";
+import Spinner from "../../../shared/Spinner";
 export default {
-  name: "ShipperGeneralInfo",
+  name: "EditCarrierAccount",
+  components: {
+    Spinner,
+  },
   data: () => ({
-    form: {
-      name: null,
-      email: null,
-      password: null,
-      confirmPassword: null,
-    },
-    passwordTogal: false,
-    snackbar: {
-      show: false,
-      position: "center",
-      duration: 5000,
-      isInfinity: false,
-      message: null,
-      statusCode: null,
-    },
+    isSubmitting: false,
+    avatar: "",
   }),
-  computed: {
-    ...mapGetters({
-      authenticated: "auth/authenticated",
-      user: "auth/user",
-    }),
-  },
   methods: {
-    update() {
-      axios
-        .put("carrier/account/" + this.user.id, this.form)
-        .then((res) => {
-          this.$router.push("/carrier/account");
-          console.log("response: ", res.data);
-        })
-        .catch((error) => {
-          this.snackbar.show = true;
-          this.snackbar.message = error.response.data.errors;
-          this.snackbar.statusCode = error.response.status;
-        });
+    onChange(e) {
+      this.avatar = e.target.files[0];
+      console.log(this.avatar);
     },
-  },
-  created() {
-    this.form.name = this.user.name;
-    this.form.email = this.user.email;
+    update() {
+      this.isSubmitting = true;
+      console.log("ava", this.avatar);
+      let fd = new FormData();
+      fd.append("avatar", this.avatar);
+      fd.append("_method", "put");
+      axios
+        .post("carrier/account/" + this.$route.params.id, fd)
+        .then((res) => {
+          console.log("res: ", res.data);
+          this.account = res.data;
+          this.$router.back();
+        })
+        .catch((err) => console.log(err));
+    },
   },
 };
 </script>
 <style lang="scss" scoped>
-.md-card {
-  text-align: center;
-  .edit-form {
-    max-width: 600px;
-    margin: auto;
+.account {
+  .md-card {
+    text-align: left;
+    .md-card-content {
+      padding: 20px;
+    }
+    .md-card-actions {
+      display: flex;
+      justify-content: flex-start;
+    }
   }
-  .close-btn {
-    position: absolute;
-    top: 0;
-    right: 0;
-  }
+}
+
+.close-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 </style>

@@ -78,13 +78,13 @@ class ShipperAccountController extends Controller
         ]);
         $user = User::find($id);
         if ($request->hasFile('avatar')) {
-            $old_image_path = public_path('images/uploads/' . $user->avatar);
+            $old_image_path = public_path('images/pub/' . $user->avatar);
             if (file_exists($old_image_path)) {
-                @unlink($old_image_path);
+               // @unlink($old_image_path);
             }
             $file = $request->file('avatar');
             $avatar_name = time() . '.' . $file->getClientOriginalName();
-            $file->move(public_path('images/uploads'), $avatar_name);
+            $file->move(public_path('images/pub'), $avatar_name);
         } else {
             $avatar_name = $user->avatar;
         }

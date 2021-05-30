@@ -62,7 +62,6 @@ export default {
       this.destination = to != null ? to.formatted_address : null;
       this.origin = from.formatted_address;
       await this.calculateAndDisplayRoute();
-      console.log("yyyyyyy", localData.read("distance"), localData.read("duration"));
     },
     setDestination: function (to, latlng) {
       this.destinationLatLng = latlng;
@@ -91,11 +90,12 @@ export default {
                   (route.legs[i].distance.value / 1000).toFixed(1)
                 );
                 localData.save("duration", (route.legs[i].duration.value / 60).toFixed());
-
+                this.$emit("refresh-price");
                 console.log(
-                  "xxxxxxxxx",
+                  "distance & duration:",
                   localData.read("distance"),
-                  localData.read("duration")
+                  "km -",
+                  localData.read("duration") + "min"
                 );
               }
             } else {

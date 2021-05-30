@@ -2,18 +2,18 @@
   <div class="shipper-account">
     <md-card v-if="account">
       <md-card-header>
-        <span class="md-title">Avatar</span>
+        <span class="md-title">Logo</span>
       </md-card-header>
       <md-divider></md-divider>
       <md-card-content>
         <div>
-          <img :src="'/images/uploads/avatar.svg'" width="80" alt="" />
+          <img :src="'/images/pub/' + account.avatar" width="80" alt="" />
         </div>
       </md-card-content>
       <md-card-actions>
         <md-button :to="{ path: 'edit/' + account.id }" class="md-primary">
           Change
-          <md-tooltip>Change avatar</md-tooltip>
+          <md-tooltip>Change logo</md-tooltip>
         </md-button>
       </md-card-actions>
     </md-card>
@@ -22,7 +22,7 @@
 <script>
 import axios from "axios";
 export default {
-  name: "ShipperAccountDetails",
+  name: "ShipperAccount",
   data: () => ({
     togal: false,
     account: null,

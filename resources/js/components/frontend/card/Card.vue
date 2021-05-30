@@ -93,7 +93,7 @@ import Snackbar from "../../shared/Snackbar";
 import Spinner from "../../shared/Spinner";
 import { mapGetters } from "vuex";
 import localData from "../services/localData";
-import functions from "../services/functions";
+import validator from "../services/validator";
 var stripe = Stripe(process.env.MIX_STRIPE_KEY);
 var style = {
   base: {
@@ -224,7 +224,7 @@ export default {
         this.form.state == null ||
         this.form.city == null ||
         this.form.postalcode == null ||
-        !functions.emailValidator(this.form.email)
+        !validator.emailValidator(this.form.email)
       ) {
         this.snackbar.message = "Invalide provided information!";
         this.snackbar.statusCode = "400";
@@ -254,10 +254,8 @@ export default {
         .post("shipper/create-customer", this.form)
         .then((res) => {
           if (this.$route.path == "/shipper/card") {
-            console.log("res xx: ", res.data);
             this.$emit("close-dialog", res.data);
           } else {
-            console.log("Billing: ", res.data);
             localData.save("shipper", res.data);
             this.$router.push("/confirmation");
           }
@@ -270,25 +268,6 @@ export default {
           this.togalMassage = err;
         });
     },
-    /*     chargeCustomer() {
-      this.cardAdded = true;
-      let carrier = localData.read("carrier");
-      axios
-        .post("charge-customer", {
-          price: carrier.price,
-        })
-        .then((res) => {
-          var bl = {};
-          bl["id"] = res.data["id"];
-          bl["status"] = res.data["status"];
-          bl["email"] = this.form.email;
-          localData.save("bl", bl);
-          this.isSubmitting = false;
-          this.cardAdded = false;
-          this.$router.push("/confirmation");
-        })
-        .catch((err) => (this.errorMassage = err));
-    }, */
   },
 };
 </script>

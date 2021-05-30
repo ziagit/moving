@@ -280,6 +280,7 @@ export default {
 
 <style lang="scss" scoped>
 .md-card {
+  margin-bottom: 30px;
   text-align: left;
   .md-card-content {
     padding: 20px;

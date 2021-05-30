@@ -57,7 +57,7 @@ import { mapActions, mapGetters } from "vuex";
 import Axios from "axios";
 import Spinner from "../../shared/Spinner";
 import Snackbar from "../../shared/Snackbar";
-import functions from "../services/functions";
+import builder from "../services/builder";
 import localData from "../services/localData";
 export default {
   name: "Movers",
@@ -89,8 +89,7 @@ export default {
     },
   },
   created() {
-    this.init();
-    this.$emit("progress", 11);
+    this.getCarrier();
     localData.save("cr", this.$router.currentRoute.path);
   },
   computed: {
@@ -101,17 +100,13 @@ export default {
   },
   methods: {
     async rebuild() {
-      console.log("price refreshed...");
-      this.getCarrier(await functions.buildOrder());
+      await this.getCarrier();
+      this.$emit("price-refreshed");
     },
-    async init() {
-      this.getCarrier(await functions.buildOrder());
-    },
-
-    getCarrier(order) {
+    async getCarrier() {
+      var order = await builder.buildOrder();
       Axios.post("carriers-rate", order)
         .then((res) => {
-          console.log("available mover", res.data);
           if (res.data.length === 0) {
             this.dataLoading = false;
             return;
@@ -129,9 +124,8 @@ export default {
 
     next() {
       localData.save("carrier", this.carrier);
-      if (this.instructions) {
-        localData.save("instructions", this.instructions);
-      }
+      localData.save("instructions", this.instructions);
+      this.$emit("progress", 0);
       if (this.authenticated && this.user.role[0].name === "customer") {
         this.$router.push("/order/moving-payment");
       } else {

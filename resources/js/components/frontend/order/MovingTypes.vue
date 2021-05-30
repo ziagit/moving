@@ -117,7 +117,6 @@ export default {
         .get("moving-types")
         .then((res) => {
           this.types = res.data;
-          console.log("types: ", res.data);
         })
         .catch((err) => {
           console.log("Error: ", err);

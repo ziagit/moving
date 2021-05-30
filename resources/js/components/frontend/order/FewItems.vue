@@ -173,9 +173,7 @@ export default {
         this.snackbar.statusCode = "404";
       } else {
         for (let i = 0; i < this.items.length; i++) {
-          console.log("in the loop");
           if (this.items[i].code === code) {
-            console.log("item exist:", i);
             this.items[i].name = name;
             this.items[i].code = code;
             this.items[i].number = number;
@@ -183,7 +181,6 @@ export default {
           }
         }
         if (!this.exist) {
-          console.log("y r here", this.exist);
           this.exist = false;
           this.items.push({
             name: name,

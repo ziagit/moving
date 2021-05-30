@@ -3,12 +3,12 @@
     <md-toolbar md-elevation="0" v-if="authenticated" class="custom-toolbar">
       <div class="row" v-if="authenticated">
         <div class="avatar" @click="profile()">
-          <img :src="'/images/uploads/avatar.svg'" width="80" alt="" />
+          <img :src="'/images/pub/' + user.avatar" width="80" alt="" />
         </div>
         <div class="break"></div>
         <div class="text">
           <div class="name md-list-item-text">{{ user.name }}</div>
-          <div class="email">{{ user.phone }}</div>
+          <div class="email">{{ formatPhone(user.phone) }}</div>
         </div>
       </div>
     </md-toolbar>
@@ -70,6 +70,7 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import Notifications from "../../shared/Notifications";
+import USPhone from "../services/USPhone";
 export default {
   name: "WebMenu",
   components: {
@@ -106,6 +107,9 @@ export default {
     navigate(path) {
       this.$router.push(path);
       this.$emit("hideSideMenu");
+    },
+    formatPhone(phone) {
+      return USPhone.formatPhone(phone);
     },
   },
 };

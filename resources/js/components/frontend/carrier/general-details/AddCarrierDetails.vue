@@ -1,143 +1,120 @@
 <template>
   <div>
     <form @submit.prevent="submit" enctype="multipart/form-data">
-      <md-card class="main-card">
-        <div class="carrier-logo">
-          <md-avatar class="md-large">
-            <md-field>
-              <md-tooltip>Select logo</md-tooltip>
-              <md-file
-                v-model="form.logo"
-                name="logo"
-                accept="image/*"
-                ref="logo"
-                @change="onChange"
+      <md-card>
+        <md-card-header>
+          <span class="md-title">Add Details</span>
+        </md-card-header>
+        <md-divider></md-divider>
+        <md-card-content>
+          <div class="inputs-container">
+            <div class="row">
+              <md-field>
+                <label for="">First name</label>
+                <md-input
+                  type="text"
+                  v-model="form.first_name"
+                  required
+                  ref="focusable"
+                ></md-input>
+              </md-field>
+              <md-field>
+                <label for="">Last name</label>
+                <md-input type="text" v-model="form.last_name" required></md-input>
+              </md-field>
+              <md-field>
+                <label for="">Email</label>
+                <md-input type="text" v-model="form.email" required :min="0"></md-input>
+              </md-field>
+            </div>
+            <div class="row">
+              <GoogleAddress3
+                v-on:google-valid-address="googleValidAddress"
+                v-on:google-invalid-address="googleInvalidAddress"
+                :initialData="form.address"
+                label="Full adddress"
               />
-            </md-field>
-          </md-avatar>
-        </div>
-        <div class="inputs-container">
-          <div class="row">
-            <md-field>
-              <label for="">First name</label>
-              <md-input
-                type="text"
-                v-model="form.first_name"
-                required
-                ref="focusable"
-              ></md-input>
-            </md-field>
-            <md-field>
-              <label for="">Last name</label>
-              <md-input type="text" v-model="form.last_name" required></md-input>
-            </md-field>
-            <md-field>
-              <label for="">Email</label>
-              <md-input type="text" v-model="form.email" required :min="0"></md-input>
-            </md-field>
+            </div>
           </div>
-          <div class="row">
-            <GoogleAddress3
-              v-on:google-valid-address="googleValidAddress"
-              v-on:google-invalid-address="googleInvalidAddress"
-              :initialData="form.address"
-              label="Full adddress"
-            />
-            <md-field>
-              <label for="">Country</label>
-              <md-input v-model="form.country" required disabled></md-input>
-            </md-field>
+          <div class="company">
+            <div class="row">
+              <md-field>
+                <label>Company Name</label>
+                <md-input v-model="form.company" required></md-input>
+              </md-field>
+              <md-field>
+                <label>Year established</label>
+                <md-input
+                  type="number"
+                  v-model="form.year_established"
+                  required
+                ></md-input>
+              </md-field>
+            </div>
 
-            <md-field>
-              <label for="">State</label>
-              <md-input v-model="form.state" required disabled></md-input>
-            </md-field>
+            <div class="row">
+              <md-field>
+                <label>Website(optional)</label>
+                <md-input type="url" v-model="form.website"></md-input>
+              </md-field>
+              <md-field>
+                <label for="">Number of employees</label>
+                <md-input
+                  type="number"
+                  :min="1"
+                  v-model="form.employees"
+                  required
+                ></md-input>
+              </md-field>
+              <md-field>
+                <label for="">Number of vehicles</label>
+                <md-input
+                  type="number"
+                  :min="1"
+                  v-model="form.vehicles"
+                  required
+                ></md-input>
+              </md-field>
+              <md-field>
+                <label for="">Hourly rate</label>
+                <md-input type="number" :min="1" v-model="form.rate" required></md-input>
+              </md-field>
+            </div>
 
-            <md-field>
-              <label for="">City</label>
-              <md-input v-model="form.city" required disabled></md-input>
-            </md-field>
-
-            <md-field>
-              <label for="">Postal code</label>
-              <md-input v-model="form.zip" required disabled></md-input>
-            </md-field>
+            <div class="row">
+              <md-field>
+                <label>About your company</label>
+                <md-textarea v-model="form.detail" required></md-textarea>
+              </md-field>
+            </div>
+            <div class="row">
+              <md-field>
+                <md-tooltip>Upload Insurance paper</md-tooltip>
+                <md-file
+                  accept="image/*"
+                  ref="insurance"
+                  @change="onInsuranceChange"
+                  placeholder="Upload Insurance paper"
+                />
+              </md-field>
+              <md-field>
+                <md-tooltip>Upload business licens</md-tooltip>
+                <md-file
+                  accept="image/*"
+                  ref="license"
+                  @change="onLicenseChange"
+                  placeholder="Upload business licens"
+                />
+              </md-field>
+            </div>
           </div>
-        </div>
-        <div class="company">
-          <div class="row">
-            <md-field>
-              <label>Company Name</label>
-              <md-input v-model="form.company" required></md-input>
-            </md-field>
-            <md-field>
-              <label>Year established</label>
-              <md-input type="number" v-model="form.year_established" required></md-input>
-            </md-field>
-          </div>
-
-          <div class="row">
-            <md-field>
-              <label>Website(optional)</label>
-              <md-input type="url" v-model="form.website"></md-input>
-            </md-field>
-            <md-field>
-              <label for="">Number of employees</label>
-              <md-input
-                type="number"
-                :min="1"
-                v-model="form.employees"
-                required
-              ></md-input>
-            </md-field>
-            <md-field>
-              <label for="">Number of vehicles</label>
-              <md-input
-                type="number"
-                :min="1"
-                v-model="form.vehicles"
-                required
-              ></md-input>
-            </md-field>
-            <md-field>
-              <label for="">Hourly rate</label>
-              <md-input type="number" :min="1" v-model="form.rate" required></md-input>
-            </md-field>
-          </div>
-
-          <div class="row">
-            <md-field>
-              <label>About your company</label>
-              <md-textarea v-model="form.detail" required></md-textarea>
-            </md-field>
-          </div>
-          <div class="row">
-            <md-field>
-              <md-tooltip>Upload Insurance paper</md-tooltip>
-              <md-file
-                v-model="insurance_papers"
-                accept="image/*"
-                ref="insurance"
-                @change="onInsuranceChange"
-                placeholder="Upload Insurance paper"
-              />
-            </md-field>
-            <md-field>
-              <md-tooltip>Upload business licens</md-tooltip>
-              <md-file
-                v-model="business_license"
-                accept="image/*"
-                ref="license"
-                @change="onLicenseChange"
-                placeholder="Upload business licens"
-              />
-            </md-field>
-          </div>
-        </div>
-        <Spinner v-if="isSubmitting" />
-        <md-button v-if="!isSubmitting" type="submit" class="md-primary md-small-fab"
-          >Save</md-button
-        >
+        </md-card-content>
+        <md-card-actions>
+          <Spinner v-if="isSubmitting" />
+          <md-button v-if="!isSubmitting" type="submit" class="md-primary md-small-fab"
+            >Save</md-button
+          >
+        </md-card-actions>
       </md-card>
     </form>
     <Snackbar :data="snackbar" />
@@ -175,7 +152,6 @@ export default {
       company: null,
       detail: null,
     },
-    logo: null,
     insurance_papers: null,
     business_license: null,
     isSubmitting: false,
@@ -221,7 +197,6 @@ export default {
     submit() {
       this.isSubmitting = true;
       let fd = new FormData();
-      fd.append("logo", this.logo);
       fd.append("business_license", this.business_license);
       fd.append("insurance_papers", this.insurance_papers);
       fd.append("first_name", this.form.first_name);
@@ -236,9 +211,10 @@ export default {
       fd.append("website", this.form.website);
       fd.append("company", this.form.company);
       fd.append("detail", this.form.detail);
+      fd.append("addressId", this.form.addressId);
+      fd.append("contactId", this.form.contactId);
       fd.append("employees", this.form.employees);
       fd.append("vehicles", this.form.vehicles);
-      fd.append("rate", this.form.rate);
       fd.append("year_established", this.form.year_established);
       axios
         .post("carrier/details", fd)
@@ -260,33 +236,23 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.main-card {
-  padding: 30px;
-  text-align: center;
-  box-shadow: none;
-  border: solid 1px #ddd;
-
-  .carrier-logo {
-    text-align: center;
-    margin-top: -40px;
-
-    .md-large {
-      background: #ddd;
-    }
-
-    .select-logo {
-      position: absolute;
+.md-card {
+  margin-bottom: 30px;
+  text-align: left;
+  .md-card-content {
+    padding: 20px;
+    .row {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      .md-field {
+        flex: 25%;
+      }
     }
   }
-
-  .row {
+  .md-card-actions {
     display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-
-    .md-field {
-      flex: 25%;
-    }
+    justify-content: flex-start;
   }
 
   .add-btn {

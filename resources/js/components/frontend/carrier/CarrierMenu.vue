@@ -2,14 +2,17 @@
   <div>
     <md-toolbar md-elevation="0" v-if="authenticated" class="custom-toolbar">
       <div class="row" v-if="authenticated">
-        <div class="img" @click="profile()"></div>
+        <div class="avatar" @click="profile()">
+          <img :src="'/images/pub/' + user.avatar" width="80" alt="" />
+        </div>
         <div class="break"></div>
         <div class="text">
           <div class="name md-list-item-text">{{ user.name }}</div>
-          <div class="email">{{ user.phone }}</div>
+          <div class="email">{{ formatPhone(user.phone) }}</div>
         </div>
       </div>
     </md-toolbar>
+    <md-divider></md-divider>
     <md-list>
       <div v-if="authenticated">
         <md-list-item @click="navigate('/help')">
@@ -97,6 +100,7 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import Notifications from "../../shared/Notifications";
+import USPhone from "../services/USPhone";
 export default {
   name: "WebMenu",
   components: {
@@ -149,6 +153,9 @@ export default {
       this.$router.push(path);
       this.$emit("hideSideMenu");
     },
+    formatPhone(phone) {
+      return USPhone.formatPhone(phone);
+    },
   },
 };
 </script>
@@ -164,21 +171,18 @@ export default {
   font-weight: 500;
 }
 .custom-toolbar {
-  background: #ffa500;
   height: 155px;
   display: flex;
   justify-content: center;
+  background: #fff !important;
   .row {
     width: 100%;
-    .img {
+    .avatar {
       margin: auto;
-      height: 68px;
-      width: 68px;
       text-align: center;
       align-items: center;
       display: flex;
-      border-radius: 50px;
-      border: solid 1px #3333334d;
+      justify-content: center;
       cursor: pointer;
     }
     .text {

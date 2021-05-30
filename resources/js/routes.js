@@ -196,7 +196,6 @@ export default new VueRouter({
                 { name: "shippers", path: "/shippers", component: OurShippers },
                 { name: "review", path: "/review/:id", component: CarrierReview },
                 {
-                    name: "order",
                     path: "order",
                     component: Order,
                     children: [
@@ -268,7 +267,6 @@ export default new VueRouter({
                     component: MovingCompletion
                 },
                 {
-                    name: "carrier",
                     path: "carrier",
                     component: CarrierProfile,
                     children: [
@@ -279,7 +277,6 @@ export default new VueRouter({
                             component: CarrierDashboard
                         },
                         {
-                            name: "account",
                             path: "account",
                             component: CarrierAccountContainer,
                             children: [
@@ -297,7 +294,6 @@ export default new VueRouter({
                             ]
                         },
                         {
-                            name: "profile",
                             path: "profile",
                             component: CarrierDetailsContainer,
                             children: [
@@ -320,7 +316,6 @@ export default new VueRouter({
                             ]
                         },
                         {
-                            name: "rates",
                             path: "rates",
                             component: RateContainer,
                             children: [
@@ -344,7 +339,6 @@ export default new VueRouter({
                         },
 
                         {
-                            name: "history",
                             path: "history",
                             component: History,
                             children: [
@@ -358,7 +352,6 @@ export default new VueRouter({
                             ]
                         },
                         {
-                            name: "earnings",
                             path: "earnings",
                             component: EarningContainer,
                             children: [
@@ -376,7 +369,6 @@ export default new VueRouter({
                             ]
                         },
                         {
-                            name: "payments",
                             path: "payments",
                             component: CarrierPaymentContainer,
                             children: [
@@ -412,13 +404,11 @@ export default new VueRouter({
                     beforeEnter: webGuard
                 },
                 {
-                    name: "shipper",
                     path: "shipper",
                     component: ShipperProfile,
                     children: [
                         { path: "", redirect: "account" },
                         {
-                            name: "account",
                             path: "account",
                             component: ShipperAccountContainer,
                             children: [
@@ -436,7 +426,6 @@ export default new VueRouter({
                             ]
                         },
                         {
-                            name: "profile",
                             path: "profile",
                             component: ShipperDetailsContainer,
                             children: [
@@ -459,7 +448,6 @@ export default new VueRouter({
                             ]
                         },
                         {
-                            name: "orders",
                             path: "orders",
                             component: ShipperOrderContainer,
                             children: [
@@ -495,7 +483,6 @@ export default new VueRouter({
                     beforeEnter: webGuard
                 },
                 {
-                    name: "admin",
                     path: "admin",
                     component: Admin,
                     children: [
@@ -610,7 +597,7 @@ export default new VueRouter({
                         { name: "users", path: "users", component: Users },
                         { name: "about", path: "about", component: About },
                         {
-                            name: "contact",
+                            name: "admin-contact",
                             path: "contact",
                             component: Contact
                         },

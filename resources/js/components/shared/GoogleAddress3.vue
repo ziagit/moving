@@ -55,7 +55,6 @@ export default {
 
     google.maps.event.addListener(autocomplete3, "place_changed", function () {
       var data = autocomplete3.getPlace();
-      console.log("fffffff", data);
 
       let latlng = {
         lat: data.geometry.location.lat(),

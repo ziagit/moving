@@ -119,7 +119,6 @@ export default {
     },
     init() {
       this.type = localData.read("moving-type");
-      console.log("type", this.type.code);
       let data = localData.read("floors");
       if (data) {
         if (data.pickup) {

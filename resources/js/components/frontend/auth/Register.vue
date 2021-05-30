@@ -88,9 +88,8 @@ export default {
         } else {
           this.dataLoading = true;
           axios
-            .post("verify/", this.form)
+            .post("auth/verify", this.form)
             .then((res) => {
-              console.log("res: ", res.data);
               localData.save("me", res.data);
               this.isSubmitting = false;
               this.$router.push("verify");

@@ -41,49 +41,7 @@ export default {
                 return "Sat";
         }
     },
-    getTimeRanges(time) {
-        var time = parseInt(time);
-        switch (time) {
-            case 6:
-                return "6:00pm";
-            case 7:
-                return "7:00am";
-            case 8:
-                return "8:00am";
-            case 9:
-                return "9:00am";
-            case 10:
-                return "10:00am";
-            case 11:
-                return "11:00am";
-            case 12:
-                return "12:00am";
-            case 13:
-                return "1:00pm";
-            case 14:
-                return "2:00pm";
-            case 15:
-                return "3:00pm";
-            case 16:
-                return "4:00pm";
-            case 17:
-                return "5:00pm";
-            default:
-                return "not available";
-        }
-        const ranges = [];
-        const date = new Date();
-        const format = {
-            hour: "numeric",
-            minute: "numeric"
-        };
-        for (let minutes = 0; minutes < 24 * 60; minutes = minutes + interval) {
-            date.setHours(0);
-            date.setMinutes(minutes);
-            ranges.push(date.toLocaleTimeString(language, format));
-        }
-        return ranges.slice(from, to);
-    },
+  
     myDateFormat(date) {
         let myDate = new Date(date);
         let year = myDate.getFullYear();

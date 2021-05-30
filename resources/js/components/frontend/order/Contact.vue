@@ -126,7 +126,7 @@ export default {
         } else {
           this.isSubmitting = true;
           axios
-            .post("verify", this.form)
+            .post("auth/verify", this.form)
             .then((res) => {
               this.isSubmitting = false;
               this.me = res.data;
