@@ -306,7 +306,5 @@ class JobController extends Controller
         $order->charge_id = $charge['id'];
         $order->update();
         return response()->json('Payment proceed successfully!',200);
-
-
     }
 }

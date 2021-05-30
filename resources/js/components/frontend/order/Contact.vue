@@ -15,9 +15,9 @@
               v-on:change="onChange"
               v-on:complete="verify"
             />
-            <p class="md-caption">We texted a code to your number.</p>
+            <p class="md-caption">We texted a code to your phone number.</p>
             <div class="resend">
-              <p>Not received a code?</p>
+              <p>Code not received?</p>
               <md-button class="md-primary" @click="me = null">Resend</md-button>
             </div>
             <p style="color: red" v-if="invalidCode">{{ invalidCode }}</p>
@@ -126,7 +126,7 @@ export default {
         } else {
           this.isSubmitting = true;
           axios
-            .post("verify/", this.form)
+            .post("verify", this.form)
             .then((res) => {
               this.isSubmitting = false;
               this.me = res.data;

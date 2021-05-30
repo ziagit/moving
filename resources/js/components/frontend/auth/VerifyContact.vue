@@ -8,7 +8,7 @@
         </md-card-header>
         <md-card-content>
           <div class="md-body-2">Enter the verification code</div>
-          <div class="md-caption">We text a code to your phone number</div>
+          <div class="md-caption">We texted a code to your phone number</div>
           <div class="break"></div>
           <CodeInput
             :loading="false"
@@ -19,7 +19,7 @@
             v-on:complete="verify"
           />
           <div class="resend">
-            <p>Not received a code?</p>
+            <p>Code not received?</p>
             <md-button class="md-primary" to="/login">Resend</md-button>
           </div>
           <p style="color: red" v-if="invalidCode">{{ invalidCode }}</p>
@@ -107,7 +107,7 @@ export default {
           }
         })
         .catch((error) => {
-          this.invalidCode = v + " is not valid, please check again!";
+          this.invalidCode = v + " is not valid, please check your phone!";
           console.log("err: ", error);
           this.isSubmitting = false;
           this.snackbar.statusCode = error.response.status;

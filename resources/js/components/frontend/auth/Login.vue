@@ -74,9 +74,6 @@ export default {
     dataLoading: false,
   }),
   methods: {
-    ...mapActions({
-      signIn: "auth/signIn",
-    }),
     update(v) {
       this.form.phone = v.isValid ? v.formattedNumber : null;
     },
@@ -89,7 +86,7 @@ export default {
         } else {
           this.dataLoading = true;
           axios
-            .post("verify/", this.form)
+            .post("auth/verify", this.form)
             .then((res) => {
               console.log("res: ", res.data);
               localData.save("me", res.data);
