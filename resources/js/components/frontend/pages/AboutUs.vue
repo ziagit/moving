@@ -16,7 +16,8 @@
     <div class="section1">
       <div class="wrapper">
         <div class="left">
-          <div v-html="body"></div>
+          <p>No data available!</p>
+          <!-- <div v-html="body"></div> -->
         </div>
         <div class="right">
           <div class="qoute">

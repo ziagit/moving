@@ -1,135 +1,219 @@
 <template>
   <div>
-    <md-card class="no-shadow-bordered">
-      <md-card-header>
-        <md-button @click="$router.back()" class="md-icon-button close-btn">
-          <md-icon>close</md-icon>
-          <md-tooltip>Cancel</md-tooltip>
-        </md-button>
-        <div>
-          <div class="md-title">Job Details</div>
-          <div v-if="dataLoaded" class="job-id">
-            <span>{{ job.order_detail.uniqid }}</span> |
-            <span>{{ formatter(job.created_at) }}</span>
+    <md-dialog-confirm
+      :md-active.sync="confirmDialog"
+      md-title="Confirmation"
+      md-content="Please confirm your action"
+      md-confirm-text="Agree"
+      md-cancel-text="Disagree"
+      @md-cancel="onCancel"
+      @md-confirm="onConfirm"
+    />
+    <md-card v-if="job" class="outer-card">
+      <md-card-header class="head">
+        <div class="status">
+          <span>Status: {{ job.order_detail.status }}</span>
+          <div>
+            <Spinner v-if="isSubmitting" />
+            <div v-else class="actions">
+              <md-button
+                class="md-primary md-raised"
+                @click="(status = 'Accepted'), (confirmDialog = true)"
+                >Accept</md-button
+              >
+              <md-button
+                class="md-primary md-raised"
+                @click="(status = 'Declined'), (confirmDialog = true)"
+                >Decline</md-button
+              >
+              <md-button
+                class="md-primary md-raised"
+                @click="(status = 'Completed'), (confirmDialog = true)"
+                >Complete</md-button
+              >
+            </div>
           </div>
         </div>
       </md-card-header>
-      <md-card-content v-if="dataLoaded">
-        <div class="status">
-          <span>Status:</span>
-          <md-menu md-size="auto" :mdCloseOnSelect="true" v-if="dataLoaded">
-            <md-button
-              md-menu-trigger
-              v-bind:class="{ delivered: job.jobstatus.id == 5 }"
-              >{{ job.jobstatus.title }}</md-button
-            >
-
-            <md-menu-content>
-              <md-menu-item
-                v-for="state in status"
-                :key="state.id"
-                @click="updateJob(state.id)"
-                >{{ state.title }}</md-menu-item
+      <md-card-content v-if="job">
+        <div class="cols">
+          <div class="col">
+            <md-card class="col1">
+              <md-card-header><span class="md-title">Job</span></md-card-header>
+              <md-card-content>
+                <div class="row">
+                  <span>Job: </span>
+                  <span>{{ job.order_detail.uniqid }}</span>
+                </div>
+                <div class="row">
+                  <span>Placed on: </span>
+                  <span>{{ formateDate(job.order_detail.created_at) }}</span>
+                </div>
+                <div class="row">
+                  <span>Pickup: </span>
+                  <span>{{ job.order_detail.addresses[0].formatted_address }}</span>
+                </div>
+                <div class="row">
+                  <span>Floor: </span>
+                  <span>{{
+                    job.order_detail.floor_from
+                      ? job.order_detail.floor_from
+                      : "No stairs"
+                  }}</span>
+                </div>
+                <div class="row">
+                  <span>Destination: </span>
+                  <span>{{ job.order_detail.addresses[1].formatted_address }}</span>
+                </div>
+                <div class="row">
+                  <span>Floor: </span>
+                  <span>{{
+                    job.order_detail.floor_to ? job.order_detail.floor_to : "No stairs"
+                  }}</span>
+                </div>
+                <div class="row" v-if="job.order_detail.movingtype.code == 'apartment'">
+                  <span>Moving size: </span>
+                  <span>{{ job.order_detail.movingsize.title }}</span>
+                </div>
+                <div class="row" v-if="job.order_detail.movingtype.code == 'office'">
+                  <span>Office size: </span>
+                  <span>{{ job.order_detail.officesize.title }}</span>
+                </div>
+                <div class="row" v-if="job.order_detail.movernumber">
+                  <span>Number of movers: </span>
+                  <span> {{ job.order_detail.movernumber.number }}</span>
+                </div>
+                <div class="row" v-if="job.order_detail.vehicle">
+                  <span>Vehicle: </span>
+                  <span> {{ job.order_detail.vehicle.name }}</span>
+                </div>
+                <div class="row">
+                  <span>Schedualed date: </span>
+                  <span> {{ job.order_detail.pickup_date }}</span>
+                </div>
+                <div class="row">
+                  <span>Time window: </span>
+                  <span> {{ job.order_detail.appointment_time }}</span>
+                </div>
+                <div class="break"></div>
+                <div class="row">
+                  <span>Type: </span>
+                  <span> {{ job.order_detail.movingtype.title }}</span>
+                </div>
+                <div class="break"></div>
+                <div class="row">
+                  <span>Instructions: </span>
+                  <span>
+                    {{
+                      job.order_detail.instructions
+                        ? job.order_detail.instructions
+                        : "Not given"
+                    }}</span
+                  >
+                </div>
+              </md-card-content>
+            </md-card>
+          </div>
+          <div class="col">
+            <md-card>
+              <md-card-header><span class="md-title">Supplies</span></md-card-header>
+              <md-card-content>
+                <div class="row">
+                  <span v-if="job.order_detail.supplies.length > 0">
+                    <div
+                      v-for="(supply, index) in job.order_detail.supplies"
+                      :key="index"
+                      class="list"
+                    >
+                      <span>{{ supply.name }}:</span>
+                      <span> {{ supply.pivot.number }}</span>
+                    </div>
+                  </span>
+                  <span v-else>Not selected</span>
+                </div>
+              </md-card-content>
+            </md-card>
+            <md-card v-if="job.order_detail.items.length > 0">
+              <md-card-header><span class="md-title">Items</span></md-card-header>
+              <md-card-content>
+                <div class="row">
+                  <span>
+                    <div
+                      v-for="(item, index) in job.order_detail.items"
+                      :key="index"
+                      class="list"
+                    >
+                      <span>{{ item.name }}:</span>
+                      <span> {{ item.pivot.number }}</span>
+                    </div>
+                  </span>
+                </div>
+              </md-card-content>
+            </md-card>
+            <md-card>
+              <md-card-header><span class="md-title">Price</span></md-card-header>
+              <md-card-content>
+                <div class="row">
+                  <span>Total: </span>
+                  <span>${{ job.order_detail.cost }}</span>
+                </div>
+                <div class="row">
+                  <span>Moving cost: </span>
+                  <span>${{ job.order_detail.moving_cost }}</span>
+                </div>
+                <div class="row">
+                  <span>Travel cost: </span>
+                  <span>${{ job.order_detail.travel_cost }}</span>
+                </div>
+                <div class="row">
+                  <span>Tax: </span>
+                  <span>${{ job.order_detail.tax }}</span>
+                </div>
+                <div class="row" v-if="job.order_detail.tips">
+                  <span>Tips: </span>
+                  <span>${{ job.order_detail.tips }}</span>
+                </div>
+              </md-card-content>
+            </md-card>
+            <md-card>
+              <md-card-header
+                ><span class="md-title">Customer contact</span></md-card-header
               >
-            </md-menu-content>
-          </md-menu>
-          <div v-show="dataLoading" class="loading">
-            <Spinner />
+              <md-card-content>
+                <div class="row">
+                  <span>Name: </span>
+                  <span>{{ job.order_detail.contact.name }}</span>
+                </div>
+                <div class="row">
+                  <span>Email: </span>
+                  <span>{{ job.order_detail.contact.email }}</span>
+                </div>
+                <div class="row">
+                  <span>Phone: </span>
+                  <span>{{ job.order_detail.contact.phone }}</span>
+                </div>
+              </md-card-content>
+            </md-card>
+            <md-card>
+              <md-card-header><span class="md-title">Mover contact</span></md-card-header>
+              <md-card-content>
+                <div class="row">
+                  <span>Name: </span>
+                  <span>{{ job.carrier_detail.user.name }}</span>
+                </div>
+                <div class="row">
+                  <span>Email: </span>
+                  <span>{{ job.carrier_detail.user.email }}</span>
+                </div>
+                <div class="row">
+                  <span>Phone: </span>
+                  <span>{{ job.carrier_detail.user.phone }}</span>
+                </div>
+              </md-card-content>
+            </md-card>
           </div>
         </div>
-        <div class="src-des">
-          <md-card class="src">
-            <md-card-content>
-              <h3 class="md-subheading">Origin Details</h3>
-              <div class="body-1">
-                Address:
-                {{ job.order_detail.addresses[0].formatted_address }}
-              </div>
-              <div class="body-1" v-if="job.order_detail.floor_from">
-                Floor:
-                {{ job.order_detail.floor_from }}
-              </div>
-            </md-card-content>
-          </md-card>
-          <md-card class="des">
-            <md-card-content>
-              <h3 class="md-subheading">Destination Details</h3>
-              <div class="body-1">
-                Address:
-                {{ job.order_detail.addresses[1].formatted_address }}
-              </div>
-              <div class="body-1" v-if="job.order_detail.floor_to">
-                Floor:
-                {{ job.order_detail.floor_to }}
-              </div>
-            </md-card-content>
-          </md-card>
-        </div>
-        <div class="src-des">
-          <md-card class="src">
-            <md-card-content>
-              <h3 class="md-subheading">Selected Supplies</h3>
-              <div v-if="job.order_detail.supplies.length > 0">
-                <div
-                  class="body-1"
-                  v-for="(supply, index) in job.order_detail.supplies"
-                  :key="index"
-                >
-                  {{ supply.name }}:
-                  {{ supply.pivot.number }}
-                </div>
-              </div>
-              <div v-else>Not selected</div>
-            </md-card-content>
-          </md-card>
-          <md-card class="des">
-            <md-card-content>
-              <h3 class="md-subheading">Contact Details</h3>
-              <div class="body-1">Contact name: {{ job.order_detail.contact.name }}</div>
-              <div class="body-1">Phone: {{ job.order_detail.contact.phone }}</div>
-              <div class="body-1">Email: {{ job.order_detail.contact.email }}</div>
-            </md-card-content>
-          </md-card>
-        </div>
-
-        <div class="src-des">
-          <md-card class="src">
-            <md-card-content>
-              <h3 class="md-subheading">Other Information</h3>
-              <div class="body-1">Pickup date: {{ job.order_detail.pickup_date }}</div>
-              <div class="body-1">
-                Appointment: {{ job.order_detail.appointment_time }}
-              </div>
-
-              <div class="body-1" v-if="job.order_detail.movingsize">
-                Moving size: {{ job.order_detail.movingsize.title }}
-              </div>
-
-              <div class="body-1" v-if="job.order_detail.movernumber">
-                Requested number of movers: {{ job.order_detail.movernumber.number }}
-              </div>
-              <div class="body-1" v-if="job.order_detail.vehicle">
-                Requested vehicle: {{ job.order_detail.vehicle.name }}
-              </div>
-              <div class="body-1">Instructions: {{ job.order_detail.instructions }}</div>
-            </md-card-content>
-          </md-card>
-          <md-card class="des" v-if="job.order_detail.items.length > 0">
-            <md-card-content>
-              <h3 class="md-subheading">Selected Items</h3>
-              <div v-for="item in job.order_detail.items" :key="item.id">
-                <div class="body-1">{{ item.name }} : {{ item.pivot.number }}</div>
-              </div>
-            </md-card-content>
-          </md-card>
-        </div>
       </md-card-content>
-      <md-card-actions>
-        <md-button class="md-icon-button mark-as-read" @click="markAsRead()">
-          <md-icon>done</md-icon>
-          <md-tooltip>Mark as read</md-tooltip>
-        </md-button>
-      </md-card-actions>
     </md-card>
   </div>
 </template>
@@ -137,33 +221,41 @@
 <script>
 import axios from "axios";
 import Spinner from "../../../shared/Spinner";
-import functions from "../../../frontend/services/functions";
+import dateFormatter from "../../../frontend/services/dateFormatter";
 export default {
   name: "JobDetails",
-  props: ["jobId"],
   data: () => ({
     job: null,
-    active: false,
-    hasHistory: false,
     notification: null,
     notificationId: null,
-    dataLoaded: false,
-    status: [],
-    selectedStatus: null,
-    dataLoading: false,
-    emails: {
-      src: null,
-      des: null,
-    },
+    isSubmitting: false,
+    confirmDialog: false,
+    status: null,
   }),
+  created() {
+    this.jobDetails();
+    this.notificationId = this.$store.state.shared.notificationId;
+  },
   methods: {
+    formateDate(date) {
+      return dateFormatter.format(date);
+    },
+    orderDetails() {
+      axios
+        .get("shipper/orders/" + this.$route.params.id)
+        .then((res) => {
+          this.order = res.data;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
     jobDetails() {
       axios
-        .get("carrier/jobs/" + this.$route.params.id)
+        .get("admin/jobs/" + this.$route.params.id)
         .then((res) => {
-          console.log("job details ", res.data);
+          console.log("job details x ", res.data);
           if (res.data) {
-            this.dataLoaded = true;
             this.job = res.data;
             this.getDistance(
               res.data.order_detail.addresses[0].formatted_address,
@@ -180,52 +272,47 @@ export default {
       axios
         .get("auth/read-notification/" + this.notificationId)
         .then((res) => {
-          console.log(res.data);
-          this.$router.replace("../jobs");
+          console.log("marked as read:", res.data);
+          //this.$router.replace("../jobs");
         })
         .catch((err) => {
           console.log(err);
         });
     },
-
-    updateJob(statusId) {
-      this.dataLoading = true;
+    onCancel() {},
+    onConfirm() {
+      this.isSubmitting = true;
       axios
-        .put("admin/jobs/" + this.$route.params.id, {
-          status: statusId,
+        .put("carrier/jobs/" + this.$route.params.id, {
+          status: this.status,
           email: this.job.order_detail.contact.email,
-          order: this.job.order_detail.id,
-          moving_size:
-            this.job.order_detail.type == "office"
-              ? this.job.order_detail.officesize
-              : this.job.order_detail.movingsize,
+          phone: this.job.order_detail.contact.phone,
+          notification_id: this.notificationId,
+          carrier_id: this.job.carrier_id,
+          order_id: this.job.order_detail.id,
+          moving_type: this.job.order_detail.movingtype,
+          moving_size: this.job.order_detail.movingsize
+            ? this.job.order_detail.movingsize
+            : this.job.order_detail.officesize,
           cost: this.job.order_detail.cost,
           vehicle: this.job.order_detail.vehicle,
           supplies: this.job.order_detail.supplies,
           floor_from: this.job.order_detail.floor_from,
           floor_to: this.job.order_detail.floor_to,
+          items: this.job.order_detail.items,
           distance: this.distance,
           duration: this.duration,
-          carrier_id: this.job.carrier_id,
+          number_of_movers: this.job.order_detail.movernumber,
         })
         .then((res) => {
-          this.job = res.data;
-          this.dataLoading = false;
+          this.isSubmitting = false;
+
+          this.jobDetails();
           console.log("updated job: ", res.data);
         })
         .catch((err) => {
           console.log(err);
-        });
-    },
-    getJobStatus() {
-      axios
-        .get("carrier/job-status")
-        .then((res) => {
-          console.log("job statues: ", res.data);
-          this.status = res.data;
-        })
-        .catch((err) => {
-          console.log(err);
+          this.isSubmitting = false;
         });
     },
     getDistance(from, to) {
@@ -247,23 +334,11 @@ export default {
         console.log("Faild to get distance");
       } else {
         this.distance = (response.rows[0].elements[0].distance.value / 1000).toFixed(1); //in km
-        this.duration = (response.rows[0].elements[0].duration.value / 60 / 60).toFixed(
-          1
-        );
+        this.duration = (response.rows[0].elements[0].duration.value / 60).toFixed(1);
       }
     },
-    formatter(date) {
-      return functions.myDateFormat(date);
-    },
-    checkStatus(status) {
-      return status == 5 ? true : false;
-    },
   },
-  created() {
-    this.jobDetails();
-    this.getJobStatus();
-    this.notificationId = this.$store.state.shared.notificationId;
-  },
+
   watch: {
     $route() {
       this.notificationId = this.$store.state.shared.notificationId;
@@ -277,67 +352,51 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.outer-card {
+  box-shadow: none;
+  .head {
+    margin: 0 !important;
+    padding: 10px 25px;
+  }
+}
+.cols {
+  display: flex;
+  justify-content: space-between;
+  .col {
+    flex: 1;
+    .md-card {
+      text-align: left;
+      .row {
+        display: flex;
+        > :first-child {
+          min-width: 132px;
+        }
+        .list {
+          display: flex;
+          justify-content: space-between;
+        }
+      }
+    }
+  }
+  .col1 {
+    height: 98%;
+  }
+}
 .md-card {
   text-align: center;
-
+  margin: 0 20px;
   .status {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
-
-    .delivered {
-      color: green !important;
-    }
   }
 
   .md-card {
     margin: 5px;
   }
-
-  .src,
-  .des,
-  .items,
-  .order_detail {
+  .inactive {
+    background: #ddd;
     box-shadow: none;
-    border: 1px solid rgb(241, 241, 241);
-    text-align: left;
-  }
-
-  .order_detail {
-    margin-top: 11px;
-  }
-
-  .src-des {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-
-    .src {
-      flex: 1;
-    }
-
-    .des {
-      flex: 1;
-    }
-  }
-
-  .close-btn {
-    position: absolute;
-    top: 0;
-    right: 0;
-  }
-
-  .job-id {
-    span {
-      font-size: 11px;
-      margin: 0;
-      padding: 0;
-    }
-  }
-
-  .md-subheading {
-    font-size: 18px;
-    color: #ffa500;
   }
 }
 </style>

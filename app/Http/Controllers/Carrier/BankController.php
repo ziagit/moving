@@ -74,7 +74,7 @@ class BankController extends Controller
      */
     public function show($id)
     {
-        $bank = Bank::with('carrier')->find($id);
+        $bank = Bank::find($id);
         return response()->json($bank);
     }
 

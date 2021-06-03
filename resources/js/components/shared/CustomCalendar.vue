@@ -11,7 +11,7 @@
               cl.month == (date.date ? date.date.month : ''),
           }"
         >
-          <div class="day">
+          <div class="day" :class="cl.date == 1 ? 'next-month' : ''">
             {{ cl.day }}
           </div>
           <div class="date">
@@ -152,7 +152,6 @@ export default {
     this.getAllDays();
     this.init();
   },
-
   methods: {
     getMinDate() {
       var today = new Date();
@@ -211,7 +210,6 @@ export default {
       this.showTimes();
       localData.save("moving-date", this.date);
     },
-
     selectDate(sl) {
       console.log("sl: ", sl);
       this.date.date = sl;
@@ -225,13 +223,25 @@ export default {
       var date = dateObject.getDate();
       var year = dateObject.getFullYear();
       var daysInMonth = new Date(year, month, 0).getDate();
-      for (var i = dateObject.getDate(); i < daysInMonth + 1; i++) {
-        this.cal.push({
-          day: services.getDaysName(day),
-          date: date,
-          month: month,
-          year: year,
-        });
+      var nextMonth = months[dateObject.getMonth() + 1];
+      var counter = 1;
+      for (var i = dateObject.getDate(); i < dateObject.getDate() + 5; i++) {
+        if (i <= daysInMonth) {
+          this.cal.push({
+            day: services.getDaysName(day),
+            date: date,
+            month: month,
+            year: year,
+          });
+        } else {
+          this.cal.push({
+            day: counter == 1 ? nextMonth : services.getDaysName(day),
+            date: counter,
+            month: month + 1,
+            year: year,
+          });
+          counter += 1;
+        }
         day++;
         day > 6 ? (day = 0) : day;
         date++;

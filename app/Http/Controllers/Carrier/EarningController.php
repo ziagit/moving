@@ -14,11 +14,24 @@ class EarningController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function unpaid()
     {
         //['moving_cost','travel_cost','supplies_cost','paid_gst','carrier_earning']
         $carrierId = User::with('carrier')->find(Auth::id())->carrier->id;
-        $earnings = Earning::with('orderAddress')->where('carrier_id', $carrierId)->get();
+        $earnings = Earning::with('order')
+        ->where('carrier_id', $carrierId)
+        ->where('status','unpaid')
+        ->paginate(5);
+        return response()->json($earnings);
+    }
+    public function paid()
+    {
+        //['moving_cost','travel_cost','supplies_cost','paid_gst','carrier_earning']
+        $carrierId = User::with('carrier')->find(Auth::id())->carrier->id;
+        $earnings = Earning::with('order')
+        ->where('carrier_id', $carrierId)
+        ->where('status','paid')
+        ->paginate(5);
         return response()->json($earnings);
     }
 

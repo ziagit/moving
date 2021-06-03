@@ -21,13 +21,13 @@ class CreateCarriersTable extends Migration
             $table->integer('year_established');
             $table->integer('employees');
             $table->integer('vehicles');
+            $table->integer('hourly_rate');
             $table->string('insurance_papers');
             $table->string('business_license');
             $table->string('logo')->nullable();
             $table->string('website')->nullable();
             $table->text('detail')->nullable();
             $table->double('votes')->default(2.0);
-            $table->unsignedInteger('contact_id');
             $table->unsignedInteger('address_id');
             $table->unsignedInteger('user_id');
 

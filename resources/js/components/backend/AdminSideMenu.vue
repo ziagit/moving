@@ -14,6 +14,9 @@
     </md-toolbar>
     <md-divider></md-divider>
     <md-list :md-expand-single="expandSingle">
+      <md-list-item @click="hideMenu('inbox')">
+        <span class="md-list-item-text">Notifications</span>
+      </md-list-item>
       <md-list-item @click="hideMenu('dashboard')">
         <span class="md-list-item-text">Dashboard</span>
       </md-list-item>

@@ -6,106 +6,29 @@
       </md-card-header>
       <md-divider></md-divider>
       <md-card-content>
-        <table class="table" v-if="earnings.length > 0">
-          <thead>
-            <tr>
-              <th rowspan="2">Job</th>
-              <th rowspan="2">From</th>
-              <th rowspan="2">To</th>
-              <th rowspan="2">Date</th>
-              <th colspan="6">Charges breakdown</th>
-              <th rowspan="2">Status</th>
-            </tr>
-            <tr>
-              <th style="font-size: 12px">Travel Cost</th>
-              <th style="font-size: 12px">Moving Cost</th>
-              <th style="font-size: 12px">Supplies Cost</th>
-              <th style="font-size: 12px">Service Fee</th>
-
-              <th style="font-size: 12px">Tax</th>
-              <th style="font-size: 12px">Subtotal</th>
-            </tr>
-          </thead>
-          <tbody class="body">
-            <tr v-for="earning in earnings" :key="earning.id">
-              <td>{{ earning.order_address.uniqid }}</td>
-              <td>{{ earning.order_address.addresses[0].city }}</td>
-              <td>{{ earning.order_address.addresses[1].city }}</td>
-              <td>{{ formatter(earning.created_at) }}</td>
-              <td>${{ earning.travel_cost }}</td>
-              <td>${{ earning.moving_cost }}</td>
-              <td>${{ earning.supplies_cost }}</td>
-              <td>-${{ earning.service_fee }}</td>
-
-              <td>${{ earning.paid_gst }}</td>
-              <td>${{ earning.carrier_earning }}</td>
-
-              <td>{{ earning.status == "unpaid" ? "Unpaid" : "Paid" }}</td>
-            </tr>
-            <tr>
-              <th colspan="9">Total Payable Amount</th>
-              <th style="color: green">${{ total.toFixed(3) }}</th>
-              <th></th>
-            </tr>
-          </tbody>
-        </table>
-        <md-empty-state
-          class="md-primary"
-          md-icon="credit_card"
-          md-label="$0"
-          md-description="When you complete a job, your earning will be showing here"
-          v-if="earnings.length == 0"
-        ></md-empty-state>
+        <md-tabs>
+          <md-tab id="tab-home" md-label="Unpaid" exact>
+            <Unpaid />
+          </md-tab>
+          <md-tab id="tab-pages" md-label="Paid" exact>
+            <Paid />
+          </md-tab>
+        </md-tabs>
       </md-card-content>
     </md-card>
   </div>
 </template>
 
 <script>
-import Invoice from "./Invoice";
-import axios from "axios";
-import functions from "../../services/functions";
+import Paid from "./Paid";
+import Unpaid from "./Unpaid";
+
 export default {
   name: "earnings",
-  data: () => ({
-    earnings: [],
-    total: 0,
-    dataToPrint: null,
-    printTogal: false,
-  }),
+  data: () => ({}),
   components: {
-    Invoice,
-  },
-  methods: {
-    getearnings() {
-      axios
-        .get("carrier/earnings")
-        .then((res) => {
-          this.earnings = res.data;
-          console.log("res..", res.data);
-          this.calculateTotal(res.data);
-        })
-        .catch((err) => {
-          console.log("error", err);
-        });
-    },
-    calculateTotal(data) {
-      data.forEach((element) => {
-        this.total = this.total + element.carrier_earning;
-      });
-    },
-    print() {
-      this.printTogal = true;
-    },
-    close() {
-      this.printTogal = false;
-    },
-    formatter(date) {
-      return functions.myDateFormat(date);
-    },
-  },
-  created() {
-    this.getearnings();
+    Paid,
+    Unpaid,
   },
 };
 </script>

@@ -8,10 +8,10 @@
     >
       <Header v-on:togal-menu="$emit('togal-menu')" />
       <div class="content">
-        <div class="md-display-1">Our Partners</div>
+        <div class="md-display-1">Become a Mover</div>
 
         <div class="md-subheading">
-          Join our carrier networks by creating an account with us.
+          Join our mover networks by creating an account with us.
         </div>
         <div class="break"></div>
         <div class="break"></div>
@@ -22,7 +22,8 @@
     <div class="section1">
       <div class="wrapper">
         <div class="left">
-          <div v-html="body"></div>
+          <p>Not available!</p>
+          <!-- <div v-html="body"></div> -->
         </div>
         <div class="right">
           <div class="download-app">

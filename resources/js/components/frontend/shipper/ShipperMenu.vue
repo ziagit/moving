@@ -8,7 +8,7 @@
         <div class="break"></div>
         <div class="text">
           <div class="name md-list-item-text">{{ user.name }}</div>
-          <div class="email">{{ formatPhone(user.phone) }}</div>
+          <div class="email">{{ user.email ? user.email : formatPhone(user.phone) }}</div>
         </div>
       </div>
     </md-toolbar>

@@ -15,7 +15,7 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $orders = Order::with('shipper', 'fullAddress', 'jobWithStatus')->paginate(10);
+        $orders = Order::with('shipper', 'addresses', 'job')->paginate(10);
         return response()->json($orders);
     }
 
@@ -48,7 +48,7 @@ class OrderController extends Controller
      */
     public function show($id)
     {
-        $order = Order::with('addresses', 'contact','items', 'jobWithStatus', 'movingsize', 'officesize', 'movingtype', 'movernumber', 'vehicle', 'supplies')->find($id);
+        $order = Order::with('addresses', 'contact','items', 'jobWithCarrier', 'movingsize', 'officesize', 'movingtype', 'movernumber', 'vehicle', 'supplies')->find($id);
         return response()->json($order);
     }
 

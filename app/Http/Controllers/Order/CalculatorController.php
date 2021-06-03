@@ -29,37 +29,37 @@ class CalculatorController extends Controller
         $hoursToMove = $this->hoursToMove($request); //get the time that 2 mover + truck 
         $stairTime = $this->stairTime($request); // get the time if stair used
         $suppliesCost = $this->suppliesCost($request); //get supplies cost
-        $carriers = Carrier::with('rate', 'calendars')->get();
+        $carriers = Carrier::with('calendars')->get();
 
         foreach ($carriers as $carrier) {
             //match carrier's available calendar that requested
             $matchedCalendar = $this->checkCalendar($carrier->calendars, $request->moving_date);
             if ($matchedCalendar) {
                 //find travel cost
-                $travelCost = ($baseFare + $distanceCharge + ($carrier->rate['price'] / 60) * $request->duration); // by 60, is because duration is in minut not hour
+                $travelCost = ($baseFare + $distanceCharge + ($carrier->hourly_rate / 60) * $request->duration); // by 60, is because duration is in minut not hour
                 //add 10% service fee
                 $travelCost = $travelCost + $travelCost * $serviceFee / 100;
                 //return $request->number_of_movers['number'];
                 if ($request->moving_type['code'] == 'few_items' || $request->moving_type['code'] == 'junk_removal') {
                     //few items case
-                    $movingCost = ($hoursToMove + $stairTime) * $carrier->rate['price'];
+                    $movingCost = ($hoursToMove + $stairTime) * $carrier->hourly_rate;
                     $movingCost = $movingCost + $this->disposalFee($request);
                     //add 10% service fee
                     $movingCost = $movingCost + $movingCost * $serviceFee / 100;
                 } else {
                     if ($request->number_of_movers['code'] == '1mover') {
                         // 1 mover case
-                        $movingCost = ($hoursToMove + 1 + $stairTime) * (($carrier->rate['price'] * 67) / 100);
+                        $movingCost = ($hoursToMove + 1 + $stairTime) * (($carrier->hourly_rate * 67) / 100);
                         //add 10% service fee
                         $movingCost = $movingCost + $movingCost * $serviceFee / 100;
                     } else if ($request->number_of_movers['code'] == '3movers') {
                         // 3 movers case
-                        $movingCost = ($hoursToMove - 1 + $stairTime) * (($carrier->rate['price'] * 133) / 100);
+                        $movingCost = ($hoursToMove - 1 + $stairTime) * (($carrier->hourly_rate * 133) / 100);
                         //add 10% service fee
                         $movingCost = $movingCost + $movingCost * $serviceFee / 100;
                     } else {
                         // standard case
-                        $movingCost = ($hoursToMove + $stairTime) * $carrier->rate['price'];
+                        $movingCost = ($hoursToMove + $stairTime) * $carrier->hourly_rate;
                         //add 10% service fee
                         $movingCost = $movingCost + $movingCost * $serviceFee / 100;
                     }
@@ -76,11 +76,12 @@ class CalculatorController extends Controller
                 $availableCarriers[$i]['logo'] = $carrier->logo;
                 $availableCarriers[$i]['website'] = $carrier->website;
                 $availableCarriers[$i]['detail'] = $carrier->detail;
-                $availableCarriers[$i]['rate'] = $carrier->rate['price'];
+                $availableCarriers[$i]['rate'] = $carrier->hourly_rate;
                 $availableCarriers[$i]['price'] = round($total, 2);
                 $availableCarriers[$i]['gross'] = round($movingCost, 2);
                 $availableCarriers[$i]['supplies_cost'] = round($suppliesCost, 2);
                 $availableCarriers[$i]['travel'] = round($travelCost, 2);
+                $availableCarriers[$i]['service_fee'] = $this->serviceFee($movingCost, $travelCost, $serviceFee);
                 $availableCarriers[$i]['disposal_fee'] = $this->disposalFee($request);
                 $availableCarriers[$i]['tax'] = round($tax, 2);
                 $availableCarriers[$i]['votes'] = $carrier->votes;
@@ -172,6 +173,11 @@ class CalculatorController extends Controller
             return $fees;
         }
         return 0;
+    }
+    public function serviceFee($movingCost, $travelCost, $serviceCharge)
+    {
+        $fee = ($movingCost + $travelCost) * $serviceCharge / 100;
+        return round($fee, 2);
     }
     public function suppliesCost($request)
     {

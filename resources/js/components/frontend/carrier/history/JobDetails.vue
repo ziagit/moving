@@ -47,7 +47,7 @@
                 </div>
                 <div class="row">
                   <span>Placed on: </span>
-                  <span>{{ job.order_detail.created_at }}</span>
+                  <span>{{ formateDate(job.order_detail.created_at) }}</span>
                 </div>
                 <div class="row">
                   <span>Pickup: </span>
@@ -154,8 +154,10 @@
               <md-card-header><span class="md-title">Price</span></md-card-header>
               <md-card-content>
                 <div class="row">
-                  <span>Total: </span>
-                  <span>${{ job.order_detail.cost }}</span>
+                  <span><strong>Total:</strong> </span>
+                  <span
+                    ><strong>${{ job.order_detail.cost }}</strong></span
+                  >
                 </div>
                 <div class="row">
                   <span>Moving cost: </span>
@@ -164,6 +166,14 @@
                 <div class="row">
                   <span>Travel cost: </span>
                   <span>${{ job.order_detail.travel_cost }}</span>
+                </div>
+                <div class="row">
+                  <span>Service fee: </span>
+                  <span>${{ job.order_detail.service_fee }}</span>
+                </div>
+                <div class="row" v-if="job.order_detail.disposal_fee">
+                  <span>Disposal fee: </span>
+                  <span>${{ job.order_detail.disposal_fee }}</span>
                 </div>
                 <div class="row">
                   <span>Tax: </span>
@@ -205,6 +215,7 @@
 import axios from "axios";
 import Spinner from "../../../shared/Spinner";
 import services from "../../services/orderSchedualer";
+import dateFormatter from "../../services/dateFormatter";
 export default {
   name: "JobDetails",
   data: () => ({
@@ -225,6 +236,9 @@ export default {
     },
     checkItemTime(date, time) {
       return services.itemExpiration(date, time);
+    },
+    formateDate(date) {
+      return dateFormatter.format(date);
     },
     orderDetails() {
       axios

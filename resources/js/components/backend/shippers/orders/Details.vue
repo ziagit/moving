@@ -82,7 +82,9 @@
         <md-card class="des">
           <md-card-content>
             <h3 class="md-subheading md-primary">Selected Mover</h3>
-            <div class="body-1">Name: {{ order.job_with_status.carrier.first_name }}</div>
+            <div class="body-1">
+              Name: {{ order.job_with_carrier.carrier.first_name }}
+            </div>
             <div class="body-1" v-if="order.vehicle">
               Requested vehicle: {{ order.vehicle.name }}
             </div>
@@ -172,22 +174,9 @@ export default {
           console.log(err);
         });
     },
-
-    orderStatus() {
-      axios
-        .get("shipper/order-status")
-        .then((res) => {
-          this.status.push(res.data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
   },
   created() {
-    console.log("order id; ", this.orderId);
     this.getDetails();
-    this.orderStatus();
     this.notificationId = this.$store.state.shared.notificationId;
   },
   watch: {

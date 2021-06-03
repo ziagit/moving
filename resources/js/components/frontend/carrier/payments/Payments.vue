@@ -5,28 +5,36 @@
     </md-card-header>
     <md-divider></md-divider>
     <md-card-content>
-      <div v-if="payment">
-        <div class="row">
-          <span>Currency:</span>
-          <span>{{ payment.currency }}</span>
-        </div>
-        <div class="row">
-          <span>Transit number:</span>
-          <span>{{ payment.transit_number }}</span>
-        </div>
-        <div class="row">
-          <span>Institution number:</span>
-          <span>{{ payment.institution_number }}</span>
-        </div>
-        <div class="row">
-          <span>Currency:</span>
-          <span>{{ payment.account_number }}</span>
-        </div>
-        <div class="row">
-          <span>Account number:</span>
-          <span>{{ payment.account_number }}</span>
-        </div>
-      </div>
+      <md-tabs>
+        <md-tab id="tab-home" md-label="Payement method">
+          <div v-if="payment">
+            <div class="row">
+              <span>Currency:</span>
+              <span>{{ payment.currency }}</span>
+            </div>
+            <div class="row">
+              <span>Transit number:</span>
+              <span>{{ payment.transit_number }}</span>
+            </div>
+            <div class="row">
+              <span>Institution number:</span>
+              <span>{{ payment.institution_number }}</span>
+            </div>
+            <div class="row">
+              <span>Currency:</span>
+              <span>{{ payment.account_number }}</span>
+            </div>
+            <div class="row">
+              <span>Account number:</span>
+              <span>{{ payment.account_number }}</span>
+            </div>
+          </div>
+        </md-tab>
+        <md-tab id="tab-pages" md-label="Payment history">
+          do we realy need this part?, because we already have payment information in the
+          earning with the dates
+        </md-tab>
+      </md-tabs>
     </md-card-content>
     <md-card-actions v-if="payment">
       <md-button :to="{ path: 'edit/' + 1 }" class="md-primary">

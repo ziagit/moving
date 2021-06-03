@@ -50,11 +50,11 @@
         <md-table-cell>{{ job.order_detail.addresses[1].city }}</md-table-cell>
         <md-table-cell>{{ job.updated_at }}</md-table-cell>
         <md-table-cell>{{ job.carrier.company }}</md-table-cell>
-        <md-table-cell>{{ job.jobstatus.title }}</md-table-cell>
+        <md-table-cell>{{ job.order_detail.status }}</md-table-cell>
 
         <md-table-cell md-label="Actions">
-          <md-button class="md-icon-button md-primary" @click="edit(job)">
-            <md-icon>edit</md-icon>
+          <md-button class="md-icon-button md-" @click="edit(job)">
+            <md-icon>more_horiz</md-icon>
           </md-button>
           <md-button class="md-icon-button md-accent" @click="remove(job.id)">
             <md-icon>delete</md-icon>

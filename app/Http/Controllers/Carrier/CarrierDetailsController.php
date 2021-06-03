@@ -24,7 +24,7 @@ class CarrierDetailsController extends Controller
     public function index()
     {
         $userId = JWTAuth::user()->id;
-        $carrier = Carrier::with('address', 'contact')->where('user_id', $userId)->first();
+        $carrier = Carrier::with('address','user')->where('user_id', $userId)->first();
         return response()->json($carrier);
     }
 
@@ -49,7 +49,6 @@ class CarrierDetailsController extends Controller
         $this->validate($request, [
             'first_name' => 'required',
             'last_name' => 'required',
-            'email' => 'required|unique:contacts',
             'country' => 'required',
             'state' => 'required',
             'city' => 'required',
@@ -57,12 +56,11 @@ class CarrierDetailsController extends Controller
             'address' => 'required',
             'employees' => 'required',
             'vehicles' => 'required',
-            'rate' => 'required',
+            'hourly_rate' => 'required',
             'company' => 'required',
         ]);
-        $contactId = $this->storeContact($request);
         $addressId = $this->storeAddress($request);
-    
+
         try {
             if ($request->hasFile('insurance_papers')) {
                 $file = $request->file('insurance_papers');
@@ -94,31 +92,30 @@ class CarrierDetailsController extends Controller
         $carrier->year_established = $request->year_established;
         $carrier->employees = $request->employees;
         $carrier->vehicles = $request->vehicles;
+        $carrier->hourly_rate = $request->hourly_rate;
         $carrier->insurance_papers = $insurance_papers_name;
         $carrier->business_license = $business_license_name;
         $carrier->website = $request->website;
         $carrier->company = $request->company;
         $carrier->detail = $request->detail;
         $carrier->address_id = $addressId;
-        $carrier->contact_id = $contactId;
         $carrier->user_id = JWTAuth::user()->id;
         $carrier->save();
-
-        $rate->price = $request->rate;
-        $rate->carrier_id = $carrier->id;
-        $rate->save();
-
+        $this->updateUser($request);
         return response()->json(["message" => "Saved successfully!"], 200);
     }
 
-    public function storeContact($request)
+    public function updateUser($request)
     {
-        $contact = new Contact();
-        $contact->name = $request->last_name;
-        $contact->email = $request->email;
-        $contact->phone= JWTAuth::user()->phone;
-        $contact->save();
-        return $contact->id;
+        $user = User::find(Auth::user()->id);
+        if ($request->email != 'null') {
+            $user->email = $request->email;
+            $user->update();
+        } else {
+            $user->phone = $request->phone;
+            $user->update();
+        }
+        return true;
     }
     public function storeAddress($request)
     {
@@ -139,7 +136,7 @@ class CarrierDetailsController extends Controller
      */
     public function show($id)
     {
-        $carrier = Carrier::with('address', 'contact')->find($id);
+        $carrier = Carrier::with('address', 'user')->find($id);
         return response()->json($carrier);
     }
 
@@ -166,7 +163,7 @@ class CarrierDetailsController extends Controller
         $this->validate($request, [
             'first_name' => 'required',
             'last_name' => 'required',
-            'email' => 'required',
+            'phone' => 'required',
             'country' => 'required',
             'state' => 'required',
             'city' => 'required',
@@ -176,7 +173,6 @@ class CarrierDetailsController extends Controller
             'vehicles' => 'required',
             'company' => 'required',
         ]);
-        $contactId = $this->updateContact($request);
         $addressId = $this->updateAddress($request);
         $carrier = Carrier::find($id);
 
@@ -193,7 +189,6 @@ class CarrierDetailsController extends Controller
             $logo_name = $carrier->insurance_papers;
         }
         if ($request->hasFile('business_license')) {
-
             $old_image_path = public_path('images/pub/' . $carrier->business_license);
             if (file_exists($old_image_path)) {
                 @unlink($old_image_path);
@@ -210,6 +205,7 @@ class CarrierDetailsController extends Controller
         $carrier->year_established = $request->year_established;
         $carrier->employees = $request->employees;
         $carrier->vehicles = $request->vehicles;
+        $carrier->hourly_rate = $request->hourly_rate;
         $carrier->insurance_papers = $request->insurance_papers;
         $carrier->business_license = $request->business_license;
         $carrier->website = $request->website;
@@ -217,20 +213,21 @@ class CarrierDetailsController extends Controller
         $carrier->detail = $request->detail;
         $carrier->logo = $logo_name;
         $carrier->address_id = $addressId;
-        $carrier->contact_id = $contactId;
         $carrier->user_id = JWTAuth::user()->id;
         $carrier->update();
+
+        $this->updateContact($request);
+
         return response()->json(["message" => "Updated successfully!"], 200);
     }
 
     public function updateContact($request)
     {
-        $contact = Contact::find($request->contactId);
-        $contact->name = $request->last_name;
-        $contact->email = $request->email;
-        $contact->phone = JWTAuth::user()->phone;
-        $contact->update();
-        return $contact->id;
+        $user = User::find(JWTAuth::user()->id);
+        $user->name = $request->last_name;
+        $user->phone = $request->phone;
+        $user->phone = JWTAuth::user()->phone;
+        $user->update();
     }
     public function updateAddress($request)
     {

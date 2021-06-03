@@ -1,7 +1,9 @@
 <template>
   <div>
     <md-dialog :md-active.sync="appointmentTogal">
-      <md-dialog-title>Enable/Disable a Date</md-dialog-title>
+      <md-dialog-title
+        ><span class="md-body-2">Select dates to enable/disable</span></md-dialog-title
+      >
       <md-dialog-content>
         <Appointment v-on:close-dialog="refresh" :initDate="state.disabledDates" />
       </md-dialog-content>
@@ -78,7 +80,6 @@ export default {
         temp.push(new Date(element.year, element.month - 1, element.day));
       });
       this.state.disabledDates.dates = temp;
-      console.log("xxxx", temp);
     },
     get() {
       axios.get("carrier/calendar").then((res) => {

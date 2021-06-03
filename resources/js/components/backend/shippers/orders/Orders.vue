@@ -11,12 +11,6 @@
       @md-cancel="cancel"
     />
 
-    <!-- edit dialog -->
-    <md-dialog :md-active.sync="editTogal">
-      <md-dialog-content>
-        <Details v-on:close-dialog="refresh" :orderId="orderId" />
-      </md-dialog-content>
-    </md-dialog>
     <md-table md-sort="name" md-sort-order="asc" md-card v-if="orders">
       <md-table-toolbar>
         <div class="md-toolbar-section-start">
@@ -29,35 +23,24 @@
       </md-table-toolbar>
 
       <md-table-empty-state
-        md-label="No state found"
-        :md-description="`No state found for this query. Try a different search term or create a new state.`"
+        md-label="Not found"
+        :md-description="`Not added any order yet.`"
       >
       </md-table-empty-state>
       <md-table-row>
         <md-table-head md-numeric>ID</md-table-head>
-        <md-table-head>Origin</md-table-head>
+        <md-table-head>Pickup</md-table-head>
         <md-table-head>Destination</md-table-head>
         <md-table-head>Customer</md-table-head>
         <md-table-head>Status</md-table-head>
         <md-table-head>Actions</md-table-head>
       </md-table-row>
       <md-table-row v-for="order in orders.data" :key="order.id">
-        <md-table-cell md-numeric>{{ order.id }}</md-table-cell>
-        <md-table-cell v-if="order.full_address.length > 0"
-          >{{ order.full_address[0].city }}
-        </md-table-cell>
-        <md-table-cell v-if="order.full_address.legnth > 0"
-          >{{ order.full_address[1].city }}
-        </md-table-cell>
-        <md-table-cell
-          ><div>
-            {{ order.type }}
-          </div></md-table-cell
-        >
+        <md-table-cell md-numeric>{{ order.uniqid }}</md-table-cell>
+        <md-table-cell>{{ order.addresses[0].city }} </md-table-cell>
+        <md-table-cell>{{ order.addresses[1].city }} </md-table-cell>
         <md-table-cell v-if="order.shipper">{{ order.shipper.first_name }}</md-table-cell>
-        <md-table-cell v-if="order.job_with_status">{{
-          order.job_with_status.jobstatus.title
-        }}</md-table-cell>
+        <md-table-cell>{{ order.status }}</md-table-cell>
         <md-table-cell md-label="Actions">
           <md-button class="md-icon-button md-accent" @click="remove(order.id)">
             <md-icon>delete</md-icon>

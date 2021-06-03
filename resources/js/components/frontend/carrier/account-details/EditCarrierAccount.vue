@@ -43,9 +43,8 @@ export default {
       console.log("ava", this.avatar);
       let fd = new FormData();
       fd.append("avatar", this.avatar);
-      fd.append("_method", "put");
       axios
-        .post("carrier/account/" + this.$route.params.id, fd)
+        .post("carrier/change-avatar/" + this.$route.params.id, fd)
         .then((res) => {
           console.log("res: ", res.data);
           this.account = res.data;

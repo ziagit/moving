@@ -23,32 +23,6 @@
     <div class="section1">
       <md-tabs :md-active-tab="tabId">
         <md-tab
-          id="how-works"
-          md-label="How it Works"
-          md-icon="help"
-          @click="
-            passData(
-              (header = 'How it Works?'),
-              (subheader = 'Beginnerٌs guide to shipping from home on Shipbay')
-            )
-          "
-        >
-          <FAQ />
-        </md-tab>
-        <md-tab
-          id="partner"
-          md-label="Partner"
-          md-icon="directions_boat"
-          @click="
-            passData(
-              (header = 'Partner'),
-              (subheader = 'Most common questoins about our partners')
-            )
-          "
-        >
-          <CarrierFaq />
-        </md-tab>
-        <md-tab
           id="shipper"
           md-label="Customer"
           md-icon="local_mall"
@@ -59,7 +33,22 @@
             )
           "
         >
-          <ShipperFaq />
+          <p>Not available!</p>
+          <!--  <ShipperFaq /> -->
+        </md-tab>
+        <md-tab
+          id="mover"
+          md-label="Mover"
+          md-icon="directions_boat"
+          @click="
+            passData(
+              (header = 'Mover'),
+              (subheader = 'Most common questoins about our movers')
+            )
+          "
+        >
+          <p>Not available!</p>
+          <!-- <CarrierFaq /> -->
         </md-tab>
       </md-tabs>
     </div>
@@ -73,7 +62,6 @@ import Footer from "../../shared/Footer";
 import Header from "../../shared/Header";
 import CarrierFaq from "./CarrierFaq";
 import ShipperFaq from "./ShipperFaq";
-import FAQ from "./FAQ";
 export default {
   name: "ContactUs",
   data: () => ({
@@ -82,9 +70,9 @@ export default {
       email: null,
       message: null,
     },
-    tabId: "how-works",
-    header: "How it Works?",
-    subheader: "Beginnerٌs guide to shipping from home on Shipbay",
+    tabId: "customer",
+    header: "Customer",
+    subheader: "Beginnerٌs guide to moving with TingsApp",
     carrierToggal: false,
     shipperToggal: false,
   }),
@@ -104,7 +92,6 @@ export default {
     Header,
     CarrierFaq,
     ShipperFaq,
-    FAQ,
   },
 };
 </script>

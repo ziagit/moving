@@ -11,7 +11,7 @@
               :loading="false"
               class="input"
               :fields="4"
-              :fieldWidth="90"
+              :fieldWidth="60"
               v-on:change="onChange"
               v-on:complete="verify"
             />
@@ -20,6 +20,7 @@
               <p>Code not received?</p>
               <md-button class="md-primary" @click="me = null">Resend</md-button>
             </div>
+            <p class="md-caption">Test code: 0-0-0-0</p>
             <p style="color: red" v-if="invalidCode">{{ invalidCode }}</p>
             <Spinner v-if="isSubmitting" />
           </md-card-content>
@@ -38,7 +39,6 @@
               v-model="form.formatted"
               default-country-code="CA"
               :no-country-selector="true"
-              placeholder="ZIA"
               :required="true"
               error-color="#e42c2c"
               :no-validator-state="true"
@@ -98,7 +98,7 @@ export default {
   }),
   created() {
     this.me = localData.read("me");
-    this.$emit("progress", 12);
+    this.$emit("progress", 0);
     localData.save("cr", this.$router.currentRoute.path);
   },
   computed: {
@@ -109,7 +109,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      signUp: "auth/signUp",
+      signIn: "auth/signIn",
     }),
     update(v) {
       this.form.phone = v.isValid ? v.formattedNumber : null;
@@ -155,15 +155,14 @@ export default {
     verify(v) {
       this.isSubmitting = true;
       this.invalidCode = null;
-      this.signUp({ code: v, me: this.me })
+      this.signIn({ code: v, me: this.me })
         .then((res) => {
-          console.log("res: ", res);
           localData.remove("me");
           this.isSubmitting = false;
           this.$router.push("/order/moving-payment");
         })
         .catch((error) => {
-          this.invalidCode = v + " is not valid, please check again!";
+          this.invalidCode = v + " is not valid, please check your phone!";
           console.log("err: ", error);
           this.isSubmitting = false;
           this.snackbar.statusCode = error.response.status;

@@ -26,7 +26,7 @@
               <td>{{ order.addresses[1].city }}</td>
               <td>{{ order.pickup_date }}</td>
               <td>{{ order.appointment_time }}</td>
-              <td>{{ order.cost }}</td>
+              <td>${{ order.cost }}</td>
               <td>{{ order.status }}</td>
 
               <td>

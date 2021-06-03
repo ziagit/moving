@@ -10,10 +10,10 @@
           <thead>
             <tr>
               <th>Order</th>
-              <th>From</th>
-              <th>To</th>
               <th>Date</th>
               <th>Time</th>
+              <th>Type</th>
+              <th>Price</th>
               <th>Status</th>
               <th>Details</th>
             </tr>
@@ -21,10 +21,10 @@
           <tbody>
             <tr v-for="job in jobs" :key="job.id">
               <td>{{ job.order_detail.uniqid }}</td>
-              <td>{{ job.order_detail.addresses[0].city }}</td>
-              <td>{{ job.order_detail.addresses[1].city }}</td>
               <td>{{ job.order_detail.pickup_date }}</td>
               <td>{{ job.order_detail.appointment_time }}</td>
+              <td>{{ job.order_detail.movingtype.title }}</td>
+              <td>${{ job.order_detail.cost }}</td>
               <td v-bind:class="{ canceled: job.order_detail.status == 'Canceled' }">
                 {{ job.order_detail.status }}
               </td>

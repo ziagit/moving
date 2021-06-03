@@ -15,11 +15,11 @@
           </div>
           <div class="row">
             <span>Email:</span>
-            <span>{{ shipper.contact.email }}</span>
+            <span>{{ user.email }}</span>
           </div>
           <div class="row">
             <span>Phone:</span>
-            <span>{{ shipper.contact.phone }}</span>
+            <span>{{ user.phone }}</span>
           </div>
           <div class="row">
             <span>Name:</span>
@@ -50,7 +50,7 @@
 
 <script>
 import axios from "axios";
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 export default {
   name: "GeneralInfo",
   data: () => ({
@@ -69,7 +69,12 @@ export default {
         });
     },
   },
-
+  computed: {
+    ...mapGetters({
+      authenticated: "auth/authenticated",
+      user: "auth/user",
+    }),
+  },
   created() {
     this.get();
   },

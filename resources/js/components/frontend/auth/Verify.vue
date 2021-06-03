@@ -7,8 +7,9 @@
           <div class="md-title">TingsApp</div>
         </md-card-header>
         <md-card-content>
+          <div class="break"></div>
           <div class="md-body-2">Enter the verification code</div>
-          <div class="md-caption">We texted a code to your phone number</div>
+          <div class="md-caption">We texted a code to your email/phone number</div>
           <div class="break"></div>
           <CodeInput
             :loading="false"
@@ -20,12 +21,11 @@
           />
           <div class="resend">
             <p>Code not received?</p>
-            <md-button class="md-primary" to="/login">Resend</md-button>
+            <md-button class="md-primary" to="/login-mover">Resend</md-button>
           </div>
+          <p class="md-caption">Test code: 0-0-0-0</p>
           <p style="color: red" v-if="invalidCode">{{ invalidCode }}</p>
           <Spinner v-if="isSubmitting" />
-          <div class="break"></div>
-          <div class="break"></div>
         </md-card-content>
       </md-card>
     </div>
@@ -108,7 +108,7 @@ export default {
         })
         .catch((error) => {
           this.invalidCode = v + " is not valid, please check your phone!";
-          console.log("err: ", error);
+          console.log("err: ", error.response);
           this.isSubmitting = false;
           this.snackbar.statusCode = error.response.status;
           this.snackbar.message = error.response.data;

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Carrier;
 
+use App\Carrier;
 use App\Http\Controllers\Controller;
 use App\Rate;
 use App\User;
@@ -19,9 +20,8 @@ class CarrierRateController extends Controller
      */
     public function index()
     {
-        $carrierId = User::with('carrier')->find(Auth::id())->carrier->id;
-        $rate = Rate::where('carrier_id', $carrierId)->first();
-        return response()->json($rate);
+        $carrier = User::with('carrier')->find(Auth::id());
+        return response()->json($carrier);
     }
 
     /**
@@ -77,17 +77,12 @@ class CarrierRateController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $rate = Rate::find($id);
-        if(!$rate){
-            $rate = new Rate();
-            $rate->price = $request->price;
-            $rate->carrier_id = User::with('carrier')->find(Auth::id())->carrier->id;
-            $rate->save();
-            return response()->json(["message" => "Saved successfully!"]);
+        $carrier = Carrier::find($id);
+        if($carrier){
+            $carrier->hourly_rate = $request->rate;
+            $carrier->update();
+            return response()->json(["message" => "updated successfully!"]);
         }
-        $rate->price = $request->price;
-        $rate->update();
-        return response()->json(["message" => "Updated successfully!"]);
     }
 
     /**

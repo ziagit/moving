@@ -31,6 +31,8 @@ class CreateOrdersTable extends Migration
             $table->double('travel_cost');
             $table->double('moving_cost');
             $table->double('tax');
+            $table->double('service_fee');
+            $table->double('disposal_fee')->nullable();
             $table->double('tips')->nullable();
 
             $table->string('charge_id')->nullable();

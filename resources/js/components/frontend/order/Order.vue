@@ -297,6 +297,7 @@ export default {
       this.selected["items"] = localData.read("moving-items");
       this.selected["supplies"] = builder.buildSupplies();
       this.selected["carrier"] = localData.read("carrier");
+      console.log("selected ", this.selected);
     },
     progressTogal() {
       if (

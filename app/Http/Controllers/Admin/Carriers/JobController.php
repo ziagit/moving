@@ -26,7 +26,7 @@ class JobController extends Controller
      */
     public function index()
     {
-        $jobs = Job::with('orderDetail', 'jobstatus','carrier')->orderBy('id', 'DESC')->paginate();
+        $jobs = Job::with('orderDetail','carrier')->orderBy('id', 'DESC')->paginate();
         return response()->json($jobs);
     }
 
@@ -59,7 +59,7 @@ class JobController extends Controller
      */
     public function show($id)
     {
-        $job = Job::with('orderDetail', 'jobstatus','carrier')->find($id);
+        $job = Job::with('orderDetail','carrierDetail')->find($id);
         return response()->json($job);
     }
 

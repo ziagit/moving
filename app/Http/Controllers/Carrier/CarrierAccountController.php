@@ -7,6 +7,7 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class CarrierAccountController extends Controller
 {
@@ -70,7 +71,7 @@ class CarrierAccountController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function changeAvatar(Request $request, $id)
     {
         $this->validate($request, [
             'avatar' => 'required',
@@ -88,6 +89,24 @@ class CarrierAccountController extends Controller
             $avatar_name = $user->avatar;
         }
         $user->avatar = $avatar_name;
+        $user->update();
+        return response()->json(['message' => 'Updated successfully!'], 200);
+    }
+    public function update(Request $data, $id)
+    {
+        if($data->password){
+            $validator = Validator::make($data->all(), [
+                'password_confirmation' => 'required|same:password',
+            ]);
+    
+            if ($validator->fails()) {
+                return response()->json(['error' => $validator->errors()], 400);
+            }
+        }
+     
+        $user = User::find($id);
+        $user->email = $data->email;
+        $user->password = Hash::make($data->password);
         $user->update();
         return response()->json(['message' => 'Updated successfully!'], 200);
     }

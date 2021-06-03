@@ -6,7 +6,9 @@ use App\Address;
 use App\Contact;
 use App\Http\Controllers\Controller;
 use App\Shipper;
+use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Validator;
 
@@ -20,7 +22,7 @@ class ShipperDetailsController extends Controller
     public function index()
     {
         $userId = JWTAuth::user()->id;
-        $carrier = Shipper::with('address','contact')->where('user_id', $userId)->first();
+        $carrier = Shipper::with('address')->where('user_id', $userId)->first();
         return response()->json($carrier);
     }
 
@@ -45,7 +47,6 @@ class ShipperDetailsController extends Controller
         $validator = Validator::make($request->all(), [
             'first_name' => 'required',
             'last_name' => 'required',
-            'email' => 'required|unique:contacts',
             'country' => 'required',
             'state' => 'required',
             'city' => 'required',
@@ -56,28 +57,28 @@ class ShipperDetailsController extends Controller
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 400);
         }
-        $contactId = $this->storeContact($request);
+        $userId = $this->updateUser($request);
         $addressId = $this->storeAddress($request);
         $shipper = new Shipper();
         $shipper->first_name = $request->first_name;
         $shipper->last_name = $request->last_name;
         $shipper->address_id = $addressId;
-        $shipper->contact_id = $contactId;
-        $shipper->user_id = JWTAuth::user()->id;
+        $shipper->user_id = $userId;
         $shipper->save();
         return response()->json(["message" => "Saved successfully!"], 200);
     }
 
-    public function storeContact($request){
-        $user = JWTAuth::user();
-        $contact = new Contact();
-        $contact->name = $request->last_name;
-        $contact->email = $request->email;
-        $contact->phone = $user->phone;
-        $contact->save();
-        $user->email = $request->email;
-        $user->update();
-        return $contact->id;
+    public function updateUser($request)
+    {
+        $user = User::find(Auth::user()->id);
+        if ($request->email != 'null') {
+            $user->email = $request->email;
+            $user->update();
+        } else {
+            $user->phone = $request->phone;
+            $user->update();
+        }
+        return $user->id;
     }
     public function storeAddress($request){
         $address = new Address();

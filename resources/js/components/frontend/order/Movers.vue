@@ -9,7 +9,7 @@
     <div v-show="!dataLoading">
       <md-card v-if="carrier != null" class="price-container">
         <div class="price">
-          <span>Your Price: ${{ carrier.price.toFixed(2) }}</span>
+          <span v-if="carrier.price">Your Price: ${{ carrier.price.toFixed(2) }}</span>
           <md-menu md-direction="top-start" :md-active.sync="priceToggle">
             <md-icon md-menu-trigger class="md-seconday info">info</md-icon>
             <md-menu-content>
@@ -54,7 +54,6 @@
 import CarrierRateInfo from "./menu/CarrierRateInfo";
 import CarrierInfo from "./menu/CarrierInfo";
 import { mapActions, mapGetters } from "vuex";
-import Axios from "axios";
 import Spinner from "../../shared/Spinner";
 import Snackbar from "../../shared/Snackbar";
 import builder from "../services/builder";
@@ -105,8 +104,10 @@ export default {
     },
     async getCarrier() {
       var order = await builder.buildOrder();
-      Axios.post("carriers-rate", order)
+      axios
+        .post("carriers-rate", order)
         .then((res) => {
+          console.log("mover availabe", res.data);
           if (res.data.length === 0) {
             this.dataLoading = false;
             return;

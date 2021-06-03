@@ -3,13 +3,15 @@ import VueRouter from "vue-router";
 import Home from "./components/frontend/Home";
 import Register from "./components/frontend/auth/Register";
 import Login from "./components/frontend/auth/Login";
+import LoginMover from "./components/frontend/auth/LoginMover";
+import VerifyContact from "./components/frontend/auth/Verify";
+import Password from "./components/frontend/auth/Password";
+
 import ResetPassword from "./components/frontend/auth/ResetPassword";
 import ForgotPassword from "./components/frontend/auth/ForgotPassword";
 import Welcome from "./components/frontend/auth/Welcome";
-
 import Card from "./components/frontend/card/Card";
-
-import CarrierDashboard from "./components/frontend/carrier/Dashboard";
+import CarrierDashboard from "./components/frontend/carrier/dashboard/Dashboard";
 import HomeContent from "./components/frontend/pages/HomeContent";
 import Help from "./components/frontend/pages/Help";
 import CityList from "./components/frontend/pages/Cities";
@@ -19,6 +21,7 @@ import Privacy from "./components/frontend/pages/Privacy";
 import Terms from "./components/frontend/pages/Terms";
 import OurCarriers from "./components/frontend/pages/OurCarriers";
 import OurShippers from "./components/frontend/pages/OurShippers";
+import HowItWorks from "./components/frontend/pages/HowItWorks";
 import Rating from "./components/frontend/shipper/review/Rating";
 import CarrierReview from "./components/frontend/shipper/review/CarrierReview";
 
@@ -63,7 +66,6 @@ import MovingDate from "./components/frontend/order/MovingDate";
 import FewItems from "./components/frontend/order/FewItems";
 import Movers from "./components/frontend/order/Movers";
 import OrderContact from "./components/frontend/order/Contact";
-import VerifyContact from "./components/frontend/auth/VerifyContact";
 import MovingPayment from './components/frontend/order/MovingPayment'
 import CardDetails from "./components/frontend/card/Card";
 import MovingConfirmation from "./components/frontend/order/MovingConfirmation";
@@ -86,6 +88,7 @@ import Expences from "./components/frontend/shipper/expences/Expences";
 //backend
 import Admin from "./components/backend/Admin";
 import Dashboard from "./components/backend/Dashboard";
+import Inbox from "./components/backend/inbox/Inbox";
 import Comapany from "./components/backend/company/Company";
 import Countries from "./components/backend/lookups/countries/Countries";
 import Cities from "./components/backend/lookups/cities/Cities";
@@ -163,8 +166,10 @@ export default new VueRouter({
                 { name: "help", path: "help/:id", component: Help },
                 { name: "cities", path: "cities", component: CityList },
                 { name: "login", path: "login", component: Login },
+                { name: "login-mover", path: "login-mover", component: LoginMover },
                 { name: "register", path: "register", component: Register },
                 { name: "verify", path: "verify", component: VerifyContact },
+                { name: "password", path: "password", component: Password },
 
                 {
                     path: "/reset-password/:token",
@@ -194,6 +199,7 @@ export default new VueRouter({
                 },
                 { name: "carriers", path: "/carriers", component: OurCarriers },
                 { name: "shippers", path: "/shippers", component: OurShippers },
+                { name: "how-it-works", path: "/how-it-works", component: HowItWorks },
                 { name: "review", path: "/review/:id", component: CarrierReview },
                 {
                     path: "order",
@@ -491,6 +497,11 @@ export default new VueRouter({
                             name: "dashboard",
                             path: "dashboard",
                             component: Dashboard
+                        },
+                        {
+                            name: "inbox",
+                            path: "inbox",
+                            component: Inbox
                         },
                         {
                             name: "company",

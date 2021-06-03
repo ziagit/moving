@@ -116,6 +116,8 @@ class ShipmentController extends Controller
         $order->cost = $request->carrier['price'];
         $order->travel_cost = $request->carrier['travel'];
         $order->moving_cost = $request->carrier['gross'];
+        $order->service_fee = $request->carrier['service_fee'];
+        $order->disposal_fee = $request->carrier['disposal_fee'];
         $order->tax = $request->carrier['tax'];
         $order->shipper_id = $shipperId;
         $order->contact_id = $contactId;

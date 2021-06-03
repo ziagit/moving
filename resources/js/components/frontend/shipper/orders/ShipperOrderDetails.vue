@@ -87,7 +87,7 @@
                 </div>
                 <div class="row">
                   <span>Placed on: </span>
-                  <span>{{ order.created_at }}</span>
+                  <span>{{ formatDate(order.created_at) }}</span>
                 </div>
                 <div class="row">
                   <span>Pickup location: </span>
@@ -206,15 +206,15 @@
               <md-card-content>
                 <div class="row">
                   <span>Name: </span>
-                  <span>{{ order.job_with_carrier.carrier_contact.contact.name }}</span>
+                  <span>{{ order.job_with_carrier.carrier_detail.company }}</span>
                 </div>
                 <div class="row">
                   <span>Email: </span>
-                  <span>{{ order.job_with_carrier.carrier_contact.contact.email }}</span>
+                  <span>{{ order.job_with_carrier.carrier_detail.user.email }}</span>
                 </div>
                 <div class="row">
                   <span>Phone: </span>
-                  <span>{{ order.job_with_carrier.carrier_contact.contact.phone }}</span>
+                  <span>{{ order.job_with_carrier.carrier_detail.user.phone }}</span>
                 </div>
               </md-card-content>
             </md-card>
@@ -229,6 +229,7 @@
 import Rate from "../rate/Rate";
 import Spinner from "../../../shared/Spinner";
 import services from "../../services/orderSchedualer";
+import dateFormatter from "../../services/dateFormatter.js";
 export default {
   name: "orderDetails",
   components: {
@@ -259,6 +260,9 @@ export default {
     },
     checkItemTime(date, time) {
       return services.itemExpiration(date, time);
+    },
+    formatDate(date) {
+      return dateFormatter.format(date);
     },
     orderDetails() {
       axios

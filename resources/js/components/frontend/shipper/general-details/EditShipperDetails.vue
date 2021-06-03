@@ -58,6 +58,7 @@ import GoogleAddress3 from "../../../shared/GoogleAddress3";
 import axios from "axios";
 import Snackbar from "../../../shared/Snackbar";
 import Spinner from "../../../shared/Spinner";
+import { mapActions, mapGetters } from "vuex";
 export default {
   name: "EditGeneralInfo",
   components: {
@@ -80,9 +81,13 @@ export default {
       contactId: null,
     },
     isSubmitting: false,
-    hasCompany: false,
   }),
-
+  computed: {
+    ...mapGetters({
+      authenticated: "auth/authenticated",
+      user: "auth/user",
+    }),
+  },
   methods: {
     googleValidAddress(address, latlng) {
       this.supportedArea = "";
@@ -121,13 +126,14 @@ export default {
         });
     },
     init() {
+      console.log("user: ", this.user);
       axios.get("shipper/details/" + this.$route.params.id).then(
         (res) => {
           console.log("shipper o ted", res.data);
           this.form.first_name = res.data.first_name;
           this.form.last_name = res.data.last_name;
-          this.form.email = res.data.contact.email;
-          this.form.phone = res.data.contact.phone;
+          this.form.email = this.user.email;
+          this.form.phone = this.user.phone;
           this.form.website = res.data.website;
           this.form.company = res.data.company;
           this.form.detail = res.data.detail;
@@ -138,7 +144,6 @@ export default {
           this.form.city = res.data.address.city;
           this.form.zip = res.data.address.zip;
           this.form.formatted_address = res.data.address.formatted_address;
-          this.oldLogo = res.data.logo;
         },
         (err) => {
           console.log(err);
@@ -146,7 +151,6 @@ export default {
       );
     },
   },
-  computed: {},
   created() {
     this.init();
   },

@@ -21,8 +21,14 @@
           >What is TingsApp</span
         >
       </md-list-item>
-      <md-list-item @click="navigate('/help/how-works')">
-        <span class="md-list-item-text">How it works</span>
+      <md-list-item @click="navigate('/how-it-works')">
+        <span
+          class="md-list-item-text"
+          v-bind:class="{
+            active: $route.name == 'how-it-works',
+          }"
+          >How it works</span
+        >
       </md-list-item>
       <md-list-item @click="navigate('/help/shipper')">
         <span
@@ -52,11 +58,11 @@
           >Become a Mover</span
         >
       </md-list-item>
-      <md-list-item @click="navigate('/login')">
+      <md-list-item @click="navigate('/login-mover')">
         <span
           class="md-list-item-text"
           v-bind:class="{
-            active: $route.name == 'login',
+            active: $route.name == 'login-mover',
           }"
           >My account</span
         >

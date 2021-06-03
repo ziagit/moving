@@ -181,6 +181,12 @@ a {
 .padding-20 {
   padding: 20px !important;
 }
+.help {
+  .md-tabs.md-theme-default .md-tabs-navigation {
+    margin-left: 74px;
+  }
+}
+
 /* .md-tabs-navigation {
   padding-left: 60px !important;
 } */
@@ -199,9 +205,6 @@ a {
 .home-content {
   .md-tabs.md-alignment-left .md-tabs-navigation {
     justify-content: center;
-  }
-  .md-tabs-navigation .md-ripple {
-    padding: 0 48px !important;
   }
 }
 .md-card {

@@ -292,6 +292,7 @@ export default {
         .get("state-cities")
         .then((res) => {
           this.supportedData = res.data;
+          console.log("cities", res.data);
         })
         .catch((err) => console.log(err));
     },

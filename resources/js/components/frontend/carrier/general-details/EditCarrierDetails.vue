@@ -27,6 +27,10 @@
                 <md-input type="text" v-model="form.last_name" required></md-input>
               </md-field>
               <md-field>
+                <label for="">Phone</label>
+                <md-input v-model="form.phone" required></md-input>
+              </md-field>
+              <md-field>
                 <label for="">Email</label>
                 <md-input v-model="form.email" required></md-input>
               </md-field>
@@ -78,6 +82,16 @@
                   :min="1"
                   v-model="form.vehicles"
                   required
+                ></md-input>
+              </md-field>
+              <md-field>
+                <label for="">Hourly rate($)</label>
+                <md-input
+                  type="number"
+                  :min="1"
+                  v-model="form.hourly_rate"
+                  required
+                  prefix="$"
                 ></md-input>
               </md-field>
             </div>
@@ -152,8 +166,10 @@ export default {
       address: null,
       employees: null,
       vehicles: null,
+      hourly_rate: null,
       year_established: null,
       email: null,
+      phone: null,
       addressId: null,
       contactId: null,
     },
@@ -169,7 +185,15 @@ export default {
       statusCode: null,
     },
   }),
-
+  computed: {
+    ...mapGetters({
+      authenticated: "auth/authenticated",
+      user: "auth/user",
+    }),
+  },
+  created() {
+    this.init();
+  },
   methods: {
     googleValidAddress(address, latlng) {
       this.supportedArea = "";
@@ -191,9 +215,7 @@ export default {
       this.form.street_number = null;
       this.form.address = null;
     },
-    onChange(e) {
-      this.logo = e.target.files[0];
-    },
+
     onLicenseChange(e) {
       this.business_license = e.target.files[0];
     },
@@ -203,7 +225,6 @@ export default {
     update() {
       this.isSubmitting = true;
       let fd = new FormData();
-      fd.append("logo", this.logo);
       fd.append("business_license", this.business_license);
       fd.append("insurance_papers", this.insurance_papers);
       fd.append("first_name", this.form.first_name);
@@ -215,13 +236,14 @@ export default {
       fd.append("zip", this.form.zip);
       fd.append("address", this.form.address);
       fd.append("email", this.form.email);
+      fd.append("phone", this.form.phone);
       fd.append("website", this.form.website);
       fd.append("company", this.form.company);
       fd.append("detail", this.form.detail);
       fd.append("addressId", this.form.addressId);
-      fd.append("contactId", this.form.contactId);
       fd.append("employees", this.form.employees);
       fd.append("vehicles", this.form.vehicles);
+      fd.append("hourly_rate", this.form.hourly_rate);
       fd.append("year_established", this.form.year_established);
       fd.append("_method", "put");
       axios
@@ -241,14 +263,15 @@ export default {
     init() {
       axios.get("carrier/details/" + this.$route.params.id).then(
         (res) => {
+          console.log("res: ", res.data);
           this.form.first_name = res.data.first_name;
           this.form.last_name = res.data.last_name;
-          this.form.email = res.data.contact.email;
+          this.form.email = this.user.email;
+          this.form.phone = this.user.phone;
           this.form.website = res.data.website;
           this.form.company = res.data.company;
           this.form.detail = res.data.detail;
           this.form.addressId = res.data.address.id;
-          this.form.contactId = res.data.contact.id;
           this.form.country = res.data.address.country;
           this.form.state = res.data.address.state;
           this.form.city = res.data.address.city;
@@ -258,22 +281,12 @@ export default {
           this.form.vehicles = res.data.vehicles;
           this.form.hourly_rate = res.data.hourly_rate;
           this.form.year_established = res.data.year_established;
-          this.oldLogo = res.data.logo;
         },
         (err) => {
           console.log(err);
         }
       );
     },
-  },
-  computed: {
-    ...mapGetters({
-      temp: "shared/temp",
-    }),
-  },
-  created() {
-    this.init();
-    console.log("formatted ddress", this.form.address);
   },
 };
 </script>

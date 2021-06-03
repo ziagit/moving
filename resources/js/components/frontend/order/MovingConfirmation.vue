@@ -170,7 +170,6 @@
 </template>
 
 <script>
-import axios from "axios";
 import builder from "../services/builder";
 import Spinner from "../../shared/Spinner";
 import Snackbar from "../../shared/Snackbar";
@@ -209,7 +208,7 @@ export default {
       this.shipment = await builder.buildOrder();
       this.shipment.moving_date.date = await builder.buildDate();
       this.shipment.moving_date.time = await builder.buildTime();
-      console.log("shipment: ", this.shipment);
+      console.log("this will be submitting: ", this.shipment);
       this.confirm();
     },
   },

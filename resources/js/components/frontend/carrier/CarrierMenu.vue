@@ -8,21 +8,17 @@
         <div class="break"></div>
         <div class="text">
           <div class="name md-list-item-text">{{ user.name }}</div>
-          <div class="email">{{ formatPhone(user.phone) }}</div>
+          <div class="email">
+            {{ user.email ? user.email : formatPhone(user.phone) }}
+          </div>
         </div>
       </div>
     </md-toolbar>
     <md-divider></md-divider>
     <md-list>
       <div v-if="authenticated">
-        <md-list-item @click="navigate('/help')">
-          <span
-            class="md-list-item-text"
-            v-bind:class="{
-              active: $route.name == 'help',
-            }"
-            >Help</span
-          >
+        <md-list-item>
+          <span class="md-list-item-text">Notifications</span>
         </md-list-item>
         <md-list-item @click="navigate('/carrier/dashboard')">
           <span
@@ -39,26 +35,17 @@
             v-bind:class="{
               active: $route.name == 'carrier-details',
             }"
-            >Profile</span
+            >Account</span
           >
         </md-list-item>
 
-        <md-list-item @click="navigate('/carrier/rates')">
-          <span
-            class="md-list-item-text"
-            v-bind:class="{
-              active: $route.name == 'rate-list',
-            }"
-            >Rates</span
-          >
-        </md-list-item>
         <md-list-item @click="navigate('/carrier/history')">
           <span
             class="md-list-item-text"
             v-bind:class="{
               active: $route.name == 'jobs',
             }"
-            >Job History</span
+            >Jobs</span
           >
         </md-list-item>
         <md-list-item @click="navigate('/carrier/earnings')">
@@ -70,6 +57,15 @@
             >Earnings</span
           >
         </md-list-item>
+        <md-list-item @click="navigate('/carrier/payments')">
+          <span
+            class="md-list-item-text"
+            v-bind:class="{
+              active: $route.name == 'details',
+            }"
+            >Wallet</span
+          >
+        </md-list-item>
         <md-list-item @click="navigate('/carrier/calendar')">
           <span
             class="md-list-item-text"
@@ -79,13 +75,14 @@
             >Calendar</span
           >
         </md-list-item>
-        <md-list-item @click="navigate('/carrier/payments')">
+
+        <md-list-item @click="navigate('/help')">
           <span
             class="md-list-item-text"
             v-bind:class="{
-              active: $route.name == 'details',
+              active: $route.name == 'help',
             }"
-            >Payments</span
+            >Help</span
           >
         </md-list-item>
       </div>
@@ -96,7 +93,6 @@
     </md-list>
   </div>
 </template>
-
 <script>
 import { mapGetters, mapActions } from "vuex";
 import Notifications from "../../shared/Notifications";

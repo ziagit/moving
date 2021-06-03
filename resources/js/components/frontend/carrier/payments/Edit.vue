@@ -72,7 +72,7 @@ import axios from "axios";
 import Snackbar from "../../../shared/Snackbar";
 import Spinner from "../../../shared/Spinner";
 export default {
-  name: "EditGeneralInfo",
+  name: "Edit",
   components: {
     Snackbar,
     Spinner,
@@ -114,6 +114,7 @@ export default {
     },
     init() {
       axios.get("carrier/payments/" + this.$route.params.id).then((res) => {
+        console.log("pay", res.data);
         this.form.currency = res.data.currency;
         this.form.transit_number = res.data.transit_number;
         this.form.institution_number = res.data.institution_number;

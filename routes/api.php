@@ -25,8 +25,9 @@ Route::group(['prefix' => 'moving'], function () {
 
   Route::group(['prefix' => 'auth', 'namespace' => 'Auth'], function () {
     Route::post('verify', 'VerifyPhoneController');
+    Route::post('verify-email', 'VerifyEmailController');
     Route::post('signin', 'SignInController');
-    Route::post('signup', 'SignUpController');
+    Route::post('check-email', 'SigninEmailController');
   }); //,'middleware'=>'verified'
   Route::group(['middleware' => 'auth:api', 'middleware' => 'status'], function () {
     Route::group(['namespace' => 'Auth', 'prefix' => 'auth'], function () {
@@ -38,10 +39,13 @@ Route::group(['prefix' => 'moving'], function () {
       Route::resource('details', 'CarrierDetailsController');
       Route::resource('rate', 'CarrierRateController');
       Route::resource('account', 'CarrierAccountController');
+      Route::post('change-avatar/{id}', 'CarrierAccountController@changeAvatar');
       Route::resource('payments', 'BankController');
 
       Route::resource('jobs', 'JobController');
-      Route::resource('earnings', 'EarningController');
+      Route::get('unpaid', 'EarningController@unpaid');
+      Route::get('paid', 'EarningController@paid');
+      Route::get('earning/{id}', 'EarningController@show');
       Route::get('job-status', 'JobController@jobStatus');
       Route::post('rate-carrier', 'CarrierDetailsController@rate');
 

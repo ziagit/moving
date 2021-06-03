@@ -19,12 +19,16 @@
                 ></md-input>
               </md-field>
               <md-field>
-                <label for="">Last name</label>
+                <label>Last name</label>
                 <md-input type="text" v-model="form.last_name" required></md-input>
               </md-field>
-              <md-field>
+              <md-field v-if="user.email">
+                <label>Phone</label>
+                <md-input type="text" v-model="form.phone" required></md-input>
+              </md-field>
+              <md-field v-else>
                 <label for="">Email</label>
-                <md-input type="text" v-model="form.email" required :min="0"></md-input>
+                <md-input type="text" v-model="form.email" required></md-input>
               </md-field>
             </div>
             <div class="row">
@@ -76,8 +80,13 @@
                 ></md-input>
               </md-field>
               <md-field>
-                <label for="">Hourly rate</label>
-                <md-input type="number" :min="1" v-model="form.rate" required></md-input>
+                <label for="">Hourly rate($)</label>
+                <md-input
+                  type="number"
+                  :min="1"
+                  v-model="form.hourly_rate"
+                  required
+                ></md-input>
               </md-field>
             </div>
 
@@ -126,6 +135,8 @@ import GoogleAddress3 from "../../../shared/GoogleAddress3";
 import axios from "axios";
 import Snackbar from "../../../shared/Snackbar";
 import Spinner from "../../../shared/Spinner";
+import validator from "../../services/validator";
+import { mapGetters, mapActions } from "vuex";
 export default {
   name: "AddGeneralInfo",
   components: {
@@ -145,9 +156,10 @@ export default {
       address: null,
       employees: null,
       vehicles: null,
-      rate: null,
+      hourly_rate: null,
       year_established: null,
       email: null,
+      phone: null,
       website: null,
       company: null,
       detail: null,
@@ -163,6 +175,12 @@ export default {
   }),
   mounted() {
     this.$refs.focusable.$el.focus();
+  },
+  computed: {
+    ...mapGetters({
+      authenticated: "auth/authenticated",
+      user: "auth/user",
+    }),
   },
   methods: {
     googleValidAddress(address, latlng) {
@@ -208,13 +226,14 @@ export default {
       fd.append("zip", this.form.zip);
       fd.append("address", this.form.address);
       fd.append("email", this.form.email);
+      fd.append("phone", this.form.phone);
       fd.append("website", this.form.website);
       fd.append("company", this.form.company);
       fd.append("detail", this.form.detail);
       fd.append("addressId", this.form.addressId);
-      fd.append("contactId", this.form.contactId);
       fd.append("employees", this.form.employees);
       fd.append("vehicles", this.form.vehicles);
+      fd.append("rate", this.form.rate);
       fd.append("year_established", this.form.year_established);
       axios
         .post("carrier/details", fd)
