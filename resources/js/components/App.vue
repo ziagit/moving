@@ -14,6 +14,11 @@ export default {
 </script>
 
 <style lang="scss">
+.add-btn {
+  position: absolute;
+  top: 1;
+  right: 1;
+}
 .react-code-input {
   input {
     font-family: "Roboto" !important;

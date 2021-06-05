@@ -42,6 +42,7 @@ class AccountController extends Controller
      */
     public function store(Request $request)
     {
+        return "ho";
         //
     }
 
@@ -76,22 +77,19 @@ class AccountController extends Controller
      */
     public function update(Request $request, $id)
     {
+        return "hi";
         $validator = Validator::make($request->all(), [
-            'name' => 'required|max:50',
             'email' => 'required|email',
-            'password' => 'required|min:3',
-            'password_confirmation' => 'required|same:password',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 400);
         }
         $user = User::find($id);
-        $user->name = $request->name;
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
         $user->update();
-        return response()->json(["message"=>"Updated."]);
+        return response()->json(["message"=>"Updated."],200);
     }
 
     /**

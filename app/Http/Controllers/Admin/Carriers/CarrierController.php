@@ -6,13 +6,14 @@ use App\Address;
 use App\Carrier;
 use App\Contact;
 use App\Http\Controllers\Controller;
+use App\User;
 use Exception;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class CarrierController extends Controller
 {
-   /**
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -20,7 +21,7 @@ class CarrierController extends Controller
 
     public function index()
     {
-        $carrier = Carrier::with('address','contact')->paginate(5);
+        $carrier = Carrier::with('user')->paginate(5);
         return response()->json($carrier);
     }
 
@@ -103,11 +104,12 @@ class CarrierController extends Controller
         $carrier->contact_id = $contactId;
 
         $carrier->save();
-        
+
         return response()->json(["message" => "Saved successfully!"], 200);
     }
 
-    public function storeContact($request){
+    public function storeContact($request)
+    {
         $contact = new Contact();
         $contact->name = $request->last_name;
         $contact->phone = $request->phone;
@@ -115,7 +117,8 @@ class CarrierController extends Controller
         $contact->save();
         return $contact->id;
     }
-    public function storeAddress($request){
+    public function storeAddress($request)
+    {
         $address = new Address();
         $address->country = $request->country;
         $address->state = $request->state;
@@ -133,8 +136,8 @@ class CarrierController extends Controller
      */
     public function show($id)
     {
-        $carrier = Carrier::with('address','contact')->find($id);
-        return $carrier;
+        $carrier = Carrier::with('address', 'user')->find($id);
+        return response()->json($carrier);
     }
 
     /**
@@ -166,51 +169,52 @@ class CarrierController extends Controller
             'zip' => 'required',
             'address' => 'required',
         ]);
-        $contactId = $this->updateContact($request);
         $addressId = $this->updateAddress($request);
         $carrier = Carrier::find($id);
 
-            if ($request->hasFile('logo')) {
+        if ($request->hasFile('logo')) {
 
-                $old_image_path = public_path('images/uploads/' . $carrier->logo);
-                if (file_exists($old_image_path)) {
-                    @unlink($old_image_path);
-                }
-                $file = $request->file('logo');
-                $logo_name = time() . '.' . $file->getClientOriginalName();
-                $file->move(public_path('images/uploads'), $logo_name);
-            } else {
-                $logo_name = $carrier->logo;
+            $old_image_path = public_path('images/uploads/' . $carrier->logo);
+            if (file_exists($old_image_path)) {
+                @unlink($old_image_path);
             }
-            if ($request->hasFile('insurance_papers')) {
+            $file = $request->file('logo');
+            $logo_name = time() . '.' . $file->getClientOriginalName();
+            $file->move(public_path('images/uploads'), $logo_name);
+        } else {
+            $logo_name = $carrier->logo;
+        }
+        if ($request->hasFile('insurance_papers')) {
 
-                $old_image_path = public_path('images/uploads/' . $carrier->insurance_papers);
-                if (file_exists($old_image_path)) {
-                    @unlink($old_image_path);
-                }
-                $file = $request->file('insurance_papers');
-                $insurance_papers_name = time() . '.' . $file->getClientOriginalName();
-                $file->move(public_path('images/uploads'), $insurance_papers_name);
-            } else {
-                $logo_name = $carrier->insurance_papers;
+            $old_image_path = public_path('images/uploads/' . $carrier->insurance_papers);
+            if (file_exists($old_image_path)) {
+                @unlink($old_image_path);
             }
-            if ($request->hasFile('business_license')) {
+            $file = $request->file('insurance_papers');
+            $insurance_papers_name = time() . '.' . $file->getClientOriginalName();
+            $file->move(public_path('images/uploads'), $insurance_papers_name);
+        } else {
+            $logo_name = $carrier->insurance_papers;
+        }
+        if ($request->hasFile('business_license')) {
 
-                $old_image_path = public_path('images/uploads/' . $carrier->business_license);
-                if (file_exists($old_image_path)) {
-                    @unlink($old_image_path);
-                }
-                $file = $request->file('business_license');
-                $business_license_name = time() . '.' . $file->getClientOriginalName();
-                $file->move(public_path('images/uploads'), $business_license_name);
-            } else {
-                $logo_name = $carrier->business_license;
+            $old_image_path = public_path('images/uploads/' . $carrier->business_license);
+            if (file_exists($old_image_path)) {
+                @unlink($old_image_path);
             }
-      
+            $file = $request->file('business_license');
+            $business_license_name = time() . '.' . $file->getClientOriginalName();
+            $file->move(public_path('images/uploads'), $business_license_name);
+        } else {
+            $logo_name = $carrier->business_license;
+        }
+
         $carrier->first_name = $request->first_name;
         $carrier->last_name = $request->last_name;
         $carrier->year_established = $request->year_established;
         $carrier->employees = $request->employees;
+        $carrier->vehicles = $request->vehicles;
+        $carrier->hourly_rate = $request->hourly_rate;
         $carrier->insurance_papers = $request->insurance_papers;
         $carrier->business_license = $request->business_license;
         $carrier->website = $request->website;
@@ -218,20 +222,22 @@ class CarrierController extends Controller
         $carrier->detail = $request->detail;
         $carrier->logo = $logo_name;
         $carrier->address_id = $addressId;
-        $carrier->contact_id = $contactId;
         $carrier->update();
+        
+        $this->updateContact($request);
 
         return response()->json(["message" => "Updated successfully!"], 200);
     }
 
-    public function updateContact($request){
-        $contact = Contact::find($request->contactId);
-        $contact->name = $request->last_name;
-        $contact->phone = $request->phone;
-        $contact->update();
-        return $contact->id;
+    public function updateContact($request)
+    {
+        $user = User::find($request->userId);
+        $user->phone = $request->phone;
+        $user->update();
+        return $user->id;
     }
-    public function updateAddress($request){
+    public function updateAddress($request)
+    {
         $address = Address::find($request->addressId);
         $address->country = $request->country;
         $address->state = $request->state;
@@ -252,13 +258,14 @@ class CarrierController extends Controller
     {
         $carrier = Carrier::find($id);
         $carrier->delete();
-        return response()->json(["message"=>"Deleted successfully!"],200);
+        return response()->json(["message" => "Deleted successfully!"], 200);
     }
 
     public function search(Request $request)
     {
         $keywords = $request->keywords;
-        $carrier = Carrier::where('first_name', 'like', '%' . $keywords . '%')
+        $carrier = Carrier::where('company', 'like', '%' . $keywords . '%')
+            ->with('user')
             ->paginate(10);
         return $carrier;
     }

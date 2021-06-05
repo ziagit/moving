@@ -6,8 +6,9 @@ use App\Address;
 use App\Contact;
 use App\Http\Controllers\Controller;
 use App\Shipper;
+use App\User;
+use Cartalyst\Stripe\Laravel\Facades\Stripe;
 use Illuminate\Http\Request;
-use Tymon\JWTAuth\Facades\JWTAuth;
 
 class ShipperController extends Controller
 {
@@ -18,10 +19,22 @@ class ShipperController extends Controller
      */
     public function index()
     {
-        $shippers = Shipper::with('address','contact')->paginate(10);
+        $shippers = Shipper::with('address','user')->paginate(10);
+        foreach($shippers as $shipper){
+            //$card = $this->getCard($shipper->stripe_customer_id);
+            $shipper['card']="xxx";
+        }
         return response()->json($shippers);
     }
-
+    public function getCard($id)
+    {
+        if ($id) {
+            $card = Stripe::cards()->all($id);
+            return $card;
+        } else {
+            return null;
+        }
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -77,7 +90,8 @@ class ShipperController extends Controller
         $shipper = Shipper::find($id);
         $shipper->first_name = $request->first_name;
         $shipper->last_name = $request->last_name;
-        $shipper->update();
+        return$shipper->update();
+
         $this->updateContact($request);
         $this->updateAddress($request);
         return response()->json(["message"=>"Updated successfully!"],200);

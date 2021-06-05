@@ -18,7 +18,6 @@ class Job extends Model
     {
         return $this->belongsTo(Carrier::class);
     }
-
     public function carrierDetail(){
         return $this->carrier()->with('user');
     }

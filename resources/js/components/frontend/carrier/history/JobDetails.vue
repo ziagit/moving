@@ -17,17 +17,17 @@
             <Spinner v-if="isSubmitting" />
             <div v-else class="actions">
               <md-button
-                class="md-primary md-raised"
+                class="custom-button"
                 @click="(status = 'Accepted'), (confirmDialog = true)"
                 >Accept</md-button
               >
               <md-button
-                class="md-primary md-raised"
+                class="custom-button"
                 @click="(status = 'Declined'), (confirmDialog = true)"
                 >Decline</md-button
               >
               <md-button
-                class="md-primary md-raised"
+                class="custom-button"
                 @click="(status = 'Completed'), (confirmDialog = true)"
                 >Complete</md-button
               >
@@ -212,7 +212,6 @@
 </template>
 
 <script>
-import axios from "axios";
 import Spinner from "../../../shared/Spinner";
 import services from "../../services/orderSchedualer";
 import dateFormatter from "../../services/dateFormatter";
@@ -225,6 +224,8 @@ export default {
     isSubmitting: false,
     confirmDialog: false,
     status: null,
+    distance: null,
+    duration: null,
   }),
   created() {
     this.jobDetails();

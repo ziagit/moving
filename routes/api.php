@@ -82,6 +82,7 @@ Route::group(['prefix' => 'moving'], function () {
       Route::get('search-earning', 'Finance\EarningController@search');
 
       Route::resource('users', 'UserController');
+      Route::get('roles', 'UserController@roles');
       Route::put('users/lock/{id}', 'UserController@lock');
       Route::get('search-user', 'UserController@search');
       Route::resource('carriers', 'Carriers\CarrierController');
@@ -99,7 +100,7 @@ Route::group(['prefix' => 'moving'], function () {
       Route::put('shippers-account/lock/{id}', 'Shippers\AccountController@lock');
       Route::get('search-shipper', 'Shippers\ShipperController@search');
       Route::get('search-shipper-account', 'Shippers\AccountController@search');
-      Route::resource('orders', 'Shippers\OrderController');
+      Route::resource('orders', 'OrderController');
       Route::get('search-order', 'Shippers\OrderController@search');
 
       Route::resource('countries', 'Lookups\CountryController');

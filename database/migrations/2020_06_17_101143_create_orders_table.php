@@ -33,7 +33,10 @@ class CreateOrdersTable extends Migration
             $table->double('tax');
             $table->double('service_fee');
             $table->double('disposal_fee')->nullable();
+            $table->double('supplies_cost')->nullable();
             $table->double('tips')->nullable();
+            $table->double('distance')->nullable();
+            $table->double('duration')->nullable();
 
             $table->string('charge_id')->nullable();
 

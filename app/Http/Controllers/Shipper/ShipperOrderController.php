@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Job;
 use App\Jobstatus;
+use App\Notifications\JobUpdated;
 use App\Notifications\UserJobUpdated;
 use App\Order;
 use Illuminate\Http\Request;
@@ -93,7 +94,7 @@ class ShipperOrderController extends Controller
         try {
             $user = User::where('email', $request->email)->first();
             if ($user) {
-                return $user->notify(new UserJobUpdated($request));
+                return $user->notify(new JobUpdated($request));
             }
             return response()->json(['message' => 'Canceled successfully'], 200);
         } catch (Exception $e) {

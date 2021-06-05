@@ -49,7 +49,7 @@ export default {
   }),
   methods: {},
   created() {
-    this.moving = this.price.gross;
+    this.moving = this.price.moving;
     this.supplies = this.price.supplies_cost;
     this.tax = this.price.tax;
     this.travel = this.price.travel;

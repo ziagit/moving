@@ -44,7 +44,7 @@ class JobCreated extends Notification
         $url = url('/carrier/history/details/'.$this->job->id);
         return (new MailMessage)
             ->subject('New Job Created')
-            ->greeting('Dear Currier')
+            ->greeting('Dear Mover')
             ->line('You have a new job available in your dashboard')
             ->action('View the job', $url);
     }

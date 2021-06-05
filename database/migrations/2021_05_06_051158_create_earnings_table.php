@@ -15,11 +15,6 @@ class CreateEarningsTable extends Migration
     {
         Schema::create('earnings', function (Blueprint $table) {
             $table->id();
-            $table->double('travel_cost');
-            $table->double('moving_cost');
-            $table->double('supplies_cost');
-            $table->double('service_fee');
-            $table->double('disposal_fee');
             $table->double('carrier_earning');
             $table->double('tingsapp_earning');
             $table->double('received_gst');

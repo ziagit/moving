@@ -10,16 +10,11 @@
       @md-confirm="confirm()"
       @md-cancel="cancel"
     />
-    <md-dialog :md-active.sync="editTogal">
-      <md-dialog-title>Update Shipper</md-dialog-title>
-      <md-dialog-content>
-        <EditShipper v-on:close-dialog="refresh" :shipper="shipper" />
-      </md-dialog-content>
-    </md-dialog>
-    <md-table md-sort="name" md-sort-order="asc" md-card>
+    <EditShipper :shipper="shipper" v-on:close-it="editTogal = false" v-if="editTogal" />
+    <md-table md-sort="first_name" md-sort-order="asc" md-card v-else>
       <md-table-toolbar>
         <div class="md-toolbar-section-start">
-          <h1 class="md-title">Shippers</h1>
+          <h1 class="md-title">Customers</h1>
         </div>
 
         <md-field md-clearable class="md-toolbar-section-end">
@@ -34,22 +29,20 @@
       </md-table-empty-state>
       <md-table-row>
         <md-table-head md-numeric>ID</md-table-head>
-        <md-table-head>First name</md-table-head>
-        <md-table-head>Last name</md-table-head>
+        <md-table-head>Name</md-table-head>
         <md-table-head>Email</md-table-head>
         <md-table-head>Phone</md-table-head>
-        <md-table-head>Full Address</md-table-head>
+        <md-table-head>Address</md-table-head>
+        <md-table-head>Payment method</md-table-head>
         <md-table-head>Actions</md-table-head>
       </md-table-row>
       <md-table-row v-for="shipper in shippers.data" :key="shipper.id">
         <md-table-cell md-numeric>{{ shipper.id }}</md-table-cell>
         <md-table-cell>{{ shipper.first_name }}</md-table-cell>
-        <md-table-cell>{{ shipper.last_name }}</md-table-cell>
-        <md-table-cell>{{ shipper.contact ? shipper.contact.email : "" }}</md-table-cell>
-        <md-table-cell>{{ shipper.contact ? shipper.contact.phone : "" }}</md-table-cell>
-        <md-table-cell>{{
-          shipper.address ? shipper.address.formatted_address : ""
-        }}</md-table-cell>
+        <md-table-cell>{{ shipper.user ? shipper.user.email : "" }}</md-table-cell>
+        <md-table-cell>{{ shipper.user ? shipper.user.phone : "" }}</md-table-cell>
+        <md-table-cell>{{ shipper.address.formatted_address }}</md-table-cell>
+        <md-table-cell>{{ shipper.card }}</md-table-cell>
 
         <md-table-cell md-label="Actions">
           <md-button class="md-icon-button md-primary" @click="edit(shipper)">
@@ -57,6 +50,9 @@
           </md-button>
           <md-button class="md-icon-button md-accent" @click="remove(shipper.id)">
             <md-icon>delete</md-icon>
+          </md-button>
+          <md-button class="md-icon-button md-accent" @click="remove(shipper.id)">
+            <md-icon>lock</md-icon>
           </md-button>
         </md-table-cell>
       </md-table-row>

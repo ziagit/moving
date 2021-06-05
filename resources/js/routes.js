@@ -66,7 +66,7 @@ import MovingDate from "./components/frontend/order/MovingDate";
 import FewItems from "./components/frontend/order/FewItems";
 import Movers from "./components/frontend/order/Movers";
 import OrderContact from "./components/frontend/order/Contact";
-import MovingPayment from './components/frontend/order/MovingPayment'
+import MovingPayment from "./components/frontend/order/MovingPayment";
 import CardDetails from "./components/frontend/card/Card";
 import MovingConfirmation from "./components/frontend/order/MovingConfirmation";
 import MovingCompletion from "./components/frontend/order/MovingCompletion";
@@ -104,21 +104,19 @@ import Supply from "./components/backend/lookups/supply/Supply";
 import Vehicle from "./components/backend/lookups/vehicle/Vehicle";
 import Constans from "./components/backend/lookups/constans/Constans";
 
-import CarrierList from "./components/backend/carrier/CarrierList";
-import CarrierDetailsAdmin from "./components/backend/carrier/Edit";
-import CarriersAccount from "./components/backend/carrier/accounts/Accounts";
+import AdminCarriers from "./components/backend/carrier/Carriers";
+import AdminCarrierDetails from "./components/backend/carrier/Details";
 import CustomerAddresses from "./components/backend/addresses/Addresses";
 import CustomerContacts from "./components/backend/contacts/Contacts";
-import Rates from "./components/backend/carrier/rates/Rates";
-import AdminJobs from "./components/backend/carrier/jobs/Jobs";
-import AdminJobDetails from "./components/backend/carrier/jobs/Details";
-import Orders from "./components/backend/shippers/orders/Orders";
-import AdminOrderDetails from "./components/backend/shippers/orders/Details";
+
 import Shippers from "./components/backend/shippers/Shippers";
+import AdminOrders from "./components/backend/orders/Orders";
+import AdminOrderDetails from "./components/backend/orders/Details";
 import ShippersAccount from "./components/backend/shippers/accounts/Accounts";
 import Users from "./components/backend/users/Users";
 
 import AdminEarnings from "./components/backend/finances/Earnings";
+import AdminRevenue from "./components/backend/finances/Revenue";
 import AdminEarningDetails from "./components/backend/finances/EarningDetails";
 import AdminInvoices from "./components/backend/finances/Invoices";
 
@@ -143,7 +141,7 @@ function webGuard(to, from, next) {
 }
 function adminGuard(to, from, next) {
     var user = store.getters["auth/user"];
-    if (!store.getters["auth/authenticated"] || user.role[0].name != 'admin') {
+    if (!store.getters["auth/authenticated"] || user.role[0].name != "admin") {
         next("/login");
     } else {
         next();
@@ -166,7 +164,11 @@ export default new VueRouter({
                 { name: "help", path: "help/:id", component: Help },
                 { name: "cities", path: "cities", component: CityList },
                 { name: "login", path: "login", component: Login },
-                { name: "login-mover", path: "login-mover", component: LoginMover },
+                {
+                    name: "login-mover",
+                    path: "login-mover",
+                    component: LoginMover
+                },
                 { name: "register", path: "register", component: Register },
                 { name: "verify", path: "verify", component: VerifyContact },
                 { name: "password", path: "password", component: Password },
@@ -199,8 +201,16 @@ export default new VueRouter({
                 },
                 { name: "carriers", path: "/carriers", component: OurCarriers },
                 { name: "shippers", path: "/shippers", component: OurShippers },
-                { name: "how-it-works", path: "/how-it-works", component: HowItWorks },
-                { name: "review", path: "/review/:id", component: CarrierReview },
+                {
+                    name: "how-it-works",
+                    path: "/how-it-works",
+                    component: HowItWorks
+                },
+                {
+                    name: "review",
+                    path: "/review/:id",
+                    component: CarrierReview
+                },
                 {
                     path: "order",
                     component: Order,
@@ -249,7 +259,11 @@ export default new VueRouter({
                             component: FewItems
                         },
                         { name: "movers", path: "movers", component: Movers },
-                        { name: "contact", path: "contact", component: OrderContact },
+                        {
+                            name: "contact",
+                            path: "contact",
+                            component: OrderContact
+                        },
                         {
                             name: "moving-payment",
                             path: "moving-payment",
@@ -402,8 +416,8 @@ export default new VueRouter({
                             component: CarrierCalendar
                         },
                         {
-                            name:"payments",
-                            path:"payments",
+                            name: "payments",
+                            path: "payments",
                             component: CarrierPayments
                         }
                     ],
@@ -484,7 +498,7 @@ export default new VueRouter({
                             name: "reviews",
                             path: "reviews",
                             component: CarrierReview
-                        },  
+                        }
                     ],
                     beforeEnter: webGuard
                 },
@@ -545,7 +559,11 @@ export default new VueRouter({
                             path: "moving-types",
                             component: Movingtype
                         },
-                        { name: "supplies", path: "supplies", component: Supply },
+                        {
+                            name: "supplies",
+                            path: "supplies",
+                            component: Supply
+                        },
                         {
                             name: "vehicles",
                             path: "vehicles",
@@ -557,27 +575,14 @@ export default new VueRouter({
                             component: Constans
                         },
                         {
-                            name: "carriers-account",
-                            path: "carriers-account",
-                            component: CarriersAccount
-                        },
-                        {
                             name: "carriers",
                             path: "carriers",
-                            component: CarrierList
+                            component: AdminCarriers
                         },
                         {
                             name: "carrier-details",
                             path: "carrier-details/:id",
-                            component: CarrierDetailsAdmin
-                        },
-                       
-                        { name: "rates", path: "rates", component: Rates },
-                        { name: "jobs", path: "jobs", component: AdminJobs },
-                        {
-                            name: "job-details",
-                            path: "job-details/:id",
-                            component: AdminJobDetails
+                            component: AdminCarrierDetails
                         },
                         {
                             name: "shippers-account",
@@ -589,16 +594,15 @@ export default new VueRouter({
                             path: "shippers",
                             component: Shippers
                         },
-                        { name: "orders", path: "orders", component: Orders },
                         {
-                            name: "order-details",
-                            path: "order-details/:id",
-                            component: AdminOrderDetails
+                            name:'admin-orders',
+                            path: "orders",
+                            component: AdminOrders,
                         },
                         {
-                            name: "addresses",
-                            path: "addresses",
-                            component: CustomerAddresses
+                            name: "admin-order-details",
+                            path: "orders/details/:id",
+                            component: AdminOrderDetails
                         },
                         {
                             name: "contacts",
@@ -644,9 +648,9 @@ export default new VueRouter({
                             component: HelpCenterAdmin
                         },
                         {
-                            name: "finances",
-                            path: "finances",
-                            component: AdminEarnings
+                            name: "revenue",
+                            path: "revenue",
+                            component: AdminRevenue
                         },
                         {
                             name: "finance-details",

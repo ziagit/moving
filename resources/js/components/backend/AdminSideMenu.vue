@@ -55,35 +55,41 @@
         </md-list>
       </md-list-item>
 
-      <md-list-item md-expand :md-expanded.sync="expandCarriers">
-        <span class="md-list-item-text">Carriers</span>
-        <md-list slot="md-expand">
-          <md-list-item class="md-inset" @click="hideMenu('carriers-account')"
-            >Carriers</md-list-item
-          >
-          <md-list-item class="md-inset" @click="hideMenu('carriers')"
-            >Profiles</md-list-item
-          >
-          <md-list-item class="md-inset" @click="hideMenu('rates')">Rates</md-list-item>
-          <md-list-item class="md-inset" @click="hideMenu('jobs')">Jobs</md-list-item>
-        </md-list>
+      <md-list-item @click="hideMenu('carriers')">
+        <span class="md-list-item-text">Movers</span>
       </md-list-item>
-      <md-list-item md-expand :md-expanded.sync="expandShippers">
+      <md-list-item @click="hideMenu('shippers')">
         <span class="md-list-item-text">Customers</span>
-        <md-list slot="md-expand">
-          <md-list-item class="md-inset" @click="hideMenu('shippers-account')"
-            >Customers</md-list-item
-          >
-          <md-list-item class="md-inset" @click="hideMenu('shippers')"
-            >Profiles</md-list-item
-          >
-          <md-list-item class="md-inset" @click="hideMenu('orders')">Orders</md-list-item>
-        </md-list>
       </md-list-item>
 
+      <md-list-item @click="hideMenu('orders')">
+        <span class="md-list-item-text">Orders</span>
+      </md-list-item>
       <md-list-item @click="hideMenu('users')">
         <span class="md-list-item-text">Users</span>
       </md-list-item>
+
+      <md-list-item md-expand :md-expanded.sync="expandFinance">
+        <span class="md-list-item-text">Finance</span>
+        <md-list slot="md-expand">
+          <md-list-item class="md-inset" @click="hideMenu('revenue')"
+            >Revenue</md-list-item
+          >
+          <md-list-item class="md-inset" @click="hideMenu('unpaid-jobs')"
+            >Unpaid jobs</md-list-item
+          >
+          <md-list-item class="md-inset" @click="hideMenu('paid-jobs')"
+            >Paid jobs</md-list-item
+          >
+          <md-list-item class="md-inset" @click="hideMenu('payouts')"
+            >Payouts</md-list-item
+          >
+          <md-list-item class="md-inset" @click="hideMenu('refunds')"
+            >Refunds</md-list-item
+          >
+        </md-list>
+      </md-list-item>
+
       <md-list-item md-expand :md-expanded.sync="expandCompany">
         <span class="md-list-item-text">Pages</span>
         <md-list slot="md-expand">
@@ -109,19 +115,6 @@
         </md-list>
       </md-list-item>
 
-      <md-list-item md-expand :md-expanded.sync="expandFinance">
-        <span class="md-list-item-text">Finance</span>
-        <md-list slot="md-expand">
-          <md-list-item class="md-inset" @click="hideMenu('finances')"
-            >Earnings</md-list-item
-          >
-        </md-list>
-        <md-list slot="md-expand">
-          <md-list-item class="md-inset" @click="hideMenu('finances')"
-            >Payouts</md-list-item
-          >
-        </md-list>
-      </md-list-item>
       <div v-if="authenticated">
         <md-divider></md-divider>
         <md-list-item @click="signOut()">

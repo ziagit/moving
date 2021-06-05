@@ -40,8 +40,8 @@ class Order extends Model
     public function addresses(){
         return $this->belongsToMany(Address::class);
     }
-    public function contact(){
-        return $this->belongsTo(Contact::class);
+    public function shipperContacts(){
+        return $this->shipper()->with('user');
     }
     public function job()
     {

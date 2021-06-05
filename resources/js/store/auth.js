@@ -25,13 +25,11 @@ export default {
     actions: {
         async signIn({ dispatch }, credentials) {
             let response = await axios.post("auth/signin", credentials)
-            console.log("login res:" , response.data)
             return dispatch('attempt', response.data)
         },
 
         async signUp({ dispatch }, credentials) {
             let response = await axios.post("auth/signup/", credentials)
-            console.log("respnonse from signup: ",response.data)
             return dispatch('attempt', response.data)
         },
 

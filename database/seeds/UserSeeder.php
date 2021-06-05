@@ -15,7 +15,7 @@ class UserSeeder extends Seeder
     public function run()
     {
         User::truncate();
-        $today = date('d-m-y h:i:s');;
+        $today = date('d-m-y h:i:s');
         $users =  [
             [
                 'name' => 'Admin',

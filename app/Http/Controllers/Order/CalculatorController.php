@@ -78,7 +78,7 @@ class CalculatorController extends Controller
                 $availableCarriers[$i]['detail'] = $carrier->detail;
                 $availableCarriers[$i]['rate'] = $carrier->hourly_rate;
                 $availableCarriers[$i]['price'] = round($total, 2);
-                $availableCarriers[$i]['gross'] = round($movingCost, 2);
+                $availableCarriers[$i]['moving'] = round($movingCost, 2);
                 $availableCarriers[$i]['supplies_cost'] = round($suppliesCost, 2);
                 $availableCarriers[$i]['travel'] = round($travelCost, 2);
                 $availableCarriers[$i]['service_fee'] = $this->serviceFee($movingCost, $travelCost, $serviceFee);

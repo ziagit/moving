@@ -16,7 +16,7 @@ class EarningController extends Controller
      */
     public function index()
     {
-        $earnings = Earning::with('orderAddress','carrier')->get();
+        $earnings = Earning::with('order')->paginate(5);
         return response()->json($earnings);
     }
 

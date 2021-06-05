@@ -21,14 +21,16 @@
       @md-cancel="cancel"
     />
     <!-- edit dialog -->
-    <md-dialog :md-active.sync="editTogal">
-      <md-dialog-title>Update data</md-dialog-title>
-      <md-dialog-content>
-        <Edit v-on:close-dialog="refresh" :user="user" />
-      </md-dialog-content>
-    </md-dialog>
 
-    <md-table md-sort="name" md-sort-order="asc" md-card>
+    <Edit
+      v-if="editTogal"
+      v-on:cancel="editTogal = false"
+      v-on:refresh="refresh"
+      :user="user"
+    />
+    <Add v-if="addTogal" v-on:cancel="addTogal = false" v-on:refresh="refresh" />
+
+    <md-table v-if="!editTogal && !addTogal" md-sort="name" md-sort-order="asc" md-card>
       <md-table-toolbar>
         <div class="md-toolbar-section-start">
           <h1 class="md-title">Users</h1>
@@ -48,7 +50,8 @@
         <md-table-head md-numeric>ID</md-table-head>
         <md-table-head>Name</md-table-head>
         <md-table-head>Email</md-table-head>
-        <md-table-head>Roles</md-table-head>
+        <md-table-head>Phone</md-table-head>
+        <md-table-head>Access</md-table-head>
         <md-table-head>Status</md-table-head>
         <md-table-head>Actions</md-table-head>
       </md-table-row>
@@ -56,6 +59,7 @@
         <md-table-cell md-numeric>{{ index + 1 }}</md-table-cell>
         <md-table-cell>{{ user.name }}</md-table-cell>
         <md-table-cell>{{ user.email }}</md-table-cell>
+        <md-table-cell>{{ user.phone }}</md-table-cell>
         <md-table-cell>
           <span v-for="role in user.roles" :key="role.id">{{ role.name }}</span>
         </md-table-cell>
@@ -74,6 +78,7 @@
             <md-icon>edit</md-icon>
           </md-button>
           <md-button
+            v-if="user.roles[0].name != 'admin'"
             class="md-icon-button md-accent"
             @click="remove(user.id)"
             :disabled="user.status != 'active'"
@@ -84,6 +89,7 @@
             v-if="user.status == 'active'"
             class="md-icon-button"
             :class="[user.status == 'active' ? 'unlocked' : 'locked']"
+            :disabled="user.roles[0].name == 'admin'"
             @click="lock(user.id, 'locked')"
           >
             <md-icon>lock_open</md-icon>
@@ -99,14 +105,22 @@
       </md-table-row>
     </md-table>
     <pagination :limit="4" :data="users" @pagination-change-page="get"></pagination>
+    <md-button class="md-fab md-primary add-btn" @click="addTogal = true">
+      <md-icon>add</md-icon>
+      <md-tooltip>Add new user</md-tooltip>
+    </md-button>
   </div>
 </template>
 
 <script>
-import axios from "axios";
 import Edit from "./Edit";
+import Add from "./Add";
 export default {
-  name: "user",
+  name: "Users",
+  components: {
+    Edit,
+    Add,
+  },
   data: () => ({
     keywords: null,
     users: null,
@@ -194,9 +208,6 @@ export default {
   },
   created() {
     this.get();
-  },
-  components: {
-    Edit,
   },
 };
 </script>

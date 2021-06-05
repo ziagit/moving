@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Role;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+
 class UserController extends Controller
 {
     /**
@@ -17,10 +19,10 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::whereHas('roles', function($q){
-            $q->where('name', 'admin');
+        $users = User::whereHas('roles', function ($q) {
+            $q->where('name', 'admin')->orWhere('name','support');
         })->with('roles')
-        ->paginate(5);
+            ->paginate(5);
         return response()->json($users);
     }
 
@@ -42,7 +44,29 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|max:50',
+            'email' => 'required|email',
+            'phone' => 'required',
+            'role'=>'required',
+            'password' => 'required|min:3',
+            'password_confirmation' => 'required|same:password',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 400);
+        }
+        $today = date('d-m-y h:i:s');
+        $user = new User();
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->phone = $request->phone;
+        $user->password = Hash::make($request->password);
+        $user->phone_verified_at = $today;
+        $user->email_verified_at = $today;
+        $user->save();
+        $role = Role::find($request->role);
+        $user->roles()->attach($role);
+        return response()->json(["message" => "Saved."],200);
     }
 
     /**
@@ -53,7 +77,8 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        $user = User::find($id);
+        return response()->json($user);
     }
 
     /**
@@ -76,23 +101,42 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if ($request->password) {
+            $validator = Validator::make($request->all(), [
+                'name' => 'required|max:50',
+                'email' => 'required|email',
+                'phone' => 'required',
+                'password' => 'required|min:3',
+                'password_confirmation' => 'required|same:password',
+            ]);
 
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|max:50',
-            'email' => 'required|email',
-            'password' => 'required|min:3',
-            'password_confirmation' => 'required|same:password',
-        ]);
+            if ($validator->fails()) {
+                return response()->json(['error' => $validator->errors()], 400);
+            }
+            $user = User::find($id);
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->phone = $request->phone;
+            $user->password = Hash::make($request->password);
+            $user->update();
+            return response()->json(["message" => "Updated."],200);
+        }else{
+            $validator = Validator::make($request->all(), [
+                'name' => 'required',
+                'email' => 'required|email',
+                'phone' => 'required',
+            ]);
 
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 400);
+            if ($validator->fails()) {
+                return response()->json(['error' => $validator->errors()], 400);
+            }
+            $user = User::find($id);
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->phone = $request->phone;
+            $user->update();
+            return response()->json(["message" => "User details updated!"],200);
         }
-        $user = User::find($id);
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->password = Hash::make($request->password);
-        $user->update();
-        return response()->json(["message"=>"Updated."]);
     }
 
     /**
@@ -105,7 +149,7 @@ class UserController extends Controller
     {
         $user = User::find($id);
         $user->delete();
-        return response()->json(["message"=>"Deleted!"]);
+        return response()->json(["message" => "Deleted!"]);
     }
 
     public function lock(Request $request, $id)
@@ -113,7 +157,7 @@ class UserController extends Controller
         $user = User::find($id);
         $user->status = $request->status;
         $user->update();
-        return response()->json(["message"=>"Account stateus changed!"]);
+        return response()->json(["user" => $user], 200);
     }
 
     public function search(Request $request)
@@ -126,5 +170,9 @@ class UserController extends Controller
             ->with('roles')
             ->paginate(10);
         return $user;
+    }
+    public function roles(){
+        $roles = Role::all();
+        return response()->json($roles);
     }
 }

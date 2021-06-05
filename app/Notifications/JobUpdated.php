@@ -5,6 +5,7 @@ namespace App\Notifications;
 use App\Jobstatus;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
@@ -30,7 +31,7 @@ class JobUpdated extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return ['database', 'broadcast', 'mail'];
     }
 
     /**
@@ -41,13 +42,30 @@ class JobUpdated extends Notification
      */
     public function toMail($notifiable)
     {
-        $jobstatus = Jobstatus::find($this->job->jobstatus_id);
-        $url = url('/#/carrier/history/details/'.$this->job->id);
+        $url = url('/carrier/history/details/'.$this->job->jobId);
         return (new MailMessage)
-        ->subject('Shipment Status')
-        ->greeting('Dear Customer')
-        ->line('Your frieght is '.$jobstatus->title)
+        ->subject('Job Status')
+        ->greeting('Dear Partner')
+        ->line('This moving is being'.$this->job->status)
         ->action('View more details', $url);
+    }
+    public function toDatabase($notifiable)
+    {
+        return [
+            'job' => $this->job
+        ];
+    }
+    /**
+     * Get the broadcastable representation of the notification.
+     *
+     * @param  mixed  $notifiable
+     * @return BroadcastMessage
+     */
+    public function toBroadcast($notifiable)
+    {
+        return new BroadcastMessage([
+            'notification' => $notifiable->notifications()->latest()->first()
+        ]);
     }
 
     /**
