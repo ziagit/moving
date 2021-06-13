@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Shippers;
 
 use App\Http\Controllers\Controller;
+use App\Shipper;
 use App\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -104,7 +105,9 @@ class AccountController extends Controller
     {
         $user = User::find($id);
         $user->delete();
-        return response()->json(["message"=>"Deleted!"]);
+        $shipper = Shipper::where('user_id',$id)->first();
+        $shipper->delete();
+        return response()->json("Record deleted successfully!",200);
     }
 
     public function lock(Request $request, $id)

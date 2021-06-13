@@ -58,11 +58,11 @@
           >Become a Mover</span
         >
       </md-list-item>
-      <md-list-item @click="navigate('/login-mover')">
+      <md-list-item @click="navigate('/login')">
         <span
           class="md-list-item-text"
           v-bind:class="{
-            active: $route.name == 'login-mover',
+            active: $route.name == 'login',
           }"
           >My account</span
         >

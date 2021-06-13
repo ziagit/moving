@@ -3,7 +3,6 @@ import VueRouter from "vue-router";
 import Home from "./components/frontend/Home";
 import Register from "./components/frontend/auth/Register";
 import Login from "./components/frontend/auth/Login";
-import LoginMover from "./components/frontend/auth/LoginMover";
 import VerifyContact from "./components/frontend/auth/Verify";
 import Password from "./components/frontend/auth/Password";
 
@@ -12,6 +11,7 @@ import ForgotPassword from "./components/frontend/auth/ForgotPassword";
 import Welcome from "./components/frontend/auth/Welcome";
 import Card from "./components/frontend/card/Card";
 import CarrierDashboard from "./components/frontend/carrier/dashboard/Dashboard";
+import CarrierInbox from "./components/frontend/carrier/inbox/Inbox";
 import HomeContent from "./components/frontend/pages/HomeContent";
 import Help from "./components/frontend/pages/Help";
 import CityList from "./components/frontend/pages/Cities";
@@ -22,7 +22,6 @@ import Terms from "./components/frontend/pages/Terms";
 import OurCarriers from "./components/frontend/pages/OurCarriers";
 import OurShippers from "./components/frontend/pages/OurShippers";
 import HowItWorks from "./components/frontend/pages/HowItWorks";
-import Rating from "./components/frontend/shipper/review/Rating";
 import CarrierReview from "./components/frontend/shipper/review/CarrierReview";
 
 import CarrierProfile from "./components/frontend/carrier/CarrierProfile";
@@ -31,10 +30,6 @@ import CarrierDetailsContainer from "./components/frontend/carrier/general-detai
 import EditCarrierDetails from "./components/frontend/carrier/general-details/EditCarrierDetails";
 import AddCarrierDetails from "./components/frontend/carrier/general-details/AddCarrierDetails";
 
-import CarrierRates from "./components/frontend/carrier/rate/CarrierRates";
-import RateContainer from "./components/frontend/carrier/rate/RateContainer";
-import AddRate from "./components/frontend/carrier/rate/AddRate";
-import EditRate from "./components/frontend/carrier/rate/EditRate";
 import History from "./components/frontend/carrier/history/History";
 import Jobs from "./components/frontend/carrier/history/Jobs";
 import JobDetails from "./components/frontend/carrier/history/JobDetails";
@@ -87,7 +82,12 @@ import Expences from "./components/frontend/shipper/expences/Expences";
 
 //backend
 import Admin from "./components/backend/Admin";
-import Dashboard from "./components/backend/Dashboard";
+import Dashboard from "./components/backend/dashboard/Dashboard";
+import AdminReports from "./components/backend/reports/Container";
+import AdminSalesReports from "./components/backend/reports/SalesReports";
+import AdminSalesReport from "./components/backend/reports/SalesReport";
+import AdminFinancialReports from "./components/backend/reports/FinancialReports";
+import AdminFinancialReport from "./components/backend/reports/FinancialReport";
 import Inbox from "./components/backend/inbox/Inbox";
 import Comapany from "./components/backend/company/Company";
 import Countries from "./components/backend/lookups/countries/Countries";
@@ -115,10 +115,12 @@ import AdminOrderDetails from "./components/backend/orders/Details";
 import ShippersAccount from "./components/backend/shippers/accounts/Accounts";
 import Users from "./components/backend/users/Users";
 
-import AdminEarnings from "./components/backend/finances/Earnings";
 import AdminRevenue from "./components/backend/finances/Revenue";
-import AdminEarningDetails from "./components/backend/finances/EarningDetails";
-import AdminInvoices from "./components/backend/finances/Invoices";
+import UnpaidJobs from "./components/backend/finances/UnpaidJobs";
+import PaidJobs from "./components/backend/finances/PaidJobs";
+import Payouts from "./components/backend/finances/Payouts";
+import Refunds from "./components/backend/finances/Refunds";
+import AdminEarningDetails from "./components/backend/finances/Details";
 
 import About from "./components/backend/company/about/About";
 import Contact from "./components/backend/company/contact/Contact";
@@ -164,11 +166,6 @@ export default new VueRouter({
                 { name: "help", path: "help/:id", component: Help },
                 { name: "cities", path: "cities", component: CityList },
                 { name: "login", path: "login", component: Login },
-                {
-                    name: "login-mover",
-                    path: "login-mover",
-                    component: LoginMover
-                },
                 { name: "register", path: "register", component: Register },
                 { name: "verify", path: "verify", component: VerifyContact },
                 { name: "password", path: "password", component: Password },
@@ -297,6 +294,11 @@ export default new VueRouter({
                             component: CarrierDashboard
                         },
                         {
+                            name: "inbox",
+                            path: "inbox",
+                            component: CarrierInbox
+                        },
+                        {
                             path: "account",
                             component: CarrierAccountContainer,
                             children: [
@@ -335,29 +337,6 @@ export default new VueRouter({
                                 }
                             ]
                         },
-                        {
-                            path: "rates",
-                            component: RateContainer,
-                            children: [
-                                { path: "", redirect: "list" },
-                                {
-                                    name: "rate-list",
-                                    path: "list",
-                                    component: CarrierRates
-                                },
-                                {
-                                    name: "add-rate",
-                                    path: "add",
-                                    component: AddRate
-                                },
-                                {
-                                    name: "edit-rate",
-                                    path: "edit/:id",
-                                    component: EditRate
-                                }
-                            ]
-                        },
-
                         {
                             path: "history",
                             component: History,
@@ -653,14 +632,59 @@ export default new VueRouter({
                             component: AdminRevenue
                         },
                         {
-                            name: "finance-details",
-                            path: "finance-details/:id",
+                            name: "unpaid-jobs",
+                            path: "unpaid-jobs",
+                            component: UnpaidJobs
+                        },
+                        {
+                            name: "paid-jobs",
+                            path: "paid-jobs",
+                            component: PaidJobs
+                        },
+                        {
+                            name: "payouts",
+                            path: "payouts",
+                            component: Payouts
+                        },
+                        {
+                            name: "refunds",
+                            path: "refunds",
+                            component: Refunds
+                        },
+                        {
+                            name: "earning-details",
+                            path: "earning-details/:id",
                             component: AdminEarningDetails
                         },
                         {
-                            name: "invoices",
-                            path: "invoices",
-                            component: AdminInvoices
+                            path:'reports',
+                            component:AdminReports,
+                            children:[
+                                {
+                                    path:'',
+                                    redirect:'sales-reports'
+                                },
+                                {
+                                    name:'admin-sales-reports',
+                                    path:'sales-reports',
+                                    component: AdminSalesReports
+                                },
+                                {
+                                    name:'admin-sales-report',
+                                    path:'sales-report/:id',
+                                    component: AdminSalesReport
+                                },
+                                {
+                                    name:'admin-financial-reports',
+                                    path:'financial-reports',
+                                    component: AdminFinancialReports
+                                },
+                                {
+                                    name:'admin-financial-report',
+                                    path:'financial-report/:id',
+                                    component: AdminFinancialReport
+                                }
+                            ]
                         }
                     ],
 

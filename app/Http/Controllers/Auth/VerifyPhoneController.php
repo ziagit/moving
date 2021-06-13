@@ -20,7 +20,7 @@ class VerifyPhoneController extends Controller
         ]); */
         $user = User::where('phone', $data->phone)->first();
         if ($user) {
-            if ($user->status == 'active') {
+            if ($user->status == 'Active') {
                 $vcode = rand(1000, 9999);
                 $user->verification_code = $vcode;
                 $user->update();

@@ -3,13 +3,12 @@
     <md-dialog-confirm
       :md-active.sync="confirmDialog"
       md-title="Confirmation"
-      md-content="Please confirm your action"
+      :md-content="confirmation_text"
       md-confirm-text="Agree"
       md-cancel-text="Disagree"
       @md-cancel="onCancel"
       @md-confirm="onConfirm"
     />
-
     <md-card v-if="order" class="outer-card">
       <md-card-header class="head">
         <div class="status">
@@ -21,7 +20,6 @@
               @click="review(order.id)"
               >Review</md-button
             >
-
             <div
               v-if="
                 order.movingtype.code == 'appartment' || order.movingtype.code == 'office'
@@ -30,21 +28,31 @@
               <Spinner v-if="isSubmitting" />
               <div v-else>
                 <md-button
-                  :disabled="checkMovingTime(order.pickup_date, order.appointment_time)"
+                  :disabled="
+                    checkMovingTime(order.pickup_date, order.appointment_time) ||
+                    order.status == 'Canceled'
+                  "
                   class="custom-button"
                   v-bind:class="{
-                    inactive: checkMovingTime(order.pickup_date, order.appointment_time),
+                    inactive:
+                      checkMovingTime(order.pickup_date, order.appointment_time) ||
+                      order.status == 'Canceled',
                   }"
-                  @click="(confirmDialog = true), (status = 'edit')"
+                  @click="edit('Edited')"
                   >Edit</md-button
                 >
                 <md-button
-                  :disabled="checkMovingTime(order.pickup_date, order.appointment_time)"
+                  :disabled="
+                    checkMovingTime(order.pickup_date, order.appointment_time) ||
+                    order.status != 'New'
+                  "
                   class="custom-button"
                   v-bind:class="{
-                    inactive: checkMovingTime(order.pickup_date, order.appointment_time),
+                    inactive:
+                      checkMovingTime(order.pickup_date, order.appointment_time) ||
+                      order.status != 'New',
                   }"
-                  @click="(confirmDialog = true), (status = 'cancel')"
+                  @click="edit('Canceled')"
                   >Cancel</md-button
                 >
               </div>
@@ -53,21 +61,31 @@
               <Spinner v-if="isSubmitting" />
               <div v-else>
                 <md-button
-                  :disabled="checkItemTime(order.pickup_date, order.appointment_time)"
+                  :disabled="
+                    checkItemTime(order.pickup_date, order.appointment_time) ||
+                    order.status == 'Canceled'
+                  "
                   class="custom-button"
                   v-bind:class="{
-                    inactive: checkItemTime(order.pickup_date, order.appointment_time),
+                    inactive:
+                      checkItemTime(order.pickup_date, order.appointment_time) ||
+                      order.status == 'Canceled',
                   }"
-                  @click="(confirmDialog = true), (status = 'edit')"
+                  @click="edit('Edited')"
                   >Edit</md-button
                 >
                 <md-button
-                  :disabled="checkItemTime(order.pickup_date, order.appointment_time)"
+                  :disabled="
+                    checkItemTime(order.pickup_date, order.appointment_time) ||
+                    order.status != 'New'
+                  "
                   class="custom-button"
                   v-bind:class="{
-                    inactive: checkItemTime(order.pickup_date, order.appointment_time),
+                    inactive:
+                      checkItemTime(order.pickup_date, order.appointment_time) ||
+                      order.status != 'New',
                   }"
-                  @click="(confirmDialog = true), (status = 'cancel')"
+                  @click="edit('Canceled')"
                   >Cancel</md-button
                 >
               </div>
@@ -222,27 +240,37 @@
         </div>
       </md-card-content>
     </md-card>
+    <Snackbar :data="snackbar" />
   </div>
 </template>
 
 <script>
 import Rate from "../rate/Rate";
 import Spinner from "../../../shared/Spinner";
+import Snackbar from "../../../shared/Snackbar";
 import services from "../../services/orderSchedualer";
+import builder from "../../services/builder";
 import dateFormatter from "../../services/dateFormatter.js";
 export default {
   name: "orderDetails",
   components: {
     Spinner,
+    Snackbar,
     Rate,
   },
   data: () => ({
+    confirmation_text: null,
     order: null,
     notification: null,
     notificationId: null,
     isSubmitting: false,
     confirmDialog: false,
     status: null,
+    snackbar: {
+      show: false,
+      message: null,
+      statusCode: null,
+    },
   }),
   watch: {
     $route() {
@@ -268,7 +296,7 @@ export default {
       axios
         .get("shipper/orders/" + this.$route.params.id)
         .then((res) => {
-          console.log("details: ", res.data);
+          console.log("order details ", res.data);
           this.order = res.data;
         })
         .catch((err) => {
@@ -286,19 +314,27 @@ export default {
           console.log(err);
         });
     },
+    edit(status) {
+      this.confirmation_text = "Are you sure you want this order to be " + status + " ?";
+      this.status = status;
+      this.confirmDialog = true;
+    },
     onCancel() {},
     onConfirm() {
       this.isSubmitting = true;
-      if (this.status == "cancel") {
+      if (this.status == "Canceled") {
         axios
           .put("shipper/orders/" + this.$route.params.id, {
-            status: "Canceled",
-            phone: this.order.job_with_carrier.carrier_contact.contact.phone,
-            email: this.order.job_with_carrier.carrier_contact.contact.email,
+            status: this.status,
+            phone: this.order.job_with_carrier.carrier_detail.user.phone,
+            email: this.order.job_with_carrier.carrier_detail.user.email,
             jobId: this.order.job_with_carrier.id,
           })
           .then((res) => {
             console.log("res: ", res.data);
+            this.snackbar.message = res.data;
+            this.snackbar.statusCode = 200;
+            this.snackbar.show = true;
             this.orderDetails();
             this.isSubmitting = false;
           })
@@ -306,6 +342,7 @@ export default {
             console.log(err);
           });
       } else {
+        builder.editOrder(this.order);
         this.$router.push("/");
       }
     },

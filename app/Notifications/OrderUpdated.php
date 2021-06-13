@@ -47,7 +47,7 @@ class OrderUpdated extends Notification
         return (new MailMessage)
         ->subject('Order Status')
         ->greeting('Dear Customer')
-        ->line('This moving is being'.$this->order->status)
+        ->line('This moving is being '.$this->order->status)
         ->action('View more details', $url);
     }
     /**

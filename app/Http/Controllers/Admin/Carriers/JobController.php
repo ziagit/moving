@@ -100,15 +100,15 @@ class JobController extends Controller
 
     public function notifyUser($user, $id)
     {
-        $job = Job::with('orderDetail', 'jobstatus')->find($id);
+        $job = Job::with('orderDetail')->find($id);
 
-        $user->notify(new UserJobUpdated($job));
+        $user->notify(new JobUpdated($job));
         return $job;
     }
 
     public function notifyShipper($email, $id)
     {
-        $job = Job::with('orderDetail', 'jobstatus')->find($id);
+        $job = Job::with('orderDetail')->find($id);
         Notification::route('mail', $email)
             ->notify(new JobUpdated($job));
         return $job;
@@ -124,7 +124,6 @@ class JobController extends Controller
 
     public function calculate($request, $id)
     {
-        return "hi";
         $base_fare = $this->baseFare($request);
         return $base_fare;
         $distancePrice = Constant::where('code', 'distance')->first()->value; //get distance charge

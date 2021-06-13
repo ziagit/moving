@@ -14,11 +14,34 @@ class EarningController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function revenue()
     {
         $earnings = Earning::with('order')->paginate(5);
         return response()->json($earnings);
     }
+    public function unpaidJobs()
+    {
+        $earnings = Earning::with('orderDetail')
+        ->where('status','unpaid')->paginate(5);
+        return response()->json($earnings);
+    }
+    public function paidJobs()
+    {
+        $earnings = Earning::with('orderDetail')
+        ->where('status','paid')->paginate(5);
+        return response()->json($earnings);
+    }
+    public function refunds()
+    {
+        $earnings = Earning::with('order')->paginate(5);
+        return response()->json($earnings);
+    }
+    public function payouts()
+    {
+        $earnings = Earning::with('order')->paginate(5);
+        return response()->json($earnings);
+    }
+ 
 
     /**
      * Show the form for creating a new resource.
@@ -49,8 +72,8 @@ class EarningController extends Controller
      */
     public function show($id)
     {
-        $earning = Earning::with('orderDetail','carrier')->find($id);
-        return response()->json($earning);
+        $earnings = Earning::with('orderDetail')->find($id);
+        return response()->json($earnings);
     }
 
     /**
@@ -88,5 +111,16 @@ class EarningController extends Controller
     public function destroy($id)
     {
         //
+    }
+    public function search(Request $request)
+    {
+        $keywords = $request->keywords;
+        $earnings = Earning::where('id', 'like', '%' . $keywords . '%')
+            ->orWhereHas('order', function ($q) use ($keywords) {
+                return $q->where('uniqid', 'like', '%' . $keywords . '%');
+            })
+            ->with('order')
+            ->paginate(5);
+        return response()->json($earnings);
     }
 }

@@ -41,7 +41,6 @@ class CreateOrdersTable extends Migration
             $table->string('charge_id')->nullable();
 
             $table->unsignedInteger('shipper_id');
-            $table->unsignedInteger('contact_id');
          
             $table->timestamps();
         });

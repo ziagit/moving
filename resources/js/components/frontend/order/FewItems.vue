@@ -147,7 +147,7 @@ export default {
           },
         })
         .then((res) => {
-          if (res.data.data.length == 0) {
+          if (res.data.data.length < 0) {
             this.searchTogal = false;
             this.notFoundTogal = true;
           } else {

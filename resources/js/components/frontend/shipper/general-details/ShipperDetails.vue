@@ -15,14 +15,14 @@
           </div>
           <div class="row">
             <span>Email:</span>
-            <span>{{ user.email }}</span>
+            <span>{{ shipper.user.email }}</span>
           </div>
           <div class="row">
             <span>Phone:</span>
-            <span>{{ user.phone }}</span>
+            <span>{{ shipper.user.phone }}</span>
           </div>
           <div class="row">
-            <span>Name:</span>
+            <span>Address:</span>
             <span>{{ shipper.address.formatted_address }}</span>
           </div>
         </div>

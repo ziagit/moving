@@ -1,14 +1,5 @@
 <template>
   <div>
-    <md-dialog-confirm
-      :md-active.sync="lockTogal"
-      md-title="Confirm to change account status"
-      md-content
-      md-confirm-text="OK"
-      md-cancel-text="Cancel"
-      @md-confirm="confirmLock()"
-      @md-cancel="cancel"
-    />
     <Edit
       v-if="editTogal"
       v-on:close-it="refresh"
@@ -18,6 +9,10 @@
     <md-card v-else>
       <md-card-header>
         <span class="md-title">Account Details</span>
+        <md-button to="/admin/carriers" class="md-icon-button add-btn">
+          <md-icon>close</md-icon>
+          <md-tooltip>Cancel</md-tooltip>
+        </md-button>
       </md-card-header>
       <md-divider></md-divider>
       <md-card-content v-if="details">
@@ -38,7 +33,6 @@
       </md-card-content>
       <md-card-actions>
         <md-button class="md-primary" @click="editTogal = true">Edit</md-button>
-        <md-button class="md-primary" @click="lockTogal = true">Suspend</md-button>
       </md-card-actions>
     </md-card>
   </div>
@@ -55,7 +49,6 @@ export default {
   },
   data: () => ({
     editTogal: false,
-    lockTogal: false,
     details: null,
   }),
   created() {
@@ -66,10 +59,7 @@ export default {
       this.deleteTogal = true;
       this.selectedId = id;
     },
-    lock(id, state) {
-      this.lockTogal = true;
-      this.status = state;
-    },
+
     get() {
       axios
         .get("admin/users/" + this.user)
@@ -78,30 +68,7 @@ export default {
         })
         .catch((err) => console.log(err));
     },
-    confirm() {
-      axios
-        .delete("admin/users/" + this.user)
-        .then((res) => {
-          this.get();
-        })
-        .catch((err) => {
-          console.log("Error: ", err);
-        });
-    },
-    confirmLock() {
-      var st = this.details.status == "Active" ? "Locked" : "Active";
-      console.log("carrent status:", this.details.status);
-      console.log("status will be:", st);
-      axios
-        .put("admin/users/lock/" + this.user, { status: st })
-        .then((res) => {
-          this.get();
-        })
-        .catch((err) => {
-          console.log("Error: ", err);
-        });
-    },
-    cancel() {},
+
     refresh() {
       this.editTogal = false;
     },
@@ -123,5 +90,10 @@ export default {
 }
 .locked {
   color: red;
+}
+.add-btn {
+  position: absolute;
+  top: 1px;
+  right: 1px;
 }
 </style>

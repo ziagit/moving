@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Shipper;
 
 use App\Http\Controllers\Controller;
+use App\Shipper;
 use App\User;
 
 use Illuminate\Http\Request;
@@ -41,6 +42,7 @@ class ShipperAccountController extends Controller
      */
     public function store(Request $request)
     {
+
     }
 
     /**
@@ -71,6 +73,27 @@ class ShipperAccountController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    public function changeAvatar(Request $request, $id)
+    {
+        $this->validate($request, [
+            'avatar' => 'required',
+        ]);
+        $user = User::find($id);
+        if ($request->hasFile('avatar')) {
+            $old_image_path = public_path('images/pub/' . $user->avatar);
+            if (file_exists($old_image_path)) {
+                //@unlink($old_image_path);
+            }
+            $file = $request->file('avatar');
+            $avatar_name = time() . '.' . $file->getClientOriginalName();
+            $file->move(public_path('images/pub'), $avatar_name);
+        } else {
+            $avatar_name = $user->avatar;
+        }
+        $user->avatar = $avatar_name;
+        $user->update();
+        return response()->json(['message' => 'Updated successfully!'], 200);
+    }
     public function update(Request $request, $id)
     {
         $this->validate($request, [
@@ -106,7 +129,7 @@ class ShipperAccountController extends Controller
 
     public function shipperAddress()
     {
-        $user = User::with('shipperWithAddress')->where('id', Auth::id())->first();
+        $user = Shipper::with('address','user')->where('user_id', Auth::id())->first();
         return response()->json($user);
     }
 }

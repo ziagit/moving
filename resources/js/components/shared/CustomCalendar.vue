@@ -206,9 +206,10 @@ export default {
       localData.save("moving-date", this.date);
     },
     select(sl) {
+      console.log(sl);
       this.date.date = sl;
       this.showTimes();
-      localData.save("moving-date", this.date);
+      //localData.save("moving-date", this.date);
     },
     selectDate(sl) {
       console.log("sl: ", sl);

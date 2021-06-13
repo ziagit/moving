@@ -64,7 +64,8 @@ class EarningController extends Controller
      */
     public function show($id)
     {
-        $earning = Earning::with('orderDetail')->find($id);
+        $earning = Earning::with('orderDetail')
+        ->where('status','unpaid')->find($id);
         return response()->json($earning);
     }
 

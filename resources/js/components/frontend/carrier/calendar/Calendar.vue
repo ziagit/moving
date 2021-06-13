@@ -41,7 +41,6 @@
 <script>
 import Appointment from "./Appointment";
 import Datepicker from "vuejs-datepicker";
-import axios from "axios";
 export default {
   name: "Callendar",
   data: () => ({
@@ -64,15 +63,9 @@ export default {
     openDialog() {
       this.appointmentTogal = true;
     },
-    refresh(year, month, day) {
-      axios
-        .post("carrier/calendar", { year: year, month: month, day: day })
-        .then((res) => {
-          console.log("saved successfully", res.data);
-          this.formatIt(res.data);
-          this.appointmentTogal = false;
-        })
-        .catch((err) => console.log(err));
+    refresh() {
+      this.get();
+      this.appointmentTogal = false;
     },
     formatIt(data) {
       var temp = [];

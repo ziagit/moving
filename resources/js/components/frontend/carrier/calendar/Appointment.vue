@@ -1,147 +1,104 @@
 <template>
-  <div class="container">
-    <div class="days" v-for="(cl, index) in allDates" :key="index" @click="select(cl)">
-      <div
-        class="content"
-        v-bind:class="{
-          selected: isSelected(cl),
-        }"
-      >
-        <div class="day">
-          {{ cl.day }}
-        </div>
-        <div class="date">
-          {{ cl.date }}
-        </div>
+  <div>
+    <Datepicker
+      :inline="true"
+      v-model="state.date"
+      :highlighted="state.highlighted"
+      :disabledDates="state.disabledDates"
+      :format="state.DatePickerFormat"
+      name="datepicker"
+      @selected="dateSelected()"
+    />
+    <div class="submit">
+      <div class="sign">
+        <div></div>
+        <span class="md-caption">Disabled (Customers can't book)</span>
       </div>
+      <md-button class="md-primary" @click="submit()">Submit</md-button>
     </div>
-    <div class="footer">
-      <md-button class="md-primary">Disable</md-button>
-      <md-button class="md-primary">Enable</md-button>
-    </div>
+    <Snackbar :data="snackbar" />
   </div>
 </template>
+
 <script>
-import services from "../../services/functions";
-var months = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-];
-var dateObject = new Date();
+import Snackbar from "../../../shared/Snackbar";
+import Datepicker from "vuejs-datepicker";
 export default {
   name: "Callendar",
   props: ["initDate"],
+  components: {
+    Datepicker,
+    Snackbar,
+  },
   data: () => ({
-    allDates: [],
-    disabledDates: [],
-    selectedDates: [],
+    state: {
+      DatePickerFormat: "yyyy MM dd",
+      date: new Date(),
+      highlighted: {
+        dates: [],
+      },
+      disabledDates: {
+        to: new Date(new Date()),
+        dates: [
+          // Disable an array of dates
+        ],
+      },
+    },
+    form: {
+      year: null,
+      month: null,
+      day: null,
+    },
+    snackbar: {
+      show: false,
+      message: null,
+      statusCode: null,
+    },
   }),
   methods: {
-    getallDates() {
-      var month = dateObject.getMonth() + 1;
-      var day = dateObject.getDay();
-      var date = dateObject.getDate();
-      var year = dateObject.getFullYear();
-      var daysInMonth = new Date(year, month, 0).getDate();
-      for (var i = dateObject.getDate(); i < daysInMonth + 1; i++) {
-        this.allDates.push({
-          day: services.getDaysName(day),
-          date: date,
-          month: month,
-          year: year,
-        });
-        day++;
-        day > 6 ? (day = 0) : day;
-        date++;
-      }
-    },
-    select(sl) {
-      this.selectedDates.push({
-        date: sl.date,
-        day: sl.day,
-        month: sl.month,
-        year: sl.year,
+    dateSelected(e) {
+      this.$nextTick(() => {
+        this.form.month = this.state.date.getMonth() + 1; //months from 1-12
+        this.form.day = this.state.date.getDate();
+        this.form.year = this.state.date.getFullYear();
       });
-      console.log("selected: ", this.selectedDates);
     },
-    isSelected(cl) {
-      for (let i = 0; i < this.selectedDates.length; i++) {
-        if (
-          cl.date == this.selectedDates[i].date &&
-          cl.month == this.selectedDates[i].month
-        ) {
-          return true;
-        } else {
-          return false;
-        }
+    submit() {
+      if (this.form.month == null && this.form.year == null && this.form.day == null) {
+        this.snackbar.show = true;
+        this.snackbar.message = "Please select a date to submit!";
+        this.snackbar.statusCode = 400;
+      } else {
+        axios
+          .post("carrier/calendar", this.form)
+          .then((res) => {
+            console.log("saved successfully", res.data);
+            this.$emit("close-dialog");
+          })
+          .catch((err) => console.log(err));
       }
-    },
-    initDisabled() {
-      this.initDate.dates.forEach((e) => {
-        var d = new Date(e);
-        this.disabledDates.push({
-          date: d.getDate(),
-          day: d.getDay(),
-          month: d.getMonth() + 1,
-          year: d.getFullYear(),
-        });
-      });
     },
   },
-  components: {},
+
   created() {
-    this.getallDates();
-    this.initDisabled();
-    this.selectedDates.push({
-      date: 11,
-      day: "Fri",
-      month: 6,
-      year: 2021,
-    });
-    console.log("seclected: ", this.selectedDates);
+    this.state.highlighted.dates = this.initDate.dates;
+    console.log("hilighted dates", this.state.highlighted.dates);
   },
 };
 </script>
 <style scoped lang="scss">
-.container {
-  max-width: 532px;
+.submit {
   display: flex;
-  flex-wrap: wrap;
-  .days {
-    margin: 5px;
-    border: solid 0.5px #ffa500;
-    width: 66px;
-    border-radius: 5px;
-    .content {
-      padding: 5px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
+  justify-content: space-between;
+  .sign {
+    display: flex;
+    align-items: center;
+    div {
+      width: 10px;
+      height: 10px;
+      background: #cae5ed;
+      margin: 5px;
     }
   }
-  .days:hover {
-    cursor: pointer;
-    background: #ffa500;
-    color: #fff;
-  }
-}
-.footer {
-  width: 100%;
-  text-align: right;
-}
-.selected {
-  background: #ffa500 !important;
-  color: #fff;
 }
 </style>

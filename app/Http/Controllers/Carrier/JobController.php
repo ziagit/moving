@@ -14,6 +14,8 @@ use App\Constant;
 use App\Earning;
 use App\Item;
 use App\Movingsize;
+use App\Notifications\CustomerPaid;
+use App\Notifications\OrderUpdated;
 use App\Officesize;
 use App\Order;
 use App\Rate;
@@ -41,7 +43,7 @@ class JobController extends Controller
     public function index()
     {
         $carrierId = User::with('carrier')->find(Auth::id())->carrier->id;
-        $jobs = Job::with('orderDetail')->where('carrier_id', $carrierId)->orderBy('id', 'DESC')->get();
+        $jobs = Job::with('orderDetail')->where('carrier_id', $carrierId)->orderBy('id', 'DESC')->paginate(5);
         return response()->json($jobs);
     }
 
@@ -98,21 +100,19 @@ class JobController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $id = Job::find($id)->order_id;
-        $order = Order::find($id);
+        $order = Order::find($request->order_detail['id']);
         $order->status = $request->status;
         $order->update();
         try {
             if ($request->status == 'Completed') {
-                $this->calculate($request, $id);
+                return $this->calculate($request, $id);
                 $this->readNotification($request->notificationId);
-                $this->processPayment($request);
             }
             $this->sms($request);
-            $user = User::where('email', $request->email)->first();
+            $customerEmail = $request->order_detail['shipper_contacts']['user']['email'];
+            $user = User::where('email', $customerEmail)->first();
             if ($user) {
-                $job = Job::with('orderDetail')->find($id);
-                return $user->notify(new UserJobUpdated($job));
+                return $user->notify(new OrderUpdated($order));
             }
         } catch (Exception $e) {
             return response()->json($e->getMessage());
@@ -120,10 +120,11 @@ class JobController extends Controller
     }
     public function sms($request)
     {
+        $customerPhone = $request->order_detail['shipper_contacts']['user']['phone'];
         try {
             $nexmo = app('Nexmo\Client');
             $nexmo->message()->send([
-                'to'   => $request->phone,
+                'to'   => $customerPhone,
                 'from' => '+93793778030',
                 'text' => 'Dear Customer this order is being' . $request->status
             ]);
@@ -159,152 +160,76 @@ class JobController extends Controller
 
     public function calculate($request, $id)
     {
-        $baseFare = $this->baseFare($request); //get the truck fair
-        $distancePrice = Constant::where('code', 'distance')->first()->value; //get distance charge
+        $subtotal = $request->order_detail['moving_cost'] + $request->order_detail['travel_cost'];
+        $serviceFee = Constant::where('code', 'servicecharge')->first()->value;
         $taxCharge = Constant::where('code', 'tax')->first()->value; //get tax 
-        $service = Constant::where('code', 'servicecharge')->first()->value; //get service charge
-        $distanceCharge = $request->distance * $distancePrice; //distance/km google gave us, 
-        $hoursToMove = $this->hoursToMove($request); //get the time that 2 mover + truck 
-        $stairTime = $this->stairTime($request); // get the time if stair used
-        $disposalFee = $this->disposalFee($request);
-
-        $suppliesCost = $this->suppliesCost($request); //get supplies cost
-
-        $carrier = Carrier::with('rate')->find($request->carrier_id);
-        //find travel cost
-        $travelCost = ($baseFare + $distanceCharge + ($carrier->rate['price'] / 60) * $request->duration); // by 60, is because duration is in minut not hour
-        //return $request->number_of_movers['number'];
-        if ($request->moving_type['code'] == 'few_items' || $request->moving_type['code'] == 'junk_removal') {
-            //few items case
-            $movingCost = ($hoursToMove + $stairTime) * $carrier->rate['price'];
-        } else {
-            if ($request->number_of_movers['code'] == '1mover') {
-                // 1 mover case
-                $movingCost = ($hoursToMove + 1 + $stairTime) * (($carrier->rate['price'] * 67) / 100);
-            } else if ($request->number_of_movers['code'] == '3movers') {
-                // 3 movers case
-                $movingCost = ($hoursToMove - 1 + $stairTime) * (($carrier->rate['price'] * 133) / 100);
-            } else {
-                // standard case
-                $movingCost = ($hoursToMove + $stairTime) * $carrier->rate['price'];
-            }
-        }
-        $subtotal = $travelCost + $movingCost;
-        //find the tax customer paid
-        $receivedGST = $request->cost - ($subtotal + ($subtotal) * $service / 100 + $suppliesCost);
-        //TingsApp earning
-        $serviceFee = ($subtotal) * $service / 100;
-        $subtotal = $subtotal - $serviceFee;
-        $subtotal = $subtotal + $suppliesCost;
-        //tax that 
+        $subtotal = $subtotal - ($subtotal * $serviceFee / 100);
+        $subtotal = $subtotal + $request->order_detail['supplies_cost'];
         $paidGST = $subtotal * $taxCharge / 100;
+        $subtotal = $subtotal + $paidGST;
+        $unPaidGST = $request->order_detail['tax'] - $paidGST;
         $carrierEarning = $subtotal + $paidGST;
-        $unPaidGST = $receivedGST - $paidGST;
-        $tingsAppEarning = $request->cost - $carrierEarning;
+        $tingsAppEarning = $request->order_detail['cost'] - $carrierEarning;
         $earning = new Earning();
-        $earning->travel_cost = round($travelCost, 2);
-        $earning->moving_cost = round($movingCost, 2);
-        $earning->supplies_cost = round($suppliesCost, 2);
-        $earning->service_fee = round($serviceFee, 2);
-        $earning->disposal_fee = round($disposalFee, 2);
+        $earning->received_gst = $request->order_detail['tax'];
+        $earning->paid_gst = $paidGST;
+        $earning->unpaid_gst = $unPaidGST;
         $earning->tingsapp_earning = round($tingsAppEarning, 2);
-        $earning->received_gst = round($receivedGST, 2);
-        $earning->paid_gst = round($paidGST, 2);
-        $earning->unpaid_gst = round($unPaidGST, 2);
         $earning->carrier_earning = round($carrierEarning, 2);
         $earning->carrier_id = $request->carrier_id;
-        $earning->job_id = $id;
-        $earning->order_id = $request->order_id;
+        $earning->job_id = $request->id;
+        $earning->order_id = $request->order_detail['id'];
         $earning->save();
+        $this->processPayment($request);
         return $earning;
     }
-
-    public function baseFare($request)
+    public function processPayment($request)
     {
-        $vehicles = Vehicle::all();
-        if ($request->vehicle) {
-            $requestedVehicle = $request->vehicle['code'];
-            foreach ($vehicles as $vehicle) {
-                if ($requestedVehicle == $vehicle->code) {
-                    return $vehicle->base_fare;
-                }
-            }
-            return 0;
-        }
-        return $vehicles->where('code', 'minivan')->first()->base_fare;
-    }
-    public function hoursToMove($request)
-    {
-        if ($request->moving_type['code'] == 'office') {
-            $sizes = Officesize::get(['code', 'hours_to_move']);
-            foreach ($sizes as $size) {
-                if ($size->code == $request->moving_size['code']) {
-                    return $size->hours_to_move;
-                }
-            }
-        } else if ($request->moving_type['code'] == 'apartment') {
-            $sizes = Movingsize::get(['code', 'hours_to_move']);
-            foreach ($sizes as $size) {
-                if ($size->code == $request->moving_size['code']) {
-                    return $size->hours_to_move;
-                }
-            }
-        } else {
-            $times = 0;
-            foreach ($request->items as $itm) {
-                $item = Item::where('code', $itm['code'])->first();
-                $times = $times + $itm['pivot']['number'] * $item->moving_cost;
-            }
-            return $times / 60;
-        }
-    }
-    public function stairTime($request)
-    {
-        $floorTime = Constant::where('code', 'floortime')->first()->value; //get time that each floor takes
-        $floor = $request->floor_from + $request->floor_to;
-        return ($floor * $floorTime) / 60;
-    }
-    public function disposalFee($request)
-    {
-        $fees = 0;
-        if ($request->moving_type['code'] == "junk_removal") {
-            foreach ($request->items as $item) {
-                $fee = Item::where('code', $item['code'])->first()->disposal_fee;
-                $fee = $fee * $item['pivot']['number'];
-                $fees = $fees + $fee;
-            }
-            return $fees;
-        }
-        return 0;
-    }
-    public function suppliesCost($request)
-    {
-        $total = 0;
-        if ($request->supplies) {
-            foreach ($request->supplies as $supply) {
-                $sp = Supply::where('code', $supply['code'])->first();
-                $total = $total + ($sp->price * $supply['pivot']['number']);
-            }
-        }
-        return $total;
-    }
-    public function processPayment($request){
         sleep(1);
-        $order = Order::find($request->order_id);
-        $shipper = Shipper::find($order->shipper_id);
-
-        $cost = $order->cost;
-        $tips = $order->tips;
-        $cost = $cost + $tips;
-
-        $charge = Stripe::charges()->create([
-            'amount' => $cost,
-            'currency' => 'USD',
-            'description' => 'Shipment costs',
-            'customer' => $shipper->stripe_customer_id
-        ]);
-        $order->charge_id = $charge['id'];
-        $order->update();
-        return response()->json('Payment proceed successfully!',200);
+        try {
+            $order = Order::find($request->order_detail['id']);
+            $charge = Stripe::charges()->create([
+                'amount' => $request->order_detail['cost'],
+                'currency' => 'USD',
+                'description' => 'Moving costs',
+                'customer' => $request->order_detail['shipper_contacts']['stripe_customer_id']
+            ]);
+            $order->charge_id = $charge['id'];
+            $order->update();
+            $this->customerPaid($request);
+            return response()->json('Payment proceed successfully!', 200);
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+    public function customerPaid($request)
+    {
+        try {
+            $shipperMail = $request->order_detail['shipper_contacts']['user']['email'];
+            $shipper = User::where('email', $shipperMail)->first();
+            if ($shipper) {
+                $shipper->notify(new CustomerPaid($request->order_detail['id']));
+            }
+            $nexmo = app('Nexmo\Client');
+            $nexmo->message()->send([
+                'to'   => $request->order_detail['shipper_contacts']['user']['phone'],
+                'from' => '+93793778030',
+                'text' => 'Dear Customer your payment proceed to TingsApp'
+            ]);
+            return true;
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+    public function search(Request $request)
+    {
+        $keywords = $request->keywords;
+        $job = Job::where('id', 'like', '%' . $keywords . '%')
+            ->orWhereHas('order', function ($q) use ($keywords) {
+                return $q->where('uniqid', 'like', '%' . $keywords . '%');
+            })
+            ->with('orderDetail')
+            ->paginate(3);
+        return $job;
     }
 }

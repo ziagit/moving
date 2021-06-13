@@ -36,7 +36,6 @@
           </div>
           <div class="row">
             <GoogleAddress3
-              v-if="form.formatted_address != null"
               v-on:google-valid-address="googleValidAddress"
               v-on:google-invalid-address="googleInvalidAddress"
               :initialData="form.formatted_address"
@@ -78,7 +77,6 @@ export default {
       email: null,
       phone: null,
       addressId: null,
-      contactId: null,
     },
     isSubmitting: false,
   }),
@@ -126,18 +124,13 @@ export default {
         });
     },
     init() {
-      console.log("user: ", this.user);
       axios.get("shipper/details/" + this.$route.params.id).then(
         (res) => {
           console.log("shipper o ted", res.data);
           this.form.first_name = res.data.first_name;
           this.form.last_name = res.data.last_name;
-          this.form.email = this.user.email;
-          this.form.phone = this.user.phone;
-          this.form.website = res.data.website;
-          this.form.company = res.data.company;
-          this.form.detail = res.data.detail;
-          this.form.contactId = res.data.contact.id;
+          this.form.email = res.data.user.email;
+          this.form.phone = res.data.user.phone;
           this.form.addressId = res.data.address.id;
           this.form.country = res.data.address.country;
           this.form.state = res.data.address.state;

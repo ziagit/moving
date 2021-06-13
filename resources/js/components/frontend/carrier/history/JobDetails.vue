@@ -1,9 +1,9 @@
 <template>
   <div>
     <md-dialog-confirm
-      :md-active.sync="confirmDialog"
+      :md-active.sync="confirmTogal"
       md-title="Confirmation"
-      md-content="Please confirm your action"
+      :md-content="confirmText"
       md-confirm-text="Agree"
       md-cancel-text="Disagree"
       @md-cancel="onCancel"
@@ -18,17 +18,41 @@
             <div v-else class="actions">
               <md-button
                 class="custom-button"
-                @click="(status = 'Accepted'), (confirmDialog = true)"
+                :disabled="job.order_detail.status != 'New'"
+                v-bind:class="{ inactive: job.order_detail.status != 'New' }"
+                @click="edit('Accepted')"
                 >Accept</md-button
               >
               <md-button
                 class="custom-button"
-                @click="(status = 'Declined'), (confirmDialog = true)"
+                @click="edit('Declined')"
+                :disabled="
+                  job.order_detail.status == 'Accepted' ||
+                  job.order_detail.status == 'Declined' ||
+                  job.order_detail.status == 'Completed'
+                "
+                v-bind:class="{
+                  inactive:
+                    job.order_detail.status == 'Accepted' ||
+                    job.order_detail.status == 'Declined' ||
+                    job.order_detail.status == 'Completed',
+                }"
                 >Decline</md-button
               >
               <md-button
                 class="custom-button"
-                @click="(status = 'Completed'), (confirmDialog = true)"
+                @click="edit('Completed')"
+                :disabled="
+                  job.order_detail.status == 'New' ||
+                  job.order_detail.status == 'Declined' ||
+                  job.order_detail.status == 'Completed'
+                "
+                v-bind:class="{
+                  inactive:
+                    job.order_detail.status == 'New' ||
+                    job.order_detail.status == 'Declined' ||
+                    job.order_detail.status == 'Completed',
+                }"
                 >Complete</md-button
               >
             </div>
@@ -192,15 +216,15 @@
               <md-card-content>
                 <div class="row">
                   <span>Name: </span>
-                  <span>{{ job.order_detail.contact.name }}</span>
+                  <span>{{ job.order_detail.shipper_contacts.user.name }}</span>
                 </div>
                 <div class="row">
                   <span>Email: </span>
-                  <span>{{ job.order_detail.contact.email }}</span>
+                  <span>{{ job.order_detail.shipper_contacts.user.email }}</span>
                 </div>
                 <div class="row">
                   <span>Phone: </span>
-                  <span>{{ job.order_detail.contact.phone }}</span>
+                  <span>{{ job.order_detail.shipper_contacts.user.phone }}</span>
                 </div>
               </md-card-content>
             </md-card>
@@ -222,10 +246,9 @@ export default {
     notification: null,
     notificationId: null,
     isSubmitting: false,
-    confirmDialog: false,
+    confirmTogal: false,
+    confirmText: null,
     status: null,
-    distance: null,
-    duration: null,
   }),
   created() {
     this.jobDetails();
@@ -241,16 +264,7 @@ export default {
     formateDate(date) {
       return dateFormatter.format(date);
     },
-    orderDetails() {
-      axios
-        .get("shipper/orders/" + this.$route.params.id)
-        .then((res) => {
-          this.order = res.data;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
+
     jobDetails() {
       axios
         .get("carrier/jobs/" + this.$route.params.id)
@@ -258,10 +272,6 @@ export default {
           console.log("job details ", res.data);
           if (res.data) {
             this.job = res.data;
-            this.getDistance(
-              res.data.order_detail.addresses[0].formatted_address,
-              res.data.order_detail.addresses[1].formatted_address
-            );
             return;
           }
         })
@@ -280,34 +290,20 @@ export default {
           console.log(err);
         });
     },
+    edit(status) {
+      this.confirmText = "Do you mark this order as " + status + " ?";
+      this.status = status;
+      this.confirmTogal = true;
+    },
     onCancel() {},
     onConfirm() {
       this.isSubmitting = true;
+      this.job["status"] = this.status;
+      this.job["notification_id"] = this.notificationId;
       axios
-        .put("carrier/jobs/" + this.$route.params.id, {
-          status: this.status,
-          email: this.job.order_detail.contact.email,
-          phone: this.job.order_detail.contact.phone,
-          notification_id: this.notificationId,
-          carrier_id: this.job.carrier_id,
-          order_id: this.job.order_detail.id,
-          moving_type: this.job.order_detail.movingtype,
-          moving_size: this.job.order_detail.movingsize
-            ? this.job.order_detail.movingsize
-            : this.job.order_detail.officesize,
-          cost: this.job.order_detail.cost,
-          vehicle: this.job.order_detail.vehicle,
-          supplies: this.job.order_detail.supplies,
-          floor_from: this.job.order_detail.floor_from,
-          floor_to: this.job.order_detail.floor_to,
-          items: this.job.order_detail.items,
-          distance: this.distance,
-          duration: this.duration,
-          number_of_movers: this.job.order_detail.movernumber,
-        })
+        .put("carrier/jobs/" + this.$route.params.id, this.job)
         .then((res) => {
           this.isSubmitting = false;
-
           this.jobDetails();
           console.log("updated job: ", res.data);
         })
@@ -316,34 +312,12 @@ export default {
           this.isSubmitting = false;
         });
     },
-    getDistance(from, to) {
-      var service = new google.maps.DistanceMatrixService();
-      service.getDistanceMatrix(
-        {
-          origins: [from],
-          destinations: [to],
-          travelMode: google.maps.TravelMode.DRIVING,
-          unitSystem: google.maps.UnitSystem.metric,
-          avoidHighways: false,
-          avoidTolls: false,
-        },
-        this.callback
-      );
-    },
-    callback(response, status) {
-      if (status != "OK") {
-        console.log("Faild to get distance");
-      } else {
-        this.distance = (response.rows[0].elements[0].distance.value / 1000).toFixed(1); //in km
-        this.duration = (response.rows[0].elements[0].duration.value / 60).toFixed(1);
-      }
-    },
   },
 
   watch: {
     $route() {
       this.notificationId = this.$store.state.shared.notificationId;
-      this.jobDetails();
+      //this.jobDetails();
     },
   },
   components: {

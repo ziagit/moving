@@ -14,7 +14,7 @@ class Earning extends Model
     }
     public function orderDetail()
     {
-        return $this->order()->with('addresses','shipper','contact','movingtype','movingsize','officesize','movernumber','vehicle','supplies');
+        return $this->order()->with('addresses','shipperContacts','jobWithCarrier','movingtype','movingsize','officesize','movernumber','vehicle','supplies','items');
     }
     public function orderAddress()
     {
@@ -22,5 +22,11 @@ class Earning extends Model
     }
     public function carrier(){
         return $this->belongsTo(Carrier::class);
+    }
+    public function payouts(){
+        return $this->belongsToMany(Payout::class);
+    }
+    public function refund(){
+        return $this->hasOne(Refund::class);
     }
 }

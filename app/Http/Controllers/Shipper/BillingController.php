@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Shipper;
 
 use App\Address;
-use App\Contact;
 use App\Http\Controllers\Controller;
 use App\Order;
 use App\Shipper;
@@ -80,7 +79,7 @@ class BillingController extends Controller
                 'name' => $request->name_oncard,
                 'description' => "Payment for moving",
             ]);
-            $shipper = $this->createShipper($request, $customer['id']);
+          $shipper = $this->createShipper($request, $customer['id']);
             return [
                 'message' => 'Thank you! your card added successfully.',
                 'shipper' => $shipper,
@@ -90,7 +89,6 @@ class BillingController extends Controller
         } catch (Exception $e) {
             return response()->json(['message' => $e], 500);
         }
-        return null;
     }
 
     public function checkCustomer()
@@ -106,39 +104,26 @@ class BillingController extends Controller
 
     public function createShipper($request, $customerId)
     {
-        $user = JWTAuth::user()->id;
-        $shipper = Shipper::where('user_id', $user)->first();
+        $user = User::find(Auth::user()->id);
+        $user->email = $request->email;
+        $user->update();
+        $shipper = Shipper::where('user_id', $user->id)->first();
         if ($shipper) {
             $shipper->first_name = $request->name;
-            $shipper->user_id = Auth::user()->id;
             $shipper->stripe_customer_id = $customerId;
-            $shipper->contact_id = $this->updateContact($request);
             $shipper->address_id = $this->updateAddress($request);
             $shipper->update();
             return $shipper->id;
         }
         $shipper = new Shipper();
         $shipper->first_name = $request->name;
-        $shipper->user_id = Auth::user()->id;
+        $shipper->user_id = $user->id;
         $shipper->stripe_customer_id = $customerId;
-        $shipper->contact_id = $this->createContact($request);
         $shipper->address_id = $this->createAddress($request);
         $shipper->save();
         return $shipper->id;
     }
-    public function createContact($request)
-    {
-        $contact = new Contact();
-        $contact->name = $request->name;
-        $contact->email = $request->email;
-        $contact->phone = JWTAuth::user()->phone;
-        $contact->save();
-        $user = JWTAuth::user();
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->update();
-        return $contact->id;
-    }
+
     public function createAddress($request)
     {
         $address = new Address();
@@ -152,21 +137,7 @@ class BillingController extends Controller
         $address->save();
         return $address->id;
     }
-    public function updateContact($request)
-    {
-        $contact = Contact::where('email', $request->email)->first();
-        if ($contact) {
-            $contact->name = $request->name;
-            $contact->email = $request->email;
-            $contact->phone = JWTAuth::user()->phone;
-            $contact->update();
-            $user = JWTAuth::user();
-            $user->name = $request->name;
-            $user->email = $request->email;
-            $user->update();
-            return $contact->id;
-        }
-    }
+
     public function updateAddress($request)
     {
         $user = Auth::user()->id;

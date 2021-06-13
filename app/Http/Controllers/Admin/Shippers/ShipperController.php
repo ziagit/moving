@@ -19,7 +19,7 @@ class ShipperController extends Controller
      */
     public function index()
     {
-        $shippers = Shipper::with('address','user')->paginate(10);
+        $shippers = Shipper::with('address','user')->paginate(5);
         foreach($shippers as $shipper){
             //$card = $this->getCard($shipper->stripe_customer_id);
             $shipper['card']="xxx";

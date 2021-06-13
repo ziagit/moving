@@ -20,7 +20,7 @@ class CreateEarningsTable extends Migration
             $table->double('received_gst');
             $table->double('paid_gst');
             $table->double('unpaid_gst');
-            $table->string('status')->default('unpaid');
+            $table->string('status')->default('Unpaid');
             $table->unsignedInteger('job_id');
             $table->unsignedInteger('order_id');
             $table->unsignedInteger('carrier_id');

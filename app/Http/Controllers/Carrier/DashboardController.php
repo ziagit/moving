@@ -3,11 +3,14 @@
 namespace App\Http\Controllers\Carrier;
 
 use App\Carrier;
+use App\Earning;
 use App\Http\Controllers\Controller;
 use App\Job;
+use App\Order;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class DashboardController extends Controller
@@ -17,12 +20,27 @@ class DashboardController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+
+    public function pieChart()
     {
         $carrierId = User::with('carrier')->find(Auth::id())->carrier->id;
-        $jobs = Job::with('orderDetail','carrier')->where('carrier_id', $carrierId)->orderBy('id', 'DESC')->get();
-        return response()->json($jobs);
+        $jobs = Job::with('order')->where('carrier_id', $carrierId)->get();
+
+       return response()->json($jobs);
     }
+    public function columnChart()
+    {
+        $carrierId = User::with('carrier')->find(Auth::id())->carrier->id;
+        $jobs = Job::where('carrier_id', $carrierId)->get();
+       return response()->json($jobs);
+    }
+    public function lineChart()
+    {
+        $carrierId = User::with('carrier')->find(Auth::id())->carrier->id;
+        $jobs = Earning::where('carrier_id', $carrierId)->get();
+       return response()->json($jobs);
+    }
+
 
     /**
      * Show the form for creating a new resource.

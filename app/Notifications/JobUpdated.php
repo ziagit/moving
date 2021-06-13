@@ -42,11 +42,11 @@ class JobUpdated extends Notification
      */
     public function toMail($notifiable)
     {
-        $url = url('/carrier/history/details/'.$this->job->jobId);
+        $url = url('/carrier/history/details/'.$this->job->id);
         return (new MailMessage)
         ->subject('Job Status')
         ->greeting('Dear Partner')
-        ->line('This moving is being'.$this->job->status)
+        ->line('This moving is being '.$this->job->order->status)
         ->action('View more details', $url);
     }
     public function toDatabase($notifiable)

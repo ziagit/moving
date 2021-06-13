@@ -2,9 +2,9 @@
   <div class="shippers" v-if="shippers">
     <!-- delete dialog-->
     <md-dialog-confirm
-      :md-active.sync="deleteTogal"
-      md-title="Do you want to delete?"
-      md-content
+      :md-active.sync="confirmTogal"
+      md-title="Confirmation"
+      :md-content="confirmation_text"
       md-confirm-text="OK"
       md-cancel-text="Cancel"
       @md-confirm="confirm()"
@@ -42,17 +42,33 @@
         <md-table-cell>{{ shipper.user ? shipper.user.email : "" }}</md-table-cell>
         <md-table-cell>{{ shipper.user ? shipper.user.phone : "" }}</md-table-cell>
         <md-table-cell>{{ shipper.address.formatted_address }}</md-table-cell>
-        <md-table-cell>{{ shipper.card }}</md-table-cell>
+        <md-table-cell>{{
+          shipper.stripe_customer_id ? "Added" : "Not added"
+        }}</md-table-cell>
 
         <md-table-cell md-label="Actions">
           <md-button class="md-icon-button md-primary" @click="edit(shipper)">
             <md-icon>edit</md-icon>
           </md-button>
-          <md-button class="md-icon-button md-accent" @click="remove(shipper.id)">
+          <md-button
+            class="md-icon-button md-accent"
+            @click="changeAccount(shipper.id, 'Deleted')"
+          >
             <md-icon>delete</md-icon>
           </md-button>
-          <md-button class="md-icon-button md-accent" @click="remove(shipper.id)">
+          <md-button
+            v-if="shipper.user.status == 'Active'"
+            class="md-icon-button md-accent"
+            @click="changeAccount(shipper.id, 'Locked')"
+          >
             <md-icon>lock</md-icon>
+          </md-button>
+          <md-button
+            v-else
+            class="md-icon-button md-accent"
+            @click="changeAccount(shipper.id, 'Active')"
+          >
+            <md-icon>lock_open</md-icon>
           </md-button>
         </md-table-cell>
       </md-table-row>
@@ -70,8 +86,10 @@ export default {
     keywords: null,
     shippers: null,
     shipper: null,
-    deleteTogal: false,
+    confirmTogal: false,
     editTogal: false,
+    confirmation_text: null,
+    status: null,
   }),
   watch: {
     keywords(after, before) {
@@ -111,9 +129,11 @@ export default {
       this.get();
     },
 
-    remove(id) {
-      this.deleteTogal = true;
+    changeAccount(id, status) {
+      this.confirmTogal = true;
       this.selectedId = id;
+      this.status = status;
+      this.confirmation_text = "Do you want to this account to be " + status + " ?";
     },
     edit(data) {
       this.editTogal = true;
@@ -121,15 +141,25 @@ export default {
     },
 
     confirm() {
-      axios
-        .delete("admin/shippers/" + this.selectedId)
-        .then((res) => {
-          console.log("deleted", res.data);
-          this.get();
-        })
-        .catch((err) => {
-          console.log("Error: ", err);
-        });
+      if (this.status == "Deleted") {
+        axios
+          .delete("admin/shippers" + this.selectedId)
+          .then((res) => {
+            this.router.push("/admin/carriers");
+          })
+          .catch((err) => {
+            console.log("Error: ", err);
+          });
+      } else {
+        axios
+          .put("admin/users/lock/" + this.user, { status: this.status })
+          .then((res) => {
+            this.get();
+          })
+          .catch((err) => {
+            console.log("Error: ", err);
+          });
+      }
     },
     cancel() {},
   },

@@ -36,11 +36,9 @@ export default {
   methods: {
     onChange(e) {
       this.avatar = e.target.files[0];
-      console.log(this.avatar);
     },
     update() {
       this.isSubmitting = true;
-      console.log("ava", this.avatar);
       let fd = new FormData();
       fd.append("avatar", this.avatar);
       axios

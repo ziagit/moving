@@ -84,7 +84,6 @@ export default {
       axios
         .get("shipper/card-details")
         .then((res) => {
-          console.log("shipper crd", res.data);
           if (res.data.data) {
             this.cards = res.data.data;
             this.dataLoading = false;

@@ -12,8 +12,8 @@
         </div>
       </div>
     </md-toolbar>
-    <md-divider></md-divider>
-    <md-list :md-expand-single="expandSingle">
+    <div class="line"></div>
+    <md-list>
       <md-list-item @click="hideMenu('inbox')">
         <span class="md-list-item-text">Notifications</span>
       </md-list-item>
@@ -89,8 +89,19 @@
           >
         </md-list>
       </md-list-item>
+      <md-list-item md-expand :md-expanded.sync="expandReport">
+        <span class="md-list-item-text">Reports</span>
+        <md-list slot="md-expand">
+          <md-list-item class="md-inset" @click="hideMenu('reports/sales-reports')"
+            >Sales reports</md-list-item
+          >
+          <md-list-item class="md-inset" @click="hideMenu('reports/financial-reports')"
+            >Financial reports</md-list-item
+          >
+        </md-list>
+      </md-list-item>
 
-      <md-list-item md-expand :md-expanded.sync="expandCompany">
+      <md-list-item md-expand :md-expanded.sync="expandPages">
         <span class="md-list-item-text">Pages</span>
         <md-list slot="md-expand">
           <md-list-item class="md-inset" @click="hideMenu('about')">About</md-list-item>
@@ -135,12 +146,10 @@ export default {
     Notifications,
   },
   data: () => ({
-    expandCompany: false,
-    expandShippers: false,
+    expandPages: false,
     expandLookups: false,
     expandFinance: false,
-    expandCarriers: false,
-    expandSingle: false,
+    expandReport: false,
   }),
   created() {},
   computed: {

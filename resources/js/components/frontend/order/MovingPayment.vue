@@ -49,7 +49,6 @@ export default {
   data: () => ({
     checkingCard: false,
     isCardAdded: false,
-    shipper: null,
   }),
   created() {
     this.getCard();

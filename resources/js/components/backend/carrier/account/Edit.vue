@@ -73,4 +73,10 @@ export default {
   },
 };
 </script>
-<style scoped></style>
+<style scoped>
+.add-btn {
+  position: absolute;
+  top: 1px;
+  right: 1px;
+}
+</style>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Carrier;
 use App\Http\Controllers\Controller;
 use App\Role;
 use App\User;
@@ -20,7 +21,7 @@ class UserController extends Controller
     public function index()
     {
         $users = User::whereHas('roles', function ($q) {
-            $q->where('name', 'admin')->orWhere('name','support');
+            $q->where('name', 'admin')->orWhere('name', 'support');
         })->with('roles')
             ->paginate(5);
         return response()->json($users);
@@ -48,7 +49,7 @@ class UserController extends Controller
             'name' => 'required|max:50',
             'email' => 'required|email',
             'phone' => 'required',
-            'role'=>'required',
+            'role' => 'required',
             'password' => 'required|min:3',
             'password_confirmation' => 'required|same:password',
         ]);
@@ -66,7 +67,7 @@ class UserController extends Controller
         $user->save();
         $role = Role::find($request->role);
         $user->roles()->attach($role);
-        return response()->json(["message" => "Saved."],200);
+        return response()->json(["message" => "Saved."], 200);
     }
 
     /**
@@ -119,8 +120,8 @@ class UserController extends Controller
             $user->phone = $request->phone;
             $user->password = Hash::make($request->password);
             $user->update();
-            return response()->json(["message" => "Updated."],200);
-        }else{
+            return response()->json(["message" => "Updated."], 200);
+        } else {
             $validator = Validator::make($request->all(), [
                 'name' => 'required',
                 'email' => 'required|email',
@@ -135,7 +136,7 @@ class UserController extends Controller
             $user->email = $request->email;
             $user->phone = $request->phone;
             $user->update();
-            return response()->json(["message" => "User details updated!"],200);
+            return response()->json(["message" => "User details updated!"], 200);
         }
     }
 
@@ -149,7 +150,9 @@ class UserController extends Controller
     {
         $user = User::find($id);
         $user->delete();
-        return response()->json(["message" => "Deleted!"]);
+        $carrier = Carrier::where('user_id', $id)->first();
+        $carrier->delete();
+        return response()->json("Deleted successfully!",200);
     }
 
     public function lock(Request $request, $id)
@@ -157,7 +160,7 @@ class UserController extends Controller
         $user = User::find($id);
         $user->status = $request->status;
         $user->update();
-        return response()->json(["user" => $user], 200);
+        return response()->json("User account locked successfully!",200);
     }
 
     public function search(Request $request)
@@ -171,7 +174,8 @@ class UserController extends Controller
             ->paginate(10);
         return $user;
     }
-    public function roles(){
+    public function roles()
+    {
         $roles = Role::all();
         return response()->json($roles);
     }

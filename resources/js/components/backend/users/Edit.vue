@@ -11,35 +11,46 @@
         </md-card-header>
         <md-divider></md-divider>
         <md-card-content>
-          <md-field class="">
+          <md-field>
             <label>Name</label>
             <md-input v-model="form.name" required></md-input>
           </md-field>
-          <md-field class="">
-            <label>Email</label>
-            <md-input v-model="form.email" required></md-input>
-          </md-field>
-          <md-field class="">
-            <label>Phone</label>
-            <md-input v-model="form.phone" required></md-input>
+          <div class="row">
+            <md-field>
+              <label>Email</label>
+              <md-input v-model="form.email" required></md-input>
+            </md-field>
+            <md-field>
+              <label>Phone</label>
+              <md-input v-model="form.phone" required></md-input>
+            </md-field>
+          </div>
+          <md-field>
+            <md-select v-model="form.role" placeholder="Role">
+              <md-option v-for="role in roles" :key="role.id" :value="role.id">{{
+                role.name
+              }}</md-option>
+            </md-select>
           </md-field>
           <md-switch v-model="passwordTogal">Change my password</md-switch>
-          <md-field class="" v-if="passwordTogal">
-            <label>New nassword</label>
-            <md-input
-              type="password"
-              v-model="form.password"
-              :required="passwordTogal"
-            ></md-input>
-          </md-field>
-          <md-field class="" v-if="passwordTogal">
-            <label>Password confirmation</label>
-            <md-input
-              type="password"
-              v-model="form.password_confirmation"
-              :required="passwordTogal"
-            ></md-input>
-          </md-field>
+          <div class="row">
+            <md-field v-if="passwordTogal">
+              <label>New nassword</label>
+              <md-input
+                type="password"
+                v-model="form.password"
+                :required="passwordTogal"
+              ></md-input>
+            </md-field>
+            <md-field v-if="passwordTogal">
+              <label>Password confirmation</label>
+              <md-input
+                type="password"
+                v-model="form.password_confirmation"
+                :required="passwordTogal"
+              ></md-input>
+            </md-field>
+          </div>
         </md-card-content>
         <md-card-actions>
           <md-button type="submit" class="md-primary">Update</md-button>
@@ -55,14 +66,20 @@ export default {
   data() {
     return {
       passwordTogal: false,
+      roles: [],
       form: {
         name: this.user.name,
         email: this.user.email,
         phone: this.user.phone,
+        role: this.user.roles[0].id,
         password: null,
         password_confirmation: null,
       },
     };
+  },
+  created() {
+    console.log("user", this.user);
+    this.getRoles();
   },
   methods: {
     update() {
@@ -74,10 +91,23 @@ export default {
         })
         .catch((err) => console.log("error: ", err));
     },
+    getRoles() {
+      axios
+        .get("admin/roles")
+        .then((res) => {
+          console.log("roles", res.data);
+          this.roles = res.data;
+        })
+        .catch((err) => console.log(err));
+    },
   },
 };
 </script>
 <style scoped>
+.row {
+  display: flex;
+  justify-content: space-between;
+}
 .add-btn {
   position: absolute;
   top: 1px;

@@ -1,15 +1,20 @@
 <template>
   <div>
     <md-toolbar md-elevation="0" v-if="authenticated" class="custom-toolbar">
-      <div class="row" v-if="authenticated">
+      <div class="row">
         <div class="avatar" @click="profile()">
           <img :src="'/images/pub/' + user.avatar" width="80" alt="" />
         </div>
         <div class="break"></div>
-        <div class="text">
-          <div class="name md-list-item-text">{{ user.name }}</div>
+        <div class="text" v-if="details">
+          <div class="name md-list-item-text">{{ details.company }}</div>
           <div class="email">
-            {{ user.email ? user.email : formatPhone(user.phone) }}
+            <star-rating
+              v-model="details.votes"
+              :star-size="11"
+              :read-only="true"
+              :show-rating="false"
+            />
           </div>
         </div>
       </div>
@@ -17,7 +22,7 @@
     <md-divider></md-divider>
     <md-list>
       <div v-if="authenticated">
-        <md-list-item>
+        <md-list-item @click="navigate('/carrier/inbox')">
           <span class="md-list-item-text">Notifications</span>
         </md-list-item>
         <md-list-item @click="navigate('/carrier/dashboard')">
@@ -76,7 +81,7 @@
           >
         </md-list-item>
 
-        <md-list-item @click="navigate('/help')">
+        <md-list-item @click="navigate('/help/' + 'carrier')">
           <span
             class="md-list-item-text"
             v-bind:class="{
@@ -94,19 +99,21 @@
   </div>
 </template>
 <script>
+import axios from "axios";
+import StarRating from "vue-star-rating";
 import { mapGetters, mapActions } from "vuex";
-import Notifications from "../../shared/Notifications";
 import USPhone from "../services/USPhone";
 export default {
   name: "WebMenu",
   components: {
-    Notifications,
+    StarRating,
   },
   data: () => ({
     menuVisible: false,
+    details: null,
   }),
   created() {
-    this.getNotifications();
+    this.getDetails();
   },
   computed: {
     ...mapGetters({
@@ -126,15 +133,7 @@ export default {
       signOutAction: "auth/signOut",
       setNotification: "shared/setNotification",
     }),
-    getNotifications() {
-      if (this.authenticated) {
-        this.notifications = this.user.notifications;
-        Echo.private("App.User." + this.user.id).notification((res) => {
-          this.notifications.push(res.notification);
-          console.log("notifications: in admin: ", this.notifications);
-        });
-      }
-    },
+
     signOut() {
       this.signOutAction().then(() => {
         this.$router.push("/");
@@ -151,6 +150,11 @@ export default {
     },
     formatPhone(phone) {
       return USPhone.formatPhone(phone);
+    },
+    getDetails() {
+      axios.get("carrier/details").then((res) => {
+        this.details = res.data;
+      });
     },
   },
 };

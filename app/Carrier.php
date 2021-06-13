@@ -38,4 +38,7 @@ class Carrier extends Model
     public function earnings(){
         return $this->hasMany(Earning::class);
     }
+    public function payouts(){
+        return $this->hasMany(Payout::class);
+    }
 }

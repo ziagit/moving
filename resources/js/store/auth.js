@@ -45,8 +45,6 @@ export default {
             //header will be set by subsciber here
             try {
                 let response = await axios.get('auth/me')
-            console.log("me is: ",response)
-
                 commit('SET_USER', response.data)
             } catch (e) {
                 commit('SET_TOKEN', null)
@@ -58,8 +56,7 @@ export default {
                 commit('SET_TOKEN', null)
                 commit('SET_USER', null)
                 localStorage.removeItem('token');
-                localStorage.removeItem('in');
-                localStorage.removeItem('temp');
+                sessionStorage.removeItem('me');
             })
         }
     },

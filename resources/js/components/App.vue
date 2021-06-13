@@ -14,6 +14,14 @@ export default {
 </script>
 
 <style lang="scss">
+@media print {
+  .no-print {
+    visibility: hidden;
+  }
+  .md-card {
+    box-shadow: none !important;
+  }
+}
 .add-btn {
   position: absolute;
   top: 1;
@@ -32,8 +40,7 @@ export default {
   outline: none !important;
   border: none !important;
 }
-#MazPhoneNumberInput-46_phone_number {
-}
+
 .shipper-payment-method {
   .md-dialog-container {
     min-height: 614px !important;
@@ -283,7 +290,9 @@ a {
 }
 
 .line {
-  color: #ddd;
+  height: 2px;
+  width: 100%;
+  background: #ddd;
 }
 
 .md-table-content {

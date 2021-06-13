@@ -39,7 +39,7 @@
       <md-card-content>
         <div class="cols">
           <div class="col">
-            <md-card class="col1">
+            <md-card>
               <md-card-header><span class="md-title">Order</span></md-card-header>
               <md-card-content>
                 <div class="row">
@@ -104,7 +104,7 @@
                 </div>
               </md-card-content>
             </md-card>
-            <md-card>
+            <md-card class="col-1">
               <md-card-header><span class="md-title">Supplies</span></md-card-header>
               <md-card-content>
                 <div class="row">
@@ -157,7 +157,7 @@
                 </div>
                 <div class="break"></div>
                 <div class="row">
-                  <span class="md-body-2">Cost:</span>
+                  <span class="md-body-2">Price:</span>
                 </div>
                 <div class="row">
                   <span>Total: </span>
@@ -209,7 +209,7 @@
                 </div>
                 <div class="break"></div>
                 <div class="row">
-                  <span class="md-body-2">Price:</span>
+                  <span class="md-body-2">Cost:</span>
                 </div>
                 <div class="row">
                   <span>Total: </span>
@@ -293,10 +293,6 @@ export default {
         .then((res) => {
           console.log("details: ", res.data);
           this.order = res.data;
-          this.getDistance(
-            res.data.addresses[0].formatted_address,
-            res.data.addresses[1].formatted_address
-          );
         })
         .catch((err) => {
           console.log(err);
@@ -377,8 +373,8 @@ export default {
       }
     }
   }
-  .col1 {
-    min-height: 484px;
+  .col-1 {
+    min-height: 270;
   }
 }
 

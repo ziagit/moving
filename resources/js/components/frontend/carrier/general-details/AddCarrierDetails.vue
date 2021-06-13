@@ -47,12 +47,24 @@
                 <md-input v-model="form.company" required></md-input>
               </md-field>
               <md-field>
-                <label>Year established</label>
-                <md-input
-                  type="number"
+                <md-select
                   v-model="form.year_established"
-                  required
-                ></md-input>
+                  placeholder="Year established"
+                  md-dense
+                >
+                  <md-option value="2021">2021</md-option>
+                  <md-option value="2020">2020</md-option>
+                  <md-option value="2019">2019</md-option>
+                  <md-option value="2018">2018</md-option>
+                  <md-option value="2017">2017</md-option>
+                  <md-option value="2016">2016</md-option>
+                  <md-option value="2015">2015</md-option>
+                  <md-option value="2014">2014</md-option>
+                  <md-option value="2013">2013</md-option>
+                  <md-option value="2012">2012</md-option>
+                  <md-option value="2011">2011</md-option>
+                  <md-option value="2010">2010</md-option>
+                </md-select>
               </md-field>
             </div>
 
@@ -233,7 +245,7 @@ export default {
       fd.append("addressId", this.form.addressId);
       fd.append("employees", this.form.employees);
       fd.append("vehicles", this.form.vehicles);
-      fd.append("rate", this.form.rate);
+      fd.append("hourly_rate", this.form.hourly_rate);
       fd.append("year_established", this.form.year_established);
       axios
         .post("carrier/details", fd)

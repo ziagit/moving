@@ -14,18 +14,37 @@
               <md-card-header><span class="md-title">Breakdown</span></md-card-header>
               <md-card-content>
                 <div class="row">
-                  <span><strong>Togal amount to be collected:</strong> </span>
+                  <span><strong>Total amount to be collected:</strong> </span>
                   <span
                     ><strong> ${{ earning.carrier_earning }}</strong></span
                   >
                 </div>
+                <div class="break"></div>
                 <div class="row">
                   <span>Travel cost: </span>
-                  <span>${{ earning.travel_cost }}</span>
+                  <span>${{ earning.order_detail.travel_cost }}</span>
                 </div>
                 <div class="row">
                   <span>Moving cost: </span>
-                  <span>${{ earning.moving_cost }}</span>
+                  <span>${{ earning.order_detail.moving_cost }}</span>
+                </div>
+                <div class="row">
+                  <span>Received tips: </span>
+                  <span
+                    >${{
+                      earning.order_detail.tips ? earning.order_detail.tips : 0
+                    }}</span
+                  >
+                </div>
+                <div class="row">
+                  <span>Supplies cost: </span>
+                  <span>
+                    ${{
+                      earning.order_detail.supplies_cost
+                        ? earning.order_detail.supplies_cost
+                        : 0
+                    }}</span
+                  >
                 </div>
               </md-card-content>
             </md-card>
@@ -33,28 +52,23 @@
           <div class="col">
             <md-card>
               <md-card-header><span class="md-body-2">Service fee</span></md-card-header>
-              <md-card-content>$ {{ earning.service_fee }} </md-card-content>
+              <md-card-content
+                >${{
+                  earning.order_detail.service_fee ? earning.order_detail.service_fee : 0
+                }}
+              </md-card-content>
             </md-card>
             <md-card>
               <md-card-header><span class="md-body-2">Disposal fee</span></md-card-header>
-              <md-card-content> ${{ earning.disposal_fee }} </md-card-content>
+              <md-card-content>
+                ${{ earning.disposal_fee ? earning.order_detail.disposal_fee : 0 }}
+              </md-card-content>
             </md-card>
-            <md-card>
-              <md-card-header
-                ><span class="md-body-2">Supplies cost</span></md-card-header
-              >
-              <md-card-content> ${{ earning.supplies_cost }} </md-card-content>
-            </md-card>
+
             <md-card>
               <md-card-header><span class="md-body-2">Payable tax</span></md-card-header>
-              <md-card-content> ${{ earning.unpaid_gst }} </md-card-content>
-            </md-card>
-            <md-card>
-              <md-card-header
-                ><span class="md-body-2">Received tips</span></md-card-header
-              >
               <md-card-content>
-                ${{ earning.order_detail.tips ? earning.order_detail.tips : 0 }}
+                ${{ earning.unpaid_gst ? earning.unpaid_gst : 0 }}
               </md-card-content>
             </md-card>
           </div>

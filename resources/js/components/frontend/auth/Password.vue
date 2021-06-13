@@ -92,10 +92,11 @@ export default {
           }
         })
         .catch((error) => {
-          this.snackbar.message = error.response.data;
+          console.log("errrr", error);
+          /*    this.snackbar.message = error.response.data;
           this.snackbar.statusCode = error.response.status;
           this.snackbar.show = true;
-          this.isSubmitting = false;
+          this.isSubmitting = false; */
         });
     },
   },

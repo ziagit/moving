@@ -15,7 +15,7 @@ class CheckUserStatus
      */
     public function handle($request, Closure $next)
     {
-        if (Auth::check() && (Auth::user()->status == 'active')) {
+        if (Auth::check() && (Auth::user()->status == 'Active')) {
             return $next($request);
         }
         return redirect('api/unauthorized');

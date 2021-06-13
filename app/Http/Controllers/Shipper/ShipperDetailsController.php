@@ -22,7 +22,7 @@ class ShipperDetailsController extends Controller
     public function index()
     {
         $userId = JWTAuth::user()->id;
-        $carrier = Shipper::with('address')->where('user_id', $userId)->first();
+        $carrier = Shipper::with('address','user')->where('user_id', $userId)->first();
         return response()->json($carrier);
     }
 
@@ -98,7 +98,7 @@ class ShipperDetailsController extends Controller
      */
     public function show($id)
     {
-        $carrier = Shipper::with('address','contact')->find($id);
+        $carrier = Shipper::with('address','user')->find($id);
         return $carrier;
     }
 
@@ -125,36 +125,30 @@ class ShipperDetailsController extends Controller
         $this->validate($request, [
             'first_name' => 'required',
             'last_name' => 'required',
-            'email' => 'required',
             'country' => 'required',
             'state' => 'required',
             'city' => 'required',
             'zip' => 'required',
             'formatted_address' => 'required',
         ]);
-        $contactId = $this->updateContact($request);
+        $this->updateContact($request);
         $addressId = $this->updateAddress($request);
         $shipper = Shipper::find($id);
 
         $shipper->first_name = $request->first_name;
         $shipper->last_name = $request->last_name;
         $shipper->address_id = $addressId;
-        $shipper->contact_id = $contactId;
-        $shipper->user_id = JWTAuth::user()->id;
         $shipper->update();
         return response()->json(["message" => "Updated successfully!"], 200);
     }
 
     public function updateContact($request){
-        $user = JWTAuth::user();
-        $contact = Contact::find($request->contactId);
-        $contact->name = $request->last_name;
-        $contact->email = $request->email;
-        $contact->phone = $user->phone;
-        $contact->update();
+        $user = User::find(Auth::id());
+        $user->name = $request->last_name;
         $user->email = $request->email;
+        $user->phone = $request->phone;
         $user->update();
-        return $contact->id;
+        return true;
     }
     public function updateAddress($request){
         $address = Address::find($request->addressId);

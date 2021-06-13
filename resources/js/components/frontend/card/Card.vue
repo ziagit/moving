@@ -161,25 +161,25 @@ export default {
           axios
             .get("shipper/shipper-address")
             .then((res) => {
-              this.form.name = res.data.name;
-              this.form.formatted_address =
-                res.data.shipper_with_address.address.formatted_address;
-              this.form.country = res.data.shipper_with_address.address.country;
-              this.form.state = res.data.shipper_with_address.address.state;
-              this.form.city = res.data.shipper_with_address.address.city;
-              this.form.postalcode = res.data.shipper_with_address.address.zip;
-              this.form.email = res.data.shipper_with_address.contact.email;
+              console.log("xxxxxxxxxxxxxx", res.data);
+              this.form.name = res.data.first_name;
+              this.form.formatted_address = res.data.address.formatted_address;
+              this.form.country = res.data.address.country;
+              this.form.state = res.data.address.state;
+              this.form.city = res.data.address.city;
+              this.form.postalcode = res.data.address.zip;
+              this.form.email = res.data.user.email;
               this.shipperExist = res.data;
             })
             .catch((err) => console.log(err));
         } else {
-          this.form.name = this.shipperExist.name;
-          this.form.formatted_address = this.shipperExist.shipper_with_address.address.formatted_address;
-          this.form.country = this.shipperExist.shipper_with_address.address.country;
-          this.form.state = this.shipperExist.shipper_with_address.address.state;
-          this.form.city = this.shipperExist.shipper_with_address.address.city;
-          this.form.postalcode = this.shipperExist.shipper_with_address.address.zip;
-          this.form.email = this.shipperExist.shipper_with_address.contact.email;
+          this.form.name = this.shipperExist.first_name;
+          this.form.formatted_address = this.shipperExist.address.formatted_address;
+          this.form.country = this.shipperExist.address.country;
+          this.form.state = this.shipperExist.address.state;
+          this.form.city = this.shipperExist.address.city;
+          this.form.postalcode = this.shipperExist.address.zip;
+          this.form.email = this.shipperExist.contact.email;
         }
       } else {
         this.form.name = this.form.phone = this.form.email = this.form.formatted_address = this.form.state = this.form.city = this.form.postalcode = this.form.country = null;
@@ -253,10 +253,9 @@ export default {
       axios
         .post("shipper/create-customer", this.form)
         .then((res) => {
-          if (this.$route.path == "/shipper/card") {
+          if (this.$route.path == "/shipper/payments") {
             this.$emit("close-dialog", res.data);
           } else {
-            localData.save("shipper", res.data);
             this.$router.push("/confirmation");
           }
         })

@@ -195,7 +195,7 @@ class OrderController extends Controller
         $earning->job_id = $request->job_with_carrier['id'];
         $earning->order_id = $id;
         $earning->save();
-        return $this->processPayment($request);
+        $this->processPayment($request);
         return $earning;
     }
     public function processPayment($request)
@@ -235,5 +235,13 @@ class OrderController extends Controller
         } catch (Exception $e) {
             return $e->getMessage();
         }
+    }
+    public function search(Request $request)
+    {
+        $keywords = $request->keywords;
+        $job = Order::where('uniqid', 'like', '%' . $keywords . '%')
+            ->with('movingtype')
+            ->paginate(5);
+        return $job;
     }
 }

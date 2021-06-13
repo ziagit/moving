@@ -29,6 +29,8 @@ export default {
         sessionStorage.removeItem('carrier');
         sessionStorage.removeItem('distance');
         sessionStorage.removeItem('duration');
+        sessionStorage.removeItem('contacts');
+        sessionStorage.removeItem('phone');
         sessionStorage.removeItem('me');
       return ;
     }

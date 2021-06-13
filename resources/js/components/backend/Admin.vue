@@ -1,10 +1,10 @@
 <template>
   <div class="container">
-    <Header v-on:togal-menu="$emit('togal-menu')" />
+    <Header v-on:togal-menu="$emit('togal-menu')" class="no-print" />
     <div class="admin">
       <router-view></router-view>
     </div>
-    <Footer />
+    <Footer class="no-print" />
   </div>
 </template>
 

@@ -29,6 +29,16 @@
               <span>{{ payment.account_number }}</span>
             </div>
           </div>
+          <md-empty-state
+            v-else
+            class="md-primary"
+            md-description="There is no payment method added yet"
+          >
+            <md-button to="Add" class="md-raised">
+              Add
+              <md-tooltip>Add </md-tooltip>
+            </md-button>
+          </md-empty-state>
         </md-tab>
         <md-tab id="tab-pages" md-label="Payment history">
           do we realy need this part?, because we already have payment information in the
@@ -42,18 +52,6 @@
         <md-tooltip>Edit profile</md-tooltip>
       </md-button>
     </md-card-actions>
-    <md-empty-state
-      v-else
-      class="md-primary"
-      md-icon="sentiment_satisfied_alt"
-      md-label="Not available"
-      md-description="Click + icon to add"
-    >
-      <md-button to="add" class="md-primary">
-        Add
-        <md-tooltip>Add </md-tooltip>
-      </md-button>
-    </md-empty-state>
   </md-card>
 </template>
 

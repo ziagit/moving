@@ -12,7 +12,7 @@ class Job extends Model
     }
     public function orderDetail()
     {
-        return $this->order()->with('addresses','shipper','contact','items','movingtype','movingsize','officesize','movernumber','vehicle','supplies');
+        return $this->order()->with('addresses','shipperContacts','items','movingtype','movingsize','officesize','movernumber','vehicle','supplies');
     }
     public function carrier()
     {

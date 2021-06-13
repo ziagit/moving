@@ -61,6 +61,7 @@ export default {
         lng: data.geometry.location.lng(),
       };
       data.address_components.forEach((component) => {
+        console.log("component from google", component);
         if (component.types.indexOf("administrative_area_level_1") > -1) {
           if (component.short_name != "BC") {
             $vm.invalidAddress(data);

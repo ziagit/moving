@@ -43,14 +43,18 @@ Route::group(['prefix' => 'moving'], function () {
       Route::resource('payments', 'BankController');
 
       Route::resource('jobs', 'JobController');
+      Route::get('search-job', 'JobController@search');
       Route::get('unpaid', 'EarningController@unpaid');
       Route::get('paid', 'EarningController@paid');
       Route::get('earning/{id}', 'EarningController@show');
       Route::get('job-status', 'JobController@jobStatus');
       Route::post('rate-carrier', 'CarrierDetailsController@rate');
-
       Route::resource('calendar', 'CalendarController');
-      Route::resource('dashboard', 'DashboardController');
+      Route::get('dashboard/pie-chart', 'DashboardController@pieChart');
+      Route::get('dashboard/line-chart', 'DashboardController@lineChart');
+      Route::get('dashboard/column-chart', 'DashboardController@columnChart');
+      Route::get('notifications', 'DashboardController@columnChart');
+
     });
     Route::group(['namespace' => 'Shipper', 'prefix' => 'shipper'], function () {
       Route::resource('details', 'ShipperDetailsController');
@@ -62,24 +66,26 @@ Route::group(['prefix' => 'moving'], function () {
       Route::get("charge-details", 'BillingController@getCharges');
       Route::get('shipper-address', "ShipperAccountController@shipperAddress");
       Route::resource('rating', 'RatingController');
+      Route::post('change-avatar/{id}', 'ShipperAccountController@changeAvatar');
     });
     Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'role'], function () {
-      Route::resource('about', 'Pages\AboutController');
-      Route::resource('terms', 'Pages\TermsController');
-      Route::resource('privacy', 'Pages\PrivacyController');
-      Route::resource('carrier-page', 'Pages\CarrierController');
-      Route::resource('shipper-page', 'Pages\ShipperController');
-      Route::resource('help', 'Pages\FAQController');
-      Route::resource('carrier-faq', 'Pages\CarrierFAQController');
-      Route::resource('shipper-faq', 'Pages\ShipperFAQController');
-
-      Route::resource('addresses', 'AddressController');
-      Route::get('search-address', 'AddressController@search');
-      Route::resource('contacts', 'ContactController');
-      Route::get('search-contact', 'ContactController@search');
-
+      Route::get('dashboard/daily-projections','DashboardController@dailyProjections');
+      Route::get('dashboard/sales','DashboardController@sales');
+      Route::get('dashboard/customers','DashboardController@customers');
+      Route::get('dashboard/movers','DashboardController@movers');
+      Route::get('dashboard/performance','DashboardController@performance');
+      Route::resource('notifications','NotificationController');
       Route::resource('earnings', 'Finance\EarningController');
+      Route::get('revenue', 'Finance\EarningController@revenue');
+      Route::get('paid-jobs', 'Finance\EarningController@paidJobs');
+      Route::get('unpaid-jobs', 'Finance\EarningController@unpaidJobs');
       Route::get('search-earning', 'Finance\EarningController@search');
+      Route::resource('payouts', 'Finance\PayoutController');
+      Route::get('search-payout', 'Finance\PayoutController@search');
+      Route::get('carrier-list', 'Finance\PayoutController@carriers');
+      Route::get('carrier-earnings/{id}', 'Finance\PayoutController@earnings');
+      Route::resource('refunds', 'Finance\RefundController');
+      Route::get('search-refund', 'Finance\RefundController@search');
 
       Route::resource('users', 'UserController');
       Route::get('roles', 'UserController@roles');
@@ -101,7 +107,8 @@ Route::group(['prefix' => 'moving'], function () {
       Route::get('search-shipper', 'Shippers\ShipperController@search');
       Route::get('search-shipper-account', 'Shippers\AccountController@search');
       Route::resource('orders', 'OrderController');
-      Route::get('search-order', 'Shippers\OrderController@search');
+      Route::get('search-order', 'OrderController@search');
+      Route::resource('card-details', 'Shippers\PaymentController');
 
       Route::resource('countries', 'Lookups\CountryController');
       Route::get('search-country', 'Lookups\CountryController@search');
@@ -121,6 +128,21 @@ Route::group(['prefix' => 'moving'], function () {
       Route::resource('constans', 'Lookups\ConstantController');
       Route::resource('times', 'TimeController');
       Route::get('search-time', 'TimeController@search');
+
+      Route::resource('financial-reports','Reports\FinancialReportsController');
+      Route::post('filter-financial-report','Reports\FinancialReportsController@filter');
+      Route::resource('sales-reports','Reports\SalesReportsController');
+      Route::post('filter-sales-report','Reports\SalesReportsController@filter');
+   
+      Route::resource('about', 'Pages\AboutController');
+      Route::resource('terms', 'Pages\TermsController');
+      Route::resource('privacy', 'Pages\PrivacyController');
+      Route::resource('carrier-page', 'Pages\CarrierController');
+      Route::resource('shipper-page', 'Pages\ShipperController');
+      Route::resource('help', 'Pages\FAQController');
+      Route::resource('carrier-faq', 'Pages\CarrierFAQController');
+      Route::resource('shipper-faq', 'Pages\ShipperFAQController');
+
     });
     Route::group(['namespace' => 'Order'], function () {
       Route::post('charge-customer', 'CheckoutController@chargeCustomer');

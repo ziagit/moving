@@ -1,20 +1,7 @@
 <template>
   <div>
     <md-table md-sort="zip" md-sort-order="asc" md-card>
-      <!--       <md-table-toolbar>
-        <md-field md-clearable class="md-toolbar-section-end">
-          <md-input placeholder="Search by order id" v-model="keywords" />
-        </md-field>
-      </md-table-toolbar>
-
-      <md-table-empty-state
-        md-label="No state found"
-        :md-description="`No state found for this query. Try a different search term or create a new state.`"
-      >
-      </md-table-empty-state> -->
-
       <md-table-row>
-        <md-table-head md-numeric>ID</md-table-head>
         <md-table-head>Order</md-table-head>
         <md-table-head>Date</md-table-head>
         <md-table-head>Type</md-table-head>
@@ -23,7 +10,6 @@
         <md-table-head>Details</md-table-head>
       </md-table-row>
       <md-table-row v-for="(earning, index) in earnings.data" :key="index">
-        <md-table-cell md-numeric>{{ index + 1 }}</md-table-cell>
         <md-table-cell>{{ earning.order.uniqid }}</md-table-cell>
         <md-table-cell>{{ formatter(earning.created_at) }}</md-table-cell>
         <md-table-cell>{{ earning.order.movingtype_id }}</md-table-cell>
@@ -36,10 +22,18 @@
           </md-button>
         </md-table-cell>
       </md-table-row>
+
+      <md-table-row>
+        <md-table-cell> </md-table-cell>
+        <md-table-cell> </md-table-cell>
+        <md-table-cell> <b>Balance</b></md-table-cell>
+        <md-table-cell>
+          <b>${{ total }}</b></md-table-cell
+        >
+        <md-table-cell> </md-table-cell>
+        <md-table-cell> </md-table-cell>
+      </md-table-row>
     </md-table>
-    <div class="total">
-      <strong>Blanace: ${{ total }}</strong>
-    </div>
   </div>
 </template>
 

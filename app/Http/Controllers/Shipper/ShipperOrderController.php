@@ -60,7 +60,7 @@ class ShipperOrderController extends Controller
     public function show($id)
     {
         try {
-            $orders = Order::with('addresses', 'items', 'contact', 'movingtype', 'movingsize', 'officesize', 'movernumber', 'vehicle', 'supplies', 'jobWithCarrier')->find($id);
+            $orders = Order::with('addresses', 'items', 'movingtype', 'movingsize', 'officesize', 'movernumber', 'vehicle', 'supplies', 'jobWithCarrier')->find($id);
             return response()->json($orders);
         } catch (Exception $e) {
             return response()->json($e->getMessage());
@@ -87,18 +87,19 @@ class ShipperOrderController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $order = Order::find($id);
-        $order->status = $request->status;
-        $order->update();
-        $this->sms($request);
         try {
+            $order = Order::find($id);
+            $order->status = $request->status;
+            $order->update();
+            $this->sms($request);
             $user = User::where('email', $request->email)->first();
             if ($user) {
-                return $user->notify(new JobUpdated($request));
+                $job = Job::with('order')->find($request->jobId);
+                return $user->notify(new JobUpdated($job));
             }
             return response()->json(['message' => 'Canceled successfully'], 200);
         } catch (Exception $e) {
-            return $e->getMessage();
+            return response()->json($e->getMessage());
         }
     }
     public function sms($request)

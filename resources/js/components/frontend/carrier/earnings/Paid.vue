@@ -14,7 +14,6 @@
       </md-table-empty-state> -->
 
       <md-table-row>
-        <md-table-head md-numeric>ID</md-table-head>
         <md-table-head>Order</md-table-head>
         <md-table-head>Date</md-table-head>
         <md-table-head>Type</md-table-head>
@@ -23,10 +22,9 @@
         <md-table-head>Details</md-table-head>
       </md-table-row>
       <md-table-row v-for="(earning, index) in earnings.data" :key="index">
-        <md-table-cell md-numeric>{{ index + 1 }}</md-table-cell>
-        <md-table-cell>{{ earning.order_address.uniqid }}</md-table-cell>
+        <md-table-cell>{{ earning.order.uniqid }}</md-table-cell>
         <md-table-cell>{{ formatter(earning.created_at) }}</md-table-cell>
-        <md-table-cell>{{ earning.order_address.movingtype_id }}</md-table-cell>
+        <md-table-cell>{{ earning.order.movingtype_id }}</md-table-cell>
         <md-table-cell>${{ earning.carrier_earning }}</md-table-cell>
         <md-table-cell>{{ earning.status }}</md-table-cell>
 
@@ -36,10 +34,17 @@
           </md-button>
         </md-table-cell>
       </md-table-row>
+      <md-table-row>
+        <md-table-cell></md-table-cell>
+        <md-table-cell></md-table-cell>
+        <md-table-cell><b>Balance</b></md-table-cell>
+        <md-table-cell
+          ><b>{{ total }}</b></md-table-cell
+        >
+        <md-table-cell></md-table-cell>
+        <md-table-cell></md-table-cell>
+      </md-table-row>
     </md-table>
-    <div class="total">
-      <strong>Total collected amount: ${{ total }}</strong>
-    </div>
   </div>
 </template>
 
@@ -61,7 +66,7 @@ export default {
         .get("carrier/paid?page=" + page)
         .then((res) => {
           this.earnings = res.data;
-          console.log("res..", res.data.data);
+          console.log("paid resutls", res.data.data);
           this.calculateTotal(res.data.data);
         })
         .catch((err) => {

@@ -10,14 +10,6 @@
     <md-card md-theme="orange-card">
       <md-card-header>
         <div class="md-title">Earning History</div>
-        <!--    <md-button
-          @click="print()"
-          class="md-icon-button add-btn"
-          v-if="earnings.length != 0"
-        >
-          <md-icon>print</md-icon>
-          <md-tooltip>Print invoice</md-tooltip>
-        </md-button> -->
       </md-card-header>
       <md-card-content>
         <table class="table" v-if="earnings.length != 0">
