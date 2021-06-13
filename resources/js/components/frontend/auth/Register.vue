@@ -39,7 +39,7 @@
             </div>
           </form>
           <div class="login">
-            <router-link to="/login-mover">Sign in instead</router-link>
+            <router-link to="/login">Sign in instead</router-link>
           </div>
         </md-card-content>
       </md-card>
@@ -90,10 +90,16 @@ export default {
           .post("auth/verify-email", this.form)
           .then((res) => {
             console.log("user created: ", res.data);
-            localData.save("me", res.data);
-            this.$router.push("verify");
+            if (res.status == 203) {
+              this.snackbar.statusCode = res.status;
+              this.snackbar.message = res.data;
+              this.snackbar.show = true;
+            } else {
+              localData.save("me", res.data);
+              this.$router.push("verify");
+              //this.$router.push("welcome");
+            }
             this.isSubmitting = false;
-            //this.$router.push("welcome");
           })
           .catch((error) => {
             this.isSubmitting = false;

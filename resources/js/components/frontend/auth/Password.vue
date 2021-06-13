@@ -69,6 +69,7 @@ export default {
       this.isSubmitting = true;
       this.signIn(this.form)
         .then((res) => {
+          console.log("88888888888888", res.d);
           switch (this.user.role[0].name) {
             case "mover":
               axios.get("carrier/details").then((res) => {

@@ -25,6 +25,7 @@ export default {
     actions: {
         async signIn({ dispatch }, credentials) {
             let response = await axios.post("auth/signin", credentials)
+            console.log("response in login auth.js",response)
             return dispatch('attempt', response.data)
         },
 

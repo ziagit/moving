@@ -83,7 +83,6 @@ export default {
       this.signIn({ code: v, me: this.me })
         .then((res) => {
           this.isSubmitting = false;
-          localData.remove("me");
           switch (this.user.role[0].name) {
             case "mover":
               axios.get("carrier/details").then((res) => {
