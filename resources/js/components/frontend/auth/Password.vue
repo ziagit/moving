@@ -69,7 +69,6 @@ export default {
       this.isSubmitting = true;
       this.signIn(this.form)
         .then((res) => {
-          console.log("88888888888888", res.d);
           switch (this.user.role[0].name) {
             case "mover":
               axios.get("carrier/details").then((res) => {
@@ -94,7 +93,6 @@ export default {
         })
         .catch((error) => {
           console.log("errrr", error);
-          localData.remove("me");
           this.snackbar.message = error.response.data;
           this.snackbar.statusCode = error.response.status;
           this.snackbar.show = true;

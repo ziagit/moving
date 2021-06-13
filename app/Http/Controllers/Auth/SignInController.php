@@ -45,10 +45,9 @@ class SignInController extends Controller
     public function signin($data)
     {
         $user=User::find($data->me);
-        if($user->whereNotNull('email_verified_at')){
+        if(!$user->whereNotNull('email_verified_at')){
             return response()->json(['message'=>'Your email is not verified'],401);
         }
-        return "not verifie";
         if(!$token = Auth::attempt(['email'=>$user->email,'password'=>$data->password,'status'=>'active'])){
             return response()->json(['message'=>'Incorrect credentials or your account is blocked!'],401);
         }

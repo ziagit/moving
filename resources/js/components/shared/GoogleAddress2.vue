@@ -292,9 +292,65 @@ export default {
         .get("state-cities")
         .then((res) => {
           this.supportedData = res.data;
-          console.log("cities", res.data);
         })
         .catch((err) => console.log(err));
+    },
+
+    getLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(this.getReverseGeocodingData);
+      } else {
+        console.log("Geolocation is not supported by this browser.");
+      }
+    },
+
+    getReverseGeocodingData(position) {
+      var lat = position.coords.latitude;
+      var lng = position.coords.longitude;
+      this.form.from.latlng = {
+        lat: lat,
+        lng: lng,
+      };
+      var latlng = new google.maps.LatLng(lat, lng);
+      // This is making the Geocode request
+      var geocoder = new google.maps.Geocoder();
+      geocoder.geocode({ latLng: latlng }, (results, status) => {
+        if (status !== google.maps.GeocoderStatus.OK) {
+          alert(status);
+        }
+        // This is checking to see if the Geoeode Status is OK before proceeding
+        if (status == google.maps.GeocoderStatus.OK) {
+          this.initCurrentLocation(results[0]);
+        }
+      });
+    },
+    initCurrentLocation(data) {
+      let $vm = this;
+      let components = data.address_components;
+      $vm.form.from.formatted_address = data.formatted_address;
+      components.forEach(function (component) {
+        let types = component.types;
+        if (types.indexOf("street_number") > -1) {
+          $vm.form.from.street_number = component.long_name;
+        }
+        if (types.indexOf("route") > -1) {
+          $vm.form.from.street = component.long_name;
+        }
+        if (types.indexOf("locality") > -1) {
+          $vm.form.from.city = component.long_name;
+        }
+        if (types.indexOf("administrative_area_level_1") > -1) {
+          $vm.form.from.state = component.short_name;
+        }
+        if (types.indexOf("postal_code") > -1) {
+          $vm.form.from.zip = component.long_name;
+        }
+        if (types.indexOf("country") > -1) {
+          $vm.form.from.country = component.long_name;
+        }
+      });
+      localData.save("from", this.form);
+      console.log("exit: ", this.form);
     },
   },
 };
