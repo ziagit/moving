@@ -21,7 +21,7 @@
           />
           <div class="resend">
             <p>Code not received?</p>
-            <md-button class="md-primary" to="/login-mover">Resend</md-button>
+            <md-button class="md-primary" to="/login">Resend</md-button>
           </div>
           <p class="md-caption">Test code: 0-0-0-0</p>
           <p style="color: red" v-if="invalidCode">{{ invalidCode }}</p>
@@ -109,6 +109,7 @@ export default {
         .catch((error) => {
           this.invalidCode = v + " is not valid, please check your phone!";
           console.log("err: ", error.response);
+          localData.remove("me");
           this.isSubmitting = false;
           this.snackbar.statusCode = error.response.status;
           this.snackbar.message = error.response.data;

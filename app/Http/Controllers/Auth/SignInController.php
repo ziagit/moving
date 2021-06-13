@@ -16,7 +16,10 @@ class SignInController extends Controller
             return $this->signin($data);
         }
         try {
-            $user = User::where('id', $data->me)->where('verification_code', $data->code)->first();
+            $user = User::where('id', $data->me)
+            ->where('status','Active')
+            ->where('verification_code', $data->code)
+            ->first();
             if ($user) {
                 $user->phone_verified_at = date('Y-m-d h:i:s');
                 $user->update();
@@ -33,7 +36,7 @@ class SignInController extends Controller
                     return response()->json($token);
                 }
             }
-            return response()->json("Invalid code entered!", 404);
+            return response()->json("Invalid code entered/your account is blocked by admin!", 401);
         } catch (Exception $e) {
             return response()->json($e->getMessage());
         }

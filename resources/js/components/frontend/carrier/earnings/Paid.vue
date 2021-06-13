@@ -37,7 +37,7 @@
       <md-table-row>
         <md-table-cell></md-table-cell>
         <md-table-cell></md-table-cell>
-        <md-table-cell><b>Balance</b></md-table-cell>
+        <md-table-cell><b>Total</b></md-table-cell>
         <md-table-cell
           ><b>{{ total }}</b></md-table-cell
         >

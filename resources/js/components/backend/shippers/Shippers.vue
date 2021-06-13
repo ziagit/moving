@@ -36,8 +36,8 @@
         <md-table-head>Payment method</md-table-head>
         <md-table-head>Actions</md-table-head>
       </md-table-row>
-      <md-table-row v-for="shipper in shippers.data" :key="shipper.id">
-        <md-table-cell md-numeric>{{ shipper.id }}</md-table-cell>
+      <md-table-row v-for="(shipper, index) in shippers.data" :key="index">
+        <md-table-cell md-numeric>{{ index + 1 }}</md-table-cell>
         <md-table-cell>{{ shipper.first_name }}</md-table-cell>
         <md-table-cell>{{ shipper.user ? shipper.user.email : "" }}</md-table-cell>
         <md-table-cell>{{ shipper.user ? shipper.user.phone : "" }}</md-table-cell>
@@ -52,21 +52,21 @@
           </md-button>
           <md-button
             class="md-icon-button md-accent"
-            @click="changeAccount(shipper.id, 'Deleted')"
+            @click="changeAccount(shipper.user.id, 'Deleted')"
           >
             <md-icon>delete</md-icon>
           </md-button>
           <md-button
             v-if="shipper.user.status == 'Active'"
             class="md-icon-button md-accent"
-            @click="changeAccount(shipper.id, 'Locked')"
+            @click="changeAccount(shipper.user.id, 'Locked')"
           >
             <md-icon>lock</md-icon>
           </md-button>
           <md-button
             v-else
             class="md-icon-button md-accent"
-            @click="changeAccount(shipper.id, 'Active')"
+            @click="changeAccount(shipper.user.id, 'Active')"
           >
             <md-icon>lock_open</md-icon>
           </md-button>
@@ -152,8 +152,9 @@ export default {
           });
       } else {
         axios
-          .put("admin/users/lock/" + this.user, { status: this.status })
+          .put("admin/users/lock/" + this.selectedId, { status: this.status })
           .then((res) => {
+            console.log("ress", res.data);
             this.get();
           })
           .catch((err) => {

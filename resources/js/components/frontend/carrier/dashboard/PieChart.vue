@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <div v-if="isLoaded">
       <GChart type="PieChart" :data="chartData" :options="chartOptions" />
       <div class="legend">
@@ -25,7 +25,7 @@
         >
       </div>
     </div>
-    <div v-else>Loading..</div>
+    <div v-else>No data.</div>
   </div>
 </template>
 <script>
@@ -67,7 +67,9 @@ export default {
       axios
         .get("carrier/dashboard/pie-chart")
         .then((res) => {
-          this.feedChart(res.data);
+          if (res.data.length > 0) {
+            this.feedChart(res.data);
+          }
         })
         .catch((err) => console.log(err));
     },

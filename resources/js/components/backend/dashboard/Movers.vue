@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <div class="container">
     <div v-if="isLoaded">
       <GChart type="LineChart" :data="chartData" :options="chartOptions" />
     </div>
-    <div v-else>Loading...</div>
+    <div v-else>No data.</div>
   </div>
 </template>
 <script>
@@ -31,7 +31,9 @@ export default {
   methods: {
     get() {
       axios.get("admin/dashboard/movers").then((res) => {
-        this.feedChart(res.data);
+        if (res.data.length > 0) {
+          this.feedChart(res.data);
+        }
       });
     },
     feedChart(movers) {
@@ -111,4 +113,8 @@ export default {
 };
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.container {
+  width: 100%;
+}
+</style>

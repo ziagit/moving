@@ -1,8 +1,9 @@
 <template>
-  <div>
-    <div>
+  <div class="container">
+    <div v-if="isloaded">
       <GChart type="BubbleChart" :data="chartData" :options="chartOptions" />
     </div>
+    <div v-else>No data.</div>
   </div>
 </template>
 
@@ -38,6 +39,9 @@ export default {
     get() {
       axios.get("admin/dashboard/daily-projections").then((res) => {
         this.feedChart(res.data);
+        /*  if (res.data.length > 0) {
+          this.feedChart(res.data);
+        } */
       });
     },
     feedChart(orders) {
@@ -47,6 +51,7 @@ export default {
           this.chartData.push(["Vancouver", 80.66, 2, "1"]);
         }
       }
+      this.isloaded = true;
     },
     getCities() {
       axios.get("cities").then((res) => {

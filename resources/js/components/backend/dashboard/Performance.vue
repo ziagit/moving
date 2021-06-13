@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <div v-if="isLoaded">
       <GChart
         type="AreaChart"
@@ -8,7 +8,7 @@
         :options="chartOptions"
       />
     </div>
-    <div v-else>Loading...</div>
+    <div v-else>No data.</div>
   </div>
 </template>
 <script>
@@ -37,8 +37,9 @@ export default {
   methods: {
     get() {
       axios.get("admin/dashboard/performance").then((res) => {
-        console.log("performance", res.data);
-        this.feedChart(res.data);
+        if (res.data.length > 0) {
+          this.feedChart(res.data);
+        }
       });
     },
     feedChart(performances) {
@@ -117,4 +118,8 @@ export default {
 };
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.container {
+  width: 100%;
+}
+</style>

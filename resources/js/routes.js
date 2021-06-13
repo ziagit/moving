@@ -102,12 +102,9 @@ import Movingtype from "./components/backend/lookups/moving-type/Movingtype";
 import Officesize from "./components/backend/lookups/office-size/Officesize";
 import Supply from "./components/backend/lookups/supply/Supply";
 import Vehicle from "./components/backend/lookups/vehicle/Vehicle";
-import Constans from "./components/backend/lookups/constans/Constans";
 
 import AdminCarriers from "./components/backend/carrier/Carriers";
 import AdminCarrierDetails from "./components/backend/carrier/Details";
-import CustomerAddresses from "./components/backend/addresses/Addresses";
-import CustomerContacts from "./components/backend/contacts/Contacts";
 
 import Shippers from "./components/backend/shippers/Shippers";
 import AdminOrders from "./components/backend/orders/Orders";
@@ -549,11 +546,6 @@ export default new VueRouter({
                             component: Vehicle
                         },
                         {
-                            name: "constans",
-                            path: "constans",
-                            component: Constans
-                        },
-                        {
                             name: "carriers",
                             path: "carriers",
                             component: AdminCarriers
@@ -582,11 +574,6 @@ export default new VueRouter({
                             name: "admin-order-details",
                             path: "orders/details/:id",
                             component: AdminOrderDetails
-                        },
-                        {
-                            name: "contacts",
-                            path: "contacts",
-                            component: CustomerContacts
                         },
                         { name: "users", path: "users", component: Users },
                         { name: "about", path: "about", component: About },

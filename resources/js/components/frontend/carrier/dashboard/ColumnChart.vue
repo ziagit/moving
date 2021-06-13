@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <div class="container">
     <div v-if="isLoaded">
       <GChart type="ColumnChart" :data="chartData" :options="chartOptions" />
     </div>
-    <div v-else>Loading...</div>
+    <div v-else>No data!</div>
   </div>
 </template>
 <script>
@@ -37,7 +37,10 @@ export default {
       axios
         .get("carrier/dashboard/column-chart")
         .then((res) => {
-          this.feedChart(res.data);
+          if (res.data.length > 0) {
+            this.feedChart(res.data);
+          }
+          console.log("column chart", res.data);
         })
         .catch((err) => console.log(err));
     },
@@ -119,4 +122,8 @@ export default {
 };
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.container {
+  width: 100%;
+}
+</style>

@@ -1,9 +1,9 @@
 <template>
-  <div class="shippers" v-if="jobs">
+  <div class="jobs" v-if="jobs">
     <md-table md-sort="first_name" md-sort-order="asc" md-card>
       <md-table-toolbar>
         <div class="md-toolbar-section-start">
-          <h1 class="md-title">Customers</h1>
+          <span class="md-title">Jobs</span>
         </div>
 
         <md-field md-clearable class="md-toolbar-section-end">
@@ -92,13 +92,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.shippers {
+.jobs {
   width: 100%;
 
   .add-btn {
     position: fixed;
     bottom: 20px;
     right: 20px;
+  }
+  .md-toolbar-section-start {
+    text-align: left;
   }
 }
 </style>

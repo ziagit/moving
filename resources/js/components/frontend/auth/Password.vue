@@ -93,10 +93,11 @@ export default {
         })
         .catch((error) => {
           console.log("errrr", error);
-          /*    this.snackbar.message = error.response.data;
+          localData.remove("me");
+          this.snackbar.message = error.response.data;
           this.snackbar.statusCode = error.response.status;
           this.snackbar.show = true;
-          this.isSubmitting = false; */
+          this.isSubmitting = false;
         });
     },
   },
