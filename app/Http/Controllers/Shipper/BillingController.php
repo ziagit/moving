@@ -87,7 +87,7 @@ class BillingController extends Controller
                 'email' => $request->email
             ];
         } catch (Exception $e) {
-            return response()->json(['message' => $e], 500);
+            return response()->json(['message' => $e->getMessage()]);
         }
     }
 
