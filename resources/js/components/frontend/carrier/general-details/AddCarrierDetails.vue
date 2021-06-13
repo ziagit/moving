@@ -225,42 +225,65 @@ export default {
       this.insurance_papers = e.target.files[0];
     },
     submit() {
-      this.isSubmitting = true;
-      let fd = new FormData();
-      fd.append("business_license", this.business_license);
-      fd.append("insurance_papers", this.insurance_papers);
-      fd.append("first_name", this.form.first_name);
-      fd.append("last_name", this.form.last_name);
-      fd.append("addressId", this.form.addressId);
-      fd.append("country", this.form.country);
-      fd.append("state", this.form.state);
-      fd.append("city", this.form.city);
-      fd.append("zip", this.form.zip);
-      fd.append("address", this.form.address);
-      fd.append("email", this.form.email);
-      fd.append("phone", this.form.phone);
-      fd.append("website", this.form.website);
-      fd.append("company", this.form.company);
-      fd.append("detail", this.form.detail);
-      fd.append("addressId", this.form.addressId);
-      fd.append("employees", this.form.employees);
-      fd.append("vehicles", this.form.vehicles);
-      fd.append("hourly_rate", this.form.hourly_rate);
-      fd.append("year_established", this.form.year_established);
-      axios
-        .post("carrier/details", fd)
-        .then((res) => {
-          this.isSubmitting = false;
-          console.log("response ", res.data);
-          this.$router.push("/carrier/profile");
-        })
-        .catch((error) => {
-          this.isSubmitting = false;
-          console.log("eerrr: ", error.response);
-          this.snackbar.message = error.response.data.errors;
-          this.snackbar.statusCode = error.response.status;
+      if (this.validate()) {
+        this.isSubmitting = true;
+        let fd = new FormData();
+        fd.append("business_license", this.business_license);
+        fd.append("insurance_papers", this.insurance_papers);
+        fd.append("first_name", this.form.first_name);
+        fd.append("last_name", this.form.last_name);
+        fd.append("addressId", this.form.addressId);
+        fd.append("country", this.form.country);
+        fd.append("state", this.form.state);
+        fd.append("city", this.form.city);
+        fd.append("zip", this.form.zip);
+        fd.append("address", this.form.address);
+        fd.append("email", this.form.email);
+        fd.append("phone", this.form.phone);
+        fd.append("website", this.form.website);
+        fd.append("company", this.form.company);
+        fd.append("detail", this.form.detail);
+        fd.append("addressId", this.form.addressId);
+        fd.append("employees", this.form.employees);
+        fd.append("vehicles", this.form.vehicles);
+        fd.append("hourly_rate", this.form.hourly_rate);
+        fd.append("year_established", this.form.year_established);
+        axios
+          .post("carrier/details", fd)
+          .then((res) => {
+            this.isSubmitting = false;
+            console.log("response ", res.data);
+            this.$router.push("/carrier/profile");
+          })
+          .catch((error) => {
+            this.isSubmitting = false;
+            console.log("eerrr: ", error.response);
+            this.snackbar.message = error.response.data.errors;
+            this.snackbar.statusCode = error.response.status;
+            this.snackbar.show = true;
+          });
+      }
+    },
+    validate() {
+      if (this.user.email) {
+        if (validator.phoneValidator(this.form.phone)) {
+          return true;
+        } else {
+          this.snackbar.message = "Please provide a valid phone number!";
+          this.snackbar.statusCode = 203;
           this.snackbar.show = true;
-        });
+          return false;
+        }
+      } else {
+        if (validator.emailValidator(this.form.email)) {
+          return true;
+        } else {
+          this.snackbar.message = "Please provide a valid meail id!";
+          this.snackbar.statusCode = 203;
+          this.snackbar.show = true;
+          return false;
+        }
+      }
     },
   },
 };
