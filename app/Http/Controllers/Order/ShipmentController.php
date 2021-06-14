@@ -29,8 +29,8 @@ class ShipmentController extends Controller
         try {
             $order = $this->createOrder($request);
 
-            $job = $this->createNewJob($order->id, $request);
-            return "hi";
+             return $job = $this->createNewJob($order->id, $request);
+            
 
             $this->createNotification($job,  $order, $request);
             return response()->json($order);
@@ -143,6 +143,7 @@ class ShipmentController extends Controller
     }
     public function createNewJob($order, $request)
     {
+        return $request->carrier;
         try {
             $job = new Job();
             $job->order_id = $order;
