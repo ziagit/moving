@@ -78,13 +78,13 @@ return $order;
             $order->service_fee = $request->carrier['service_fee'];
             $order->disposal_fee = $request->carrier['disposal_fee'];
             $order->supplies_cost = $request->carrier['supplies_cost'];
+            return 'dd';
 
             $order->distance = $request->distance;
             $order->duration = $request->duration;
             $order->tax = $request->carrier['tax'];
             $order->shipper_id = $this->shipper();
             $order->save();
-            return 'dd';
 
             $order->addresses()->attach($addressIds);
             if ($request->supplies) {
