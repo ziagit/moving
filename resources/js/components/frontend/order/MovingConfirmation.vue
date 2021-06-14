@@ -193,9 +193,9 @@ export default {
       axios
         .post("confirm", this.shipment)
         .then((res) => {
-          //localData.removeAll();
+          localData.removeAll();
           console.log("order completed: ", res.data);
-          //this.$router.push("completion/" + res.data.uniqid);
+          this.$router.push("completion/" + res.data.uniqid);
         })
         .catch((err) => {
           this.snackbar.show = true;

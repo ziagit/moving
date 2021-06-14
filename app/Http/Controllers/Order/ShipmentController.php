@@ -29,8 +29,6 @@ class ShipmentController extends Controller
         try {
             $order = $this->createOrder($request);
             $job = $this->createNewJob($order->id, $request);
-            
-return "hi";
             $this->createNotification($job,  $order, $request);
             return response()->json($order);
         } catch (Exception $e) {
@@ -44,7 +42,6 @@ return "hi";
             $floor_to = 0;
             $addressIds = $this->storeAddress($request);
             $shipperId = $this->shipper();
-            return $shipperId;
             if ($request->floors) {
                 $floor_from = $request->floors['pickup'];
                 $floor_to = $request->floors['destination'];
@@ -145,6 +142,7 @@ return "hi";
     }
     public function createNewJob($order, $request)
     {
+        
         try {
             $job = new Job();
             $job->order_id = $order;
