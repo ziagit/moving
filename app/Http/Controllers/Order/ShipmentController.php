@@ -71,7 +71,6 @@ return $order;
             $order->officesize_id = $office_size;
             $order->movernumber_id = $number_of_movers;
             $order->vehicle_id = $vehicle;
-            return 'dd';
 
             $order->cost = $request->carrier['price'];
             $order->travel_cost = $request->carrier['travel'];
@@ -79,6 +78,7 @@ return $order;
             $order->service_fee = $request->carrier['service_fee'];
             $order->disposal_fee = $request->carrier['disposal_fee'];
             $order->supplies_cost = $request->carrier['supplies_cost'];
+            return 'dd';
 
             $order->distance = $request->distance;
             $order->duration = $request->duration;
