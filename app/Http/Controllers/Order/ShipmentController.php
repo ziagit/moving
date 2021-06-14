@@ -27,8 +27,9 @@ class ShipmentController extends Controller
     public function store(Request $request)
     {
         try {
-            return "hi";
             $order = $this->createOrder($request);
+            return "hi";
+
             $job = $this->createNewJob($order->id, $request);
             $this->createNotification($job,  $order, $request);
             return response()->json($order);
