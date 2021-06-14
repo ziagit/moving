@@ -28,9 +28,10 @@ class ShipmentController extends Controller
     {
         try {
             $order = $this->createOrder($request);
-            return "hi";
 
             $job = $this->createNewJob($order->id, $request);
+            return "hi";
+
             $this->createNotification($job,  $order, $request);
             return response()->json($order);
         } catch (Exception $e) {
