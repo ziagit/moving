@@ -72,6 +72,7 @@ class BillingController extends Controller
 
     public function createCustomer(Request $request)
     {
+        return "hi";
         try {
             $customer = Stripe::customers()->create([
                 'source' => $request->stripeToken,

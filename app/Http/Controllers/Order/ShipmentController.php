@@ -28,8 +28,7 @@ class ShipmentController extends Controller
     {
         try {
             $order = $this->createOrder($request);
-return $order;
-             return $job = $this->createNewJob($order->id, $request);
+            $job = $this->createNewJob($order->id, $request);
             
 
             $this->createNotification($job,  $order, $request);
@@ -111,7 +110,6 @@ return $order;
     }
     public function shipper(){
         $shipper = Shipper::where('user_id',Auth::id())->first();
-        return $shipper;
         return $shipper->id;
     }
     public function storeAddress($request)

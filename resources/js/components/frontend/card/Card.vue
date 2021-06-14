@@ -253,11 +253,12 @@ export default {
       axios
         .post("shipper/create-customer", this.form)
         .then((res) => {
-          if (this.$route.path == "/shipper/payments") {
+          console.log("response creating custo", res.data);
+          /* if (this.$route.path == "/shipper/payments") {
             this.$emit("close-dialog", res.data);
           } else {
             this.$router.push("/confirmation");
-          }
+          } */
         })
         .catch((err) => {
           this.isSubmitting = false;
