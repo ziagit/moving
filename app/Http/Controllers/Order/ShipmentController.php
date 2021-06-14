@@ -55,7 +55,7 @@ return $order;
 
             $number_of_movers = $request->number_of_movers ?  Movernumber::where('code', $request->number_of_movers['code'])->first()->id : null;
             $vehicle = $request->vehicle ? Vehicle::where('code', $request->vehicle['code'])->first()->id : null;
-            return "from order";
+            
             $order = new Order();
 
             $order->uniqid = 'O' . rand();
@@ -63,7 +63,7 @@ return $order;
             $order->pickup_date = $request->moving_date['date'];
             $order->appointment_time = $request->moving_date['time'];
             $order->instructions = $request->instructions;
-
+return "ok.";
             $order->movingtype_id = $moving_type;
             $order->floor_from = $floor_from;
             $order->floor_to = $floor_to;
