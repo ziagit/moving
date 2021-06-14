@@ -26,13 +26,13 @@
     <br />
     <div class="row">
       <md-card>
-        <md-card-header>CUSTOMERsS</md-card-header>
+        <md-card-header>CUSTOMERS</md-card-header>
         <md-card-content>
           <Customers />
         </md-card-content>
       </md-card>
       <md-card>
-        <md-card-header>MOVERsS</md-card-header>
+        <md-card-header>MOVERS</md-card-header>
         <md-card-content>
           <Movers />
         </md-card-content>

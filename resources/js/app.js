@@ -43,8 +43,8 @@ import Home from "./components/frontend/Home";
 import axios from "axios";
 
 //axios.defaults.baseURL = "http://localhost:8000/api/moving";
-//axios.defaults.baseURL = 'http://34.121.144.224/api/moving';
-axios.defaults.baseURL = 'https://tingsapp.com/api/moving';
+axios.defaults.baseURL = 'http://34.121.144.224/api/moving';
+//axios.defaults.baseURL = 'https://tingsapp.com/api/moving';
 //some time when I push to server api still points to localhost, this problem solved by runing 'npm run prod' and then push to server and change .env to production too in server,
 /**
  * Next, we will create a fresh Vue application instance and attach it to

@@ -32,15 +32,21 @@
           <div v-if="details">
             <div v-if="details.type == 'App\\Notifications\\JobCreated'">
               <p>This Order is created at: {{ details.created_at }}</p>
-              <md-button class="md-primary">View in order page</md-button>
+              <md-button class="md-primary" @click="readMore(details.data.job.id)"
+                >Read more</md-button
+              >
             </div>
             <div v-else-if="details.type == 'App\\Notifications\\JobUpdated'">
               <p>An Order is updated at: {{ details.created_at }}</p>
-              <md-button class="md-primary">View in order page</md-button>
+              <md-button class="md-primary" @click="readMore(details.data.job.id)"
+                >Read more</md-button
+              >
             </div>
             <div v-else-if="details.type == 'App\\Notifications\\CarrierPaid'">
               <p>A mover paid at: {{ details.created_at }}</p>
-              <md-button class="md-primary">View in payment page</md-button>
+              <md-button class="md-primary" @click="readMore(details)"
+                >Read more</md-button
+              >
             </div>
           </div>
         </div>
@@ -59,6 +65,12 @@ export default {
   created() {
     this.getNotifications();
   },
+  computed: {
+    ...mapGetters({
+      authenticated: "auth/authenticated",
+      user: "auth/user",
+    }),
+  },
   methods: {
     ...mapActions({
       setNotification: "shared/setNotification",
@@ -72,7 +84,10 @@ export default {
         });
       }
     },
-
+    readMore(id) {
+      console.log("details", id);
+      this.$router.push("/carrier/history/details/" + id);
+    },
     open(not) {
       this.selectedNot = not.id;
       this.details = not;

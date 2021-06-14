@@ -1,64 +1,117 @@
 <template>
   <div class="container">
-    <div v-if="isloaded">
-      <GChart type="BubbleChart" :data="chartData" :options="chartOptions" />
+    <div v-if="isLoaded">
+      <GChart class="graph" type="PieChart" :data="chartData" :options="chartOptions" />
     </div>
     <div v-else>No data.</div>
+
+    <div class="legend">
+      <span class="md-caption">
+        <span class="dot" style="background: #4472c4"></span>
+        <span>Jobs received : {{ received }}</span></span
+      >
+      <span class="md-caption">
+        <span class="dot" style="background: #ed7d31"></span>
+        <span>Jobs accepted: {{ accepted }}</span></span
+      >
+      <span class="md-caption">
+        <span class="dot" style="background: #a5a5a5"></span>
+        <span>Jobs declined : {{ declined }}</span></span
+      >
+      <span class="md-caption">
+        <span class="dot" style="background: #ffc000"></span>
+        <span>Jobs compledted {{ completed }}</span></span
+      >
+      <span class="md-caption">
+        <span class="dot" style="background: #5b9bd5"></span>
+        <span>Jobs pending {{ pending }}</span></span
+      >
+    </div>
   </div>
 </template>
-
 <script>
-import axios from "axios";
 import { GChart } from "vue-google-charts";
 export default {
   data: () => ({
-    isloaded: true,
-    cities: [],
-    chartData: [
-      ["City", "Expected", "Outcome (%)", "Number of placed orders"],
-      ["Vancouver", 80.66, 2, "1"],
-      ["Victoria", 72.73, 2.6, "2"],
-      ["Toronto", 79.84, 1.36, "3"],
-      ["Ottawa", 78.6, 1.84, "4"],
+    isLoaded: false,
+    completed: 0,
+    canceled: 0,
+    accepted: 0,
+    declined: 0,
+    pending: 0,
+    received: 0,
+    defaultData: [
+      ["Jobs", "Qty"],
+      ["Received", 1],
+      ["Accepted", 1],
+      ["Declined", 1],
+      ["Completed", 1],
+      ["Pending", 1],
     ],
+    chartData: [["Jobs", "Qty"]],
     chartOptions: {
-      title: "",
-      hAxis: { title: "Expectancy" },
-      vAxis: { title: "Fertility Rate" },
-      bubble: { textStyle: { fontSize: 9 } },
-      height: 500,
-      legend: { position: "bottom", alignment: "center" },
-      animation: { startup: true },
+      chart: {
+        title: "Company Performance",
+        subtitle: "Sales, Expenses, and Profit: 2014-2020",
+      },
+      width: 300,
+      height: 300,
+      pieHole: 0.65,
+      legend: "none",
+      chartArea: {
+        left: "3%",
+        top: "3%",
+        height: "600",
+        width: "600",
+      },
     },
   }),
   created() {
     this.get();
-    this.getCities();
   },
   methods: {
     get() {
-      axios.get("admin/dashboard/daily-projections").then((res) => {
-        this.feedChart(res.data);
-        /*  if (res.data.length > 0) {
-          this.feedChart(res.data);
-        } */
-      });
+      axios
+        .get("admin/dashboard/daily-projections")
+        .then((res) => {
+          console.log("xxx ", res.data);
+          if (res.data.length > 0) {
+            this.feedChart(res.data);
+          }
+        })
+        .catch((err) => console.log(err));
     },
-    feedChart(orders) {
-      for (let i = 0; i < orders.length; i++) {
-        console.log("order", orders[i].addresses[0].city);
-        if (orders[i].addresses[0].city == "Vancouver") {
-          this.chartData.push(["Vancouver", 80.66, 2, "1"]);
+    feedChart(jobs) {
+      for (let i = 0; i < jobs.length; i++) {
+        this.received += 1;
+        switch (jobs[i].order.status) {
+          case "Completed":
+            this.completed += 1;
+            this.chartData.push(["Completed jobs", this.completed]);
+            this.chartOptions.colors.push("#FFC000");
+            break;
+          case "Accepted":
+            this.accepted += 1;
+            this.chartData.push(["Accepted jobs", this.accepted]);
+            this.chartOptions.colors.push("#ED7D31");
+          case "Declined":
+            this.declined += 1;
+            this.chartData.push(["Declined jobs", this.declined]);
+            this.chartOptions.colors.push("#A5A5A5");
+          case "Canceled":
+            this.chartData.push(["Canceled jobs", this.canceled]);
+            this.chartOptions.colors.push("#A5A5A5");
+          case "New":
+            this.chartData.push(["Pending jobs", this.pending]);
+            this.chartOptions.colors.push("#5B9BD5");
         }
       }
-      this.isloaded = true;
-    },
-    getCities() {
-      axios.get("cities").then((res) => {
-        this.cities = res.data;
-      });
+      this.chartData.push(["Received jobs", this.received]);
+      this.chartOptions.colors.push("#4472C4");
+      this.isLoaded = true;
     },
   },
+  mounted: function () {},
   components: {
     GChart,
   },
@@ -66,12 +119,25 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.row {
+.graph {
   display: flex;
-  justify-content: space-between;
-  .md-card {
-    width: 100%;
-    text-align: center;
+  justify-content: center;
+}
+.legend {
+  margin: 30px 10px;
+  display: flex;
+  justify-content: center;
+  .md-caption {
+    margin: 10px;
+    display: flex;
+    align-items: center;
+    .dot {
+      height: 10px;
+      width: 10px;
+      border-radius: 0%;
+      display: inline-block;
+      margin: 1px;
+    }
   }
 }
 </style>

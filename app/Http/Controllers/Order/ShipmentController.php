@@ -29,10 +29,6 @@ class ShipmentController extends Controller
         try {
             $order = $this->createOrder($request);
             $job = $this->createNewJob($order->id, $request);
-
-            $admin = User::find(1);
-        
-            $admin->notify(new JobCreated($job));
             $this->createNotification($job,  $order, $request);
             return response()->json($order);
         } catch (Exception $e) {
@@ -161,6 +157,8 @@ class ShipmentController extends Controller
         try {
             $user  = Carrier::with('user')->find($request->carrier['id'])->user;
             $user->notify(new JobCreated($job));
+            $admin = User::find(1);
+            $admin->notify(new JobCreated($job));
             return true;
         } catch (Exception $e) {
             return response()->json($e->getMessage());

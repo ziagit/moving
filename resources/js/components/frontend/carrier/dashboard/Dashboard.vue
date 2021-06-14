@@ -45,6 +45,9 @@ export default {
 .row {
   display: flex;
   justify-content: space-evenly;
+  .md-card {
+    width: 100%;
+  }
 }
 @media only screen and (max-width: 600px) {
   .row {

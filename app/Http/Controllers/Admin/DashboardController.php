@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 class DashboardController extends Controller
 {
     public function dailyProjections(){
-        $orders = Order::with('addresses')->get();
+        $orders = Order::all();
         return response()->json($orders);
     }
     public function sales(){

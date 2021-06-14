@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div v-if="isLoaded">
-      <GChart type="PieChart" :data="chartData" :options="chartOptions" />
+      <GChart class="graph" type="PieChart" :data="chartData" :options="chartOptions" />
       <div class="legend">
         <span class="md-caption">
           <span class="dot" style="background: #4472c4"></span>
@@ -39,15 +39,18 @@ export default {
     declined: 0,
     pending: 0,
     received: 0,
-    chartData: [["Jobs", "Qty"]],
+    chartData: [
+      ["Jobs", "Qty"],
+      ["Completed", 20],
+    ],
     chartOptions: {
       chart: {
         title: "Company Performance",
         subtitle: "Sales, Expenses, and Profit: 2014-2020",
       },
-      width: "100%",
-      height: "100%",
-      pieHole: 0.5,
+      width: "300",
+      height: "300",
+      pieHole: 0.65,
       legend: "none",
       colors: ["#0598d8", "#f97263"],
       chartArea: {
@@ -56,7 +59,6 @@ export default {
         height: "600",
         width: "600",
       },
-      colors: [],
     },
   }),
   created() {
@@ -111,6 +113,10 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.graph {
+  display: flex;
+  justify-content: center;
+}
 .legend {
   margin: 30px 10px;
   display: flex;
