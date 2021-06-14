@@ -291,6 +291,7 @@ export default {
       axios
         .get("state-cities")
         .then((res) => {
+          console.log("cities in googleaddress2", res.data);
           this.supportedData = res.data;
         })
         .catch((err) => console.log(err));
