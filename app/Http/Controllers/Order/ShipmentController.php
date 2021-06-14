@@ -55,6 +55,7 @@ return $order;
 
             $number_of_movers = $request->number_of_movers ?  Movernumber::where('code', $request->number_of_movers['code'])->first()->id : null;
             $vehicle = $request->vehicle ? Vehicle::where('code', $request->vehicle['code'])->first()->id : null;
+            return "from order";
             $order = new Order();
 
             $order->uniqid = 'O' . rand();
@@ -143,7 +144,6 @@ return $order;
     }
     public function createNewJob($order, $request)
     {
-        return 'dd';
         try {
             $job = new Job();
             $job->order_id = $order;
