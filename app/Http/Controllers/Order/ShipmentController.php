@@ -44,6 +44,8 @@ return $order;
             $floor_from = 0;
             $floor_to = 0;
             $addressIds = $this->storeAddress($request);
+            $shipperId = $this->shipper();
+            return $shipperId;
             if ($request->floors) {
                 $floor_from = $request->floors['pickup'];
                 $floor_to = $request->floors['destination'];
@@ -78,12 +80,11 @@ return $order;
             $order->service_fee = $request->carrier['service_fee'];
             $order->disposal_fee = $request->carrier['disposal_fee'];
             $order->supplies_cost = $request->carrier['supplies_cost'];
-            return 'dd';
 
             $order->distance = $request->distance;
             $order->duration = $request->duration;
             $order->tax = $request->carrier['tax'];
-            $order->shipper_id = $this->shipper();
+            $order->shipper_id = $shipperId;
             $order->save();
 
             $order->addresses()->attach($addressIds);
@@ -110,6 +111,7 @@ return $order;
     }
     public function shipper(){
         $shipper = Shipper::where('user_id',Auth::id())->first();
+        return $shipper;
         return $shipper->id;
     }
     public function storeAddress($request)
