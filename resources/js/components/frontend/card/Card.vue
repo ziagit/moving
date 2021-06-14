@@ -254,11 +254,11 @@ export default {
         .post("shipper/create-customer", this.form)
         .then((res) => {
           console.log("response creating custo", res.data);
-          /* if (this.$route.path == "/shipper/payments") {
+          if (this.$route.path == "/shipper/payments") {
             this.$emit("close-dialog", res.data);
           } else {
             this.$router.push("/confirmation");
-          } */
+          }
         })
         .catch((err) => {
           this.isSubmitting = false;
