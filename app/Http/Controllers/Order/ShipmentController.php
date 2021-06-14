@@ -63,7 +63,7 @@ return $order;
             $order->pickup_date = $request->moving_date['date'];
             $order->appointment_time = $request->moving_date['time'];
             $order->instructions = $request->instructions;
-return "ok.";
+
             $order->movingtype_id = $moving_type;
             $order->floor_from = $floor_from;
             $order->floor_to = $floor_to;
@@ -71,6 +71,7 @@ return "ok.";
             $order->officesize_id = $office_size;
             $order->movernumber_id = $number_of_movers;
             $order->vehicle_id = $vehicle;
+            return 'dd';
 
             $order->cost = $request->carrier['price'];
             $order->travel_cost = $request->carrier['travel'];
