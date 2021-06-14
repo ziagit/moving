@@ -73,7 +73,6 @@ class BillingController extends Controller
 
     public function createCustomer(Request $request)
     {
-        
         try {
             $customer = Stripe::customers()->create([
                 'source' => $request->stripeToken,
@@ -81,16 +80,19 @@ class BillingController extends Controller
                 'name' => $request->name_oncard,
                 'description' => "Payment for moving",
             ]);
-            return $customer;
-          $shipper = $this->createShipper($request, $customer['id']);
-            return [
-                'message' => 'Thank you! your card added successfully.',
-                'shipper' => $shipper,
-                'status' => false,
-                'email' => $request->email
-            ];
+            if($customer){
+                $shipper = $this->createShipper($request, $customer['id']);
+                return [
+                    'message' => 'Thank you! your card added successfully.',
+                    'shipper' => $shipper,
+                    'status' => false,
+                    'email' => $request->email
+                ];
+            }
+            return response()->json(['message'=>'Could not create Strip customer'],400);
+        
         } catch (Exception $e) {
-            return response()->json(['message' => $e->getMessage()]);
+            return response()->json($e->getMessage());
         }
     }
 
