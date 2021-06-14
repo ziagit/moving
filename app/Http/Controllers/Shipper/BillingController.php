@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Order;
 use App\Shipper;
 use App\User;
+use Cartalyst\Stripe\Api\Customers;
 use Cartalyst\Stripe\Laravel\Facades\Stripe;
 use Exception;
 use Illuminate\Http\Request;
@@ -72,7 +73,7 @@ class BillingController extends Controller
 
     public function createCustomer(Request $request)
     {
-        return "hi";
+        
         try {
             $customer = Stripe::customers()->create([
                 'source' => $request->stripeToken,
@@ -80,6 +81,7 @@ class BillingController extends Controller
                 'name' => $request->name_oncard,
                 'description' => "Payment for moving",
             ]);
+            return $customer;
           $shipper = $this->createShipper($request, $customer['id']);
             return [
                 'message' => 'Thank you! your card added successfully.',
