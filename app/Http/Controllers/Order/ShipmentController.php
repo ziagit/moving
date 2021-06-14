@@ -143,7 +143,7 @@ class ShipmentController extends Controller
     }
     public function createNewJob($order, $request)
     {
-        return $request->carrier;
+        return 'dd';
         try {
             $job = new Job();
             $job->order_id = $order;
