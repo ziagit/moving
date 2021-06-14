@@ -28,7 +28,7 @@ class ShipmentController extends Controller
     {
         try {
             $order = $this->createOrder($request);
-
+return $order;
              return $job = $this->createNewJob($order->id, $request);
             
 
