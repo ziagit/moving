@@ -18,7 +18,6 @@ class CreateLegalsTable extends Migration
             $table->string('title');
             $table->text('body');
             $table->timestamps();
-            $table->timestamps();
         });
     }
 
