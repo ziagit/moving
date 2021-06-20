@@ -1,138 +1,93 @@
 <template>
   <div>
-    <md-toolbar md-elevation="0" v-if="authenticated" class="custom-toolbar">
-      <div class="row" v-if="authenticated">
-        <div class="avatar" @click="profile()">
-          <img :src="'/images/pub/' + user.avatar" width="80" alt="" />
-        </div>
-        <div class="break"></div>
-        <div class="text">
-          <div class="name md-title">{{ user.name }}</div>
-          <div class="email">{{ formatPhone(user.phone) }}</div>
-        </div>
+    <div v-if="authenticated" class="text-center">
+      <b-avatar
+        button
+        :src="'/images/pub/' + user.avatar"
+        size="5rem"
+        @click="profile()"
+        class="mt-3 mb-3"
+      ></b-avatar>
+      <div class="text" v-if="user">
+        <p class="mb-0">
+          <b>{{ user.name }}</b>
+        </p>
+        <p>{{ user.email }}</p>
       </div>
-    </md-toolbar>
+    </div>
     <div class="line"></div>
-    <md-list>
-      <md-list-item @click="hideMenu('inbox')">
-        <span class="md-list-item-text">Notifications</span>
-      </md-list-item>
-      <md-list-item @click="hideMenu('dashboard')">
-        <span class="md-list-item-text">Dashboard</span>
-      </md-list-item>
-      <md-list-item md-expand :md-expanded.sync="expandLookups">
-        <span class="md-list-item-text">Lookups</span>
-        <md-list slot="md-expand">
-          <md-list-item class="md-inset" @click="hideMenu('countries')"
-            >Countries</md-list-item
-          >
-          <md-list-item class="md-inset" @click="hideMenu('states')">States</md-list-item>
-          <md-list-item class="md-inset" @click="hideMenu('cities')">Cities</md-list-item>
-          <md-list-item class="md-inset" @click="hideMenu('moving-types')"
-            >Moving types</md-list-item
-          >
-          <md-list-item class="md-inset" @click="hideMenu('moving-sizes')"
-            >Moving sizes</md-list-item
-          >
-          <md-list-item class="md-inset" @click="hideMenu('office-sizes')"
-            >Office sizes</md-list-item
-          >
-          <md-list-item class="md-inset" @click="hideMenu('number-of-movers')"
-            >Number of movers</md-list-item
-          >
-          <md-list-item class="md-inset" @click="hideMenu('moving-few-items')"
-            >Few items</md-list-item
-          >
-          <md-list-item class="md-inset" @click="hideMenu('supplies')"
-            >Supplies</md-list-item
-          >
-          <md-list-item class="md-inset" @click="hideMenu('vehicles')"
-            >Vehicles</md-list-item
-          >
-          <md-list-item class="md-inset" @click="hideMenu('constans')"
-            >Tax +</md-list-item
-          >
-        </md-list>
-      </md-list-item>
-
-      <md-list-item @click="hideMenu('carriers')">
-        <span class="md-list-item-text">Movers</span>
-      </md-list-item>
-      <md-list-item @click="hideMenu('shippers')">
-        <span class="md-list-item-text">Customers</span>
-      </md-list-item>
-
-      <md-list-item @click="hideMenu('orders')">
-        <span class="md-list-item-text">Orders</span>
-      </md-list-item>
-      <md-list-item @click="hideMenu('users')">
-        <span class="md-list-item-text">Users</span>
-      </md-list-item>
-
-      <md-list-item md-expand :md-expanded.sync="expandFinance">
-        <span class="md-list-item-text">Finance</span>
-        <md-list slot="md-expand">
-          <md-list-item class="md-inset" @click="hideMenu('revenue')"
-            >Revenue</md-list-item
-          >
-          <md-list-item class="md-inset" @click="hideMenu('unpaid-jobs')"
-            >Unpaid jobs</md-list-item
-          >
-          <md-list-item class="md-inset" @click="hideMenu('paid-jobs')"
-            >Paid jobs</md-list-item
-          >
-          <md-list-item class="md-inset" @click="hideMenu('payouts')"
-            >Payouts</md-list-item
-          >
-          <md-list-item class="md-inset" @click="hideMenu('refunds')"
-            >Refunds</md-list-item
-          >
-        </md-list>
-      </md-list-item>
-      <md-list-item md-expand :md-expanded.sync="expandReport">
-        <span class="md-list-item-text">Reports</span>
-        <md-list slot="md-expand">
-          <md-list-item class="md-inset" @click="hideMenu('reports/sales-reports')"
-            >Sales reports</md-list-item
-          >
-          <md-list-item class="md-inset" @click="hideMenu('reports/financial-reports')"
-            >Financial reports</md-list-item
-          >
-        </md-list>
-      </md-list-item>
-
-      <md-list-item md-expand :md-expanded.sync="expandPages">
-        <span class="md-list-item-text">Pages</span>
-        <md-list slot="md-expand">
-          <md-list-item class="md-inset" @click="hideMenu('about')">About</md-list-item>
-
-          <md-list-item class="md-inset" @click="hideMenu('terms')">Terms</md-list-item>
-          <md-list-item class="md-inset" @click="hideMenu('privacy')"
-            >Privacy</md-list-item
-          >
-          <md-list-item class="md-inset" @click="hideMenu('shipper-help')"
-            >Customer</md-list-item
-          >
-          <md-list-item class="md-inset" @click="hideMenu('carrier-help')"
-            >Carrier</md-list-item
-          >
-          <md-list-item class="md-inset" @click="hideMenu('help')">Help</md-list-item>
-          <md-list-item class="md-inset" @click="hideMenu('carrier-faq')"
-            >Carrier FAQ</md-list-item
-          >
-          <md-list-item class="md-inset" @click="hideMenu('shipper-faq')"
-            >Customer FAQ</md-list-item
-          >
-        </md-list>
-      </md-list-item>
-
-      <div v-if="authenticated">
-        <md-divider></md-divider>
-        <md-list-item @click="signOut()">
-          <span class="md-list-item-text">Logout</span>
-        </md-list-item>
-      </div>
-    </md-list>
+    <ul class="o-ul">
+      <li @click="hideMenu('inbox')"><span>Notifications</span></li>
+      <li @click="hideMenu('dashboard')"><span>Dashboard</span></li>
+      <li @click="lookupTogal = !lookupTogal">
+        <div class="childer">
+          <span>Lookups</span>
+          <b-icon v-if="!lookupTogal" icon="chevron-right"></b-icon>
+          <b-icon v-else icon="chevron-down"> </b-icon>
+        </div>
+        <ul v-show="lookupTogal" class="i-ul">
+          <li @click="hideMenu('countries')"><span>Countries</span></li>
+          <li @click="hideMenu('states')"><span>States</span></li>
+          <li @click="hideMenu('cities')"><span>Cities</span></li>
+          <li @click="hideMenu('moving-types')"><span>Moving types</span></li>
+          <li @click="hideMenu('office-sizes')"><span>Office sizes</span></li>
+          <li @click="hideMenu('number-of-movers')"><span>Number of movers</span></li>
+          <li @click="hideMenu('moving-few-items')"><span>Few items</span></li>
+          <li @click="hideMenu('supplies')"><span>Supplies</span></li>
+          <li @click="hideMenu('vehicles')"><span>Vehicles</span></li>
+          <li @click="hideMenu('tax')"><span>Fees & Taxes</span></li>
+        </ul>
+      </li>
+      <li @click="hideMenu('carriers')"><span>Movers</span></li>
+      <li @click="hideMenu('shippers')"><span>Customers</span></li>
+      <li @click="hideMenu('orders')"><span>Orders</span></li>
+      <li @click="hideMenu('users')"><span>Users</span></li>
+      <li @click="financeTogal = !financeTogal">
+        <div class="childer">
+          <span><span>Finances</span></span>
+          <b-icon v-if="!financeTogal" icon="chevron-right"></b-icon>
+          <b-icon v-else icon="chevron-down"> </b-icon>
+        </div>
+        <ul v-show="financeTogal" class="i-ul">
+          <li @click="hideMenu('revenue')"><span>Revenue</span></li>
+          <li @click="hideMenu('unpaid-jobs')"><span>Unpaid jobs</span></li>
+          <li @click="hideMenu('paid-jobs')"><span>Paid jobs</span></li>
+          <li @click="hideMenu('payouts')"><span>Payouts</span></li>
+          <li @click="hideMenu('refunds')"><span>Refunds</span></li>
+        </ul>
+      </li>
+      <li @click="reportTogal = !reportTogal">
+        <div class="childer">
+          <span><span>Reports</span></span>
+          <b-icon v-if="!reportTogal" icon="chevron-right"></b-icon>
+          <b-icon v-else icon="chevron-down"> </b-icon>
+        </div>
+        <ul v-show="reportTogal" class="i-ul">
+          <li @click="hideMenu('reports/sales-reports')"><span>Sales reports</span></li>
+          <li @click="hideMenu('reports/financial-reports')">
+            <span>Financial reports</span>
+          </li>
+        </ul>
+      </li>
+      <li @click="pageTogal = !pageTogal">
+        <div class="childer">
+          <span><span>Pages</span></span>
+          <b-icon v-if="!pageTogal" icon="chevron-right"></b-icon>
+          <b-icon v-else icon="chevron-down"> </b-icon>
+        </div>
+        <ul v-show="pageTogal" class="i-ul">
+          <li @click="hideMenu('about')"><span>What is TingsApp</span></li>
+          <li @click="hideMenu('how-it-works')"><span>How it works</span></li>
+          <li @click="hideMenu('carrier-faq')"><span>Mover </span></li>
+          <li @click="hideMenu('shipper-faq')"><span>Customer </span></li>
+          <li @click="hideMenu('terms')"><span>Terms</span></li>
+          <li @click="hideMenu('privacy')"><span>Privacy</span></li>
+          <li @click="hideMenu('legals')"><span>Legals</span></li>
+        </ul>
+      </li>
+      <div class="line"></div>
+      <li @click="signOut()"><span>Logout</span></li>
+    </ul>
   </div>
 </template>
 
@@ -146,10 +101,10 @@ export default {
     Notifications,
   },
   data: () => ({
-    expandPages: false,
-    expandLookups: false,
-    expandFinance: false,
-    expandReport: false,
+    lookupTogal: false,
+    financeTogal: false,
+    reportTogal: false,
+    pageTogal: false,
   }),
   created() {},
   computed: {
@@ -174,7 +129,7 @@ export default {
     },
 
     profile() {
-      this.$router.push("/admin/dashboard");
+      this.$router.push("/admin/account");
       this.$emit("hideSideMenu");
     },
     hideMenu(path) {
@@ -189,39 +144,31 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.o-ul {
+  margin: 0;
+  padding: 0;
+  li {
+    list-style-type: none;
+    padding: 8px 8px 8px 18px;
+    cursor: pointer;
+  }
+
+  .childer {
+    display: flex;
+    justify-content: space-between;
+  }
+  span {
+    margin: 0;
+    padding: 0;
+  }
+}
 .active {
   color: #ffa500 !important;
 }
-.md-list {
-  padding: 0 !important;
+.o-ul > li:hover {
+  background: #ddd;
 }
-.md-list-item-text {
-  font-weight: 500;
-}
-.custom-toolbar {
-  background: #fff !important;
-  height: 155px;
-  display: flex;
-  justify-content: center;
-  .row {
-    width: 100%;
-    .avatar {
-      margin: auto;
-      text-align: center;
-      align-items: center;
-      display: flex;
-      justify-content: center;
-      cursor: pointer;
-    }
-    .text {
-      text-align: left;
-      .name {
-        font-weight: 600;
-      }
-      .email {
-        font-size: 11px;
-      }
-    }
-  }
+.o-ul li ul li:hover {
+  background: rgb(241, 240, 240);
 }
 </style>

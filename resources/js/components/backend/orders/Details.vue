@@ -1,268 +1,231 @@
 <template>
-  <div>
-    <md-dialog-confirm
-      :md-active.sync="confirmDialog"
-      md-title="Confirmation"
-      :md-content="confirmation_text"
-      md-confirm-text="Agree"
-      md-cancel-text="Disagree"
-      @md-cancel="onCancel"
-      @md-confirm="onConfirm"
-    />
-
-    <md-card v-if="order" class="outer-card">
-      <md-card-header class="head">
-        <div class="status">
-          <span>Status: {{ order.status }}</span>
-          <div class="outer-content">
-            <div>
-              <Spinner v-if="isSubmitting" />
-              <div v-else>
-                <md-button class="custom-button" @click="edit('Edited')">Edit</md-button>
-                <md-button class="custom-button" @click="edit('Accepted')"
-                  >Accept</md-button
-                >
-                <md-button class="custom-button" @click="edit('Canceled')"
-                  >Cancel</md-button
-                >
-                <md-button class="custom-button" @click="edit('Declined')"
-                  >Decline</md-button
-                >
-                <md-button class="custom-button" @click="edit('Completed')"
-                  >Complete</md-button
-                >
-              </div>
+  <div class="container">
+    <div v-if="order" class="mt-5">
+      <div class="d-flex justify-content-between align-items-center">
+        <span
+          >Status: <b-badge pill variant="dark">{{ order.status }}</b-badge></span
+        >
+        <div>
+          <b-spinner variant="primary" v-if="isSubmitting" />
+          <b-button-group v-else>
+            <b-button variant="primary" @click="edit('Edited')">Edit</b-button>
+            <b-button variant="secondary" @click="edit('Accepted')">Accept</b-button>
+            <b-button variant="danger" @click="edit('Canceled')">Cancel</b-button>
+            <b-button variant="warning" @click="edit('Declined')">Decline</b-button>
+            <b-button variant="success" @click="edit('Completed')">Complete</b-button>
+          </b-button-group>
+        </div>
+      </div>
+      <div class="row d-flex justify-content-between">
+        <div class="col-md-6">
+          <b-card class="border-0 shadow mb-3" header="Order Details">
+            <div class="row">
+              <span class="col-3">Order: </span>
+              <span class="col-6">{{ order.uniqid }}</span>
             </div>
-          </div>
+            <div class="row">
+              <span class="col-3">Placed on: </span>
+              <span class="col-6">{{ formatDate(order.created_at) }}</span>
+            </div>
+            <div class="row">
+              <span class="col-3">Pickup location: </span>
+              <span class="col-6">{{ order.addresses[0].formatted_address }}</span>
+            </div>
+            <div class="row">
+              <span class="col-3">Floor: </span>
+              <span class="col-6" v-if="order.floor_from">{{ order.floor_from }}</span>
+              <span class="col-6" v-else>No stairs</span>
+            </div>
+            <div class="row">
+              <span class="col-3">Destination: </span>
+              <span class="col-6">{{ order.addresses[1].formatted_address }}</span>
+            </div>
+            <div class="row">
+              <span class="col-3">Floor: </span>
+              <span class="col-6" v-if="order.floor_to">{{ order.floor_to }}</span>
+              <span class="col-6" v-else>No stairs</span>
+            </div>
+            <div class="row" v-if="order.movingtype.code == 'apartment'">
+              <span class="col-3">Moving size: </span>
+              <span class="col-6">{{ order.movingsize.title }}</span>
+            </div>
+            <div class="row" v-if="order.movingtype.code == 'office'">
+              <span class="col-3">Office size: </span>
+              <span class="col-6">{{ order.officesize.title }}</span>
+            </div>
+            <div class="row" v-if="order.vehicle">
+              <span class="col-3">Requested vehicle: </span>
+              <span class="col-6">{{ order.vehicle.name }}</span>
+            </div>
+            <div class="row" v-if="order.movernumber">
+              <span class="col-3">Number of movers: </span>
+              <span class="col-6">{{ order.movernumber.number }}</span>
+            </div>
+            <div class="row">
+              <span class="col-3">Schedualed date: </span>
+              <span class="col-6">{{ order.pickup_date }}</span>
+            </div>
+            <div class="row">
+              <span class="col-3">Time window: </span>
+              <span class="col-6">{{ order.appointment_time }}</span>
+            </div>
+            <div class="break"></div>
+            <div class="row">
+              <span class="col-3">Moving type: </span>
+              <span class="col-6">{{ order.movingtype.title }}</span>
+            </div>
+            <div class="break"></div>
+            <div class="row">
+              <span class="col-3">Instructions: </span>
+              <span class="col-6">{{ order.instructions }}</span>
+            </div>
+          </b-card>
+          <b-card class="mt-3 shadow border-0" header="Supplies">
+            <div class="row">
+              <span v-if="order.supplies.length > 0">
+                <div v-for="(supply, index) in order.supplies" :key="index" class="list">
+                  <span class="col-3">{{ supply.name }}:</span>
+                  <span class="col-6"> {{ supply.pivot.number }}</span>
+                </div>
+              </span>
+              <span class="col-6" v-else>Not selected</span>
+            </div>
+          </b-card>
+          <b-card v-if="order.items.length > 0" header="Items" class="shadow border-0">
+            <div class="row">
+              <span>
+                <div v-for="(item, index) in order.items" :key="index" class="list">
+                  <span class="col-3">{{ item.name }}:</span>
+                  <span class="col-6"> {{ item.pivot.number }}</span>
+                </div>
+              </span>
+            </div>
+          </b-card>
         </div>
-      </md-card-header>
-      <md-card-content>
-        <div class="cols">
-          <div class="col">
-            <md-card>
-              <md-card-header><span class="md-title">Order</span></md-card-header>
-              <md-card-content>
-                <div class="row">
-                  <span>Order: </span>
-                  <span>{{ order.uniqid }}</span>
-                </div>
-                <div class="row">
-                  <span>Placed on: </span>
-                  <span>{{ formatDate(order.created_at) }}</span>
-                </div>
-                <div class="row">
-                  <span>Pickup location: </span>
-                  <span>{{ order.addresses[0].formatted_address }}</span>
-                </div>
-                <div class="row">
-                  <span>Floor: </span>
-                  <span v-if="order.floor_from">{{ order.floor_from }}</span>
-                  <span v-else>No stairs</span>
-                </div>
-                <div class="row">
-                  <span>Destination: </span>
-                  <span>{{ order.addresses[1].formatted_address }}</span>
-                </div>
-                <div class="row">
-                  <span>Floor: </span>
-                  <span v-if="order.floor_to">{{ order.floor_to }}</span>
-                  <span v-else>No stairs</span>
-                </div>
-                <div class="row" v-if="order.movingtype.code == 'apartment'">
-                  <span>Moving size: </span>
-                  <span>{{ order.movingsize.title }}</span>
-                </div>
-                <div class="row" v-if="order.movingtype.code == 'office'">
-                  <span>Office size: </span>
-                  <span>{{ order.officesize.title }}</span>
-                </div>
-                <div class="row" v-if="order.vehicle">
-                  <span>Requested vehicle: </span>
-                  <span>{{ order.vehicle.name }}</span>
-                </div>
-                <div class="row" v-if="order.movernumber">
-                  <span>Number of movers: </span>
-                  <span>{{ order.movernumber.number }}</span>
-                </div>
-                <div class="row">
-                  <span>Schedualed date: </span>
-                  <span>{{ order.pickup_date }}</span>
-                </div>
-                <div class="row">
-                  <span>Time window: </span>
-                  <span>{{ order.appointment_time }}</span>
-                </div>
-                <div class="break"></div>
-                <div class="row">
-                  <span>Moving type: </span>
-                  <span>{{ order.movingtype.title }}</span>
-                </div>
-                <div class="break"></div>
-                <div class="row">
-                  <span>Instructions: </span>
-                  <span>{{ order.instructions }}</span>
-                </div>
-              </md-card-content>
-            </md-card>
-            <md-card class="col-1">
-              <md-card-header><span class="md-title">Supplies</span></md-card-header>
-              <md-card-content>
-                <div class="row">
-                  <span v-if="order.supplies.length > 0">
-                    <div
-                      v-for="(supply, index) in order.supplies"
-                      :key="index"
-                      class="list"
-                    >
-                      <span>{{ supply.name }}:</span>
-                      <span> {{ supply.pivot.number }}</span>
-                    </div>
-                  </span>
-                  <span v-else>Not selected</span>
-                </div>
-              </md-card-content>
-            </md-card>
-            <md-card v-if="order.items.length > 0">
-              <md-card-header><span class="md-title">Items</span></md-card-header>
-              <md-card-content>
-                <div class="row">
-                  <span>
-                    <div v-for="(item, index) in order.items" :key="index" class="list">
-                      <span>{{ item.name }}:</span>
-                      <span> {{ item.pivot.number }}</span>
-                    </div>
-                  </span>
-                </div>
-              </md-card-content>
-            </md-card>
-          </div>
-          <div class="col">
-            <md-card>
-              <md-card-header><span class="md-title">Customer</span></md-card-header>
-              <md-card-content>
-                <div class="row">
-                  <span class="md-body-2">Contacts:</span>
-                </div>
-                <div class="row">
-                  <span>Name: </span>
-                  <span>{{ order.shipper_contacts.user.name }}</span>
-                </div>
-                <div class="row">
-                  <span>Email: </span>
-                  <span>{{ order.shipper_contacts.user.email }}</span>
-                </div>
-                <div class="row">
-                  <span>Phone: </span>
-                  <span>{{ order.shipper_contacts.user.phone }}</span>
-                </div>
-                <div class="break"></div>
-                <div class="row">
-                  <span class="md-body-2">Price:</span>
-                </div>
-                <div class="row">
-                  <span>Total: </span>
-                  <span>${{ order.cost }}</span>
-                </div>
-                <div class="row">
-                  <span>Moving cost: </span>
-                  <span>${{ order.moving_cost }}</span>
-                </div>
-                <div class="row">
-                  <span>Travel cost: </span>
-                  <span>${{ order.travel_cost }}</span>
-                </div>
-                <div class="row">
-                  <span>Supplies cost: </span>
-                  <span>${{ order.supplies_cost }}</span>
-                </div>
-                <div class="row" v-if="order.disposal_fee">
-                  <span>Disposal fee: </span>
-                  <span>${{ order.disposal_fee }}</span>
-                </div>
-                <div class="row">
-                  <span>Tax: </span>
-                  <span>${{ order.tax }}</span>
-                </div>
-                <div class="row" v-if="order.tips">
-                  <span>Tips: </span>
-                  <span>${{ order.tips }}</span>
-                </div>
-              </md-card-content>
-            </md-card>
-            <md-card>
-              <md-card-header><span class="md-title">Mover</span></md-card-header>
-              <md-card-content>
-                <div class="row">
-                  <span class="md-body-2">Contacts:</span>
-                </div>
-                <div class="row">
-                  <span>Name: </span>
-                  <span>{{ order.job_with_carrier.carrier_detail.company }}</span>
-                </div>
-                <div class="row">
-                  <span>Email: </span>
-                  <span>{{ order.job_with_carrier.carrier_detail.user.email }}</span>
-                </div>
-                <div class="row">
-                  <span>Phone: </span>
-                  <span>{{ order.job_with_carrier.carrier_detail.user.phone }}</span>
-                </div>
-                <div class="break"></div>
-                <div class="row">
-                  <span class="md-body-2">Cost:</span>
-                </div>
-                <div class="row">
-                  <span>Total: </span>
-                  <span
-                    >${{ Math.round(order.cost - order.service_fee).toFixed(2) }}</span
-                  >
-                </div>
-                <div class="row">
-                  <span>Moving cost: </span>
-                  <span>${{ order.moving_cost }}</span>
-                </div>
-                <div class="row">
-                  <span>Travel cost: </span>
-                  <span>${{ order.travel_cost }}</span>
-                </div>
-                <div class="row">
-                  <span>Supplies cost: </span>
-                  <span>${{ order.supplies_cost }}</span>
-                </div>
-                <div class="row">
-                  <span>Service fee: </span>
-                  <span>-${{ order.service_fee }}</span>
-                </div>
+        <div class="col-md-6">
+          <b-card header="Customer" class="mb-3 border-0 shadow">
+            <div class="row">
+              <span class="col-3"><b>Contacts:</b></span>
+            </div>
+            <div class="row">
+              <span class="col-3">Name: </span>
+              <span class="col-6">{{ order.shipper_contacts.user.name }}</span>
+            </div>
+            <div class="row">
+              <span class="col-3">Email: </span>
+              <span class="col-6">{{ order.shipper_contacts.user.email }}</span>
+            </div>
+            <div class="row">
+              <span class="col-3">Phone: </span>
+              <span class="col-6">{{ order.shipper_contacts.user.phone }}</span>
+            </div>
+            <div class="break"></div>
+            <div class="row">
+              <span class="col-3"><b>Price:</b></span>
+            </div>
+            <div class="row">
+              <span class="col-3">Total: </span>
+              <span class="col-6">${{ order.cost }}</span>
+            </div>
+            <div class="row">
+              <span class="col-3">Moving cost: </span>
+              <span class="col-6">${{ order.moving_cost }}</span>
+            </div>
+            <div class="row">
+              <span class="col-3">Travel cost: </span>
+              <span class="col-6">${{ order.travel_cost }}</span>
+            </div>
+            <div class="row">
+              <span class="col-3">Supplies cost: </span>
+              <span class="col-6">${{ order.supplies_cost }}</span>
+            </div>
+            <div class="row" v-if="order.disposal_fee">
+              <span class="col-3">Disposal fee: </span>
+              <span class="col-6">${{ order.disposal_fee }}</span>
+            </div>
+            <div class="row">
+              <span class="col-3">Tax: </span>
+              <span class="col-6">${{ order.tax }}</span>
+            </div>
+            <div class="row" v-if="order.tips">
+              <span class="col-3">Tips: </span>
+              <span class="col-6">${{ order.tips }}</span>
+            </div>
+          </b-card>
+          <b-card header="Mover" class="border-0 shadow mb-3">
+            <div class="row">
+              <span class="col-3"><b>Contacts:</b></span>
+            </div>
+            <div class="row">
+              <span class="col-3">Name: </span>
+              <span class="col-6">{{
+                order.job_with_carrier.carrier_detail.company
+              }}</span>
+            </div>
+            <div class="row">
+              <span class="col-3">Email: </span>
+              <span class="col-6">{{
+                order.job_with_carrier.carrier_detail.user.email
+              }}</span>
+            </div>
+            <div class="row">
+              <span class="col-3">Phone: </span>
+              <span class="col-6">{{
+                order.job_with_carrier.carrier_detail.user.phone
+              }}</span>
+            </div>
+            <div class="break"></div>
+            <div class="row">
+              <span class="col-3"><b>Cost:</b></span>
+            </div>
+            <div class="row">
+              <span class="col-3">Total: </span>
+              <span class="col-6"
+                >${{ Math.round(order.cost - order.service_fee).toFixed(2) }}</span
+              >
+            </div>
+            <div class="row">
+              <span class="col-3">Moving cost: </span>
+              <span class="col-6">${{ order.moving_cost }}</span>
+            </div>
+            <div class="row">
+              <span class="col-3">Travel cost: </span>
+              <span class="col-6">${{ order.travel_cost }}</span>
+            </div>
+            <div class="row">
+              <span class="col-3">Supplies cost: </span>
+              <span class="col-6">${{ order.supplies_cost }}</span>
+            </div>
+            <div class="row">
+              <span class="col-3">Service fee: </span>
+              <span class="col-6">-${{ order.service_fee }}</span>
+            </div>
 
-                <div class="row">
-                  <span>Tax: </span>
-                  <span>${{ order.tax }}</span>
-                </div>
-                <div class="row">
-                  <span>Tips: </span>
-                  <span>${{ order.tips ? order.tips : 0 }}</span>
-                </div>
-                <div class="row" v-if="order.tips">
-                  <span>Tips: </span>
-                  <span>${{ order.tips }}</span>
-                </div>
-              </md-card-content>
-            </md-card>
-          </div>
+            <div class="row">
+              <span class="col-3">Tax: </span>
+              <span class="col-3">${{ order.tax }}</span>
+            </div>
+            <div class="row">
+              <span class="col-3">Tips: </span>
+              <span class="col-6">${{ order.tips ? order.tips : 0 }}</span>
+            </div>
+            <div class="row" v-if="order.tips">
+              <span class="col-3">Tips: </span>
+              <span class="col-6">${{ order.tips }}</span>
+            </div>
+          </b-card>
         </div>
-      </md-card-content>
-    </md-card>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import Rate from "../../frontend/shipper/rate/Rate";
-import Spinner from "../../shared/Spinner";
 import dateFormatter from "../../frontend/services/dateFormatter.js";
 export default {
   name: "orderDetails",
   components: {
-    Spinner,
     Rate,
   },
   data: () => ({
@@ -271,7 +234,6 @@ export default {
     notificationId: null,
     isSubmitting: false,
     confirmDialog: false,
-    status: null,
     confirmation_text: null,
     distance: null,
     duration: null,
@@ -310,17 +272,23 @@ export default {
         });
     },
     edit(status) {
-      this.confirmation_text = "Do you want this order to be " + status + " ?";
-      this.status = status;
-      this.confirmDialog = true;
+      this.$bvModal
+        .msgBoxConfirm("Do you want this order to be " + status + " ?")
+        .then((value) => {
+          if (value) {
+            this.confirm(status);
+          }
+        })
+        .catch((err) => {
+          console.log("err", err);
+        });
     },
-    onCancel() {},
-    onConfirm() {
-      if (this.status == "Edited") {
+    confirm(status) {
+      if (status == "Edited") {
         this.$router.push("/");
       } else {
         this.isSubmitting = true;
-        this.order["status"] = this.status;
+        this.order["status"] = status;
         axios
           .put("admin/orders/" + this.$route.params.id, this.order)
           .then((res) => {
@@ -333,12 +301,6 @@ export default {
           });
       }
     },
-    refresh() {
-      this.rateTogal = false;
-    },
-    review(id) {
-      this.$router.push("/review/" + id);
-    },
     formatDate(date) {
       return dateFormatter.format(date);
     },
@@ -346,59 +308,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.outer-card {
-  box-shadow: none;
-  .head {
-    margin: 0 !important;
-    padding: 10px 25px;
-  }
-}
-.cols {
-  display: flex;
-  justify-content: space-between;
-  .col {
-    flex: 1;
-    .md-card {
-      text-align: left;
-      .row {
-        display: flex;
-        > :first-child {
-          min-width: 132px;
-        }
-        .list {
-          display: flex;
-          justify-content: space-between;
-        }
-      }
-    }
-  }
-  .col-1 {
-    min-height: 270;
-  }
-}
-
-.md-card {
-  text-align: center;
-  margin: 0 20px;
-  .status {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    .outer-content {
-      display: flex;
-      .review {
-        margin-right: 10px;
-      }
-    }
-  }
-
-  .md-card {
-    margin: 5px;
-  }
-  .inactive {
-    background: #ddd;
-    box-shadow: none;
-  }
-}
-</style>
+<style lang="scss" scoped></style>

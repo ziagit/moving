@@ -19,13 +19,10 @@
 <script>
 import Header from "../../shared/Header";
 import Footer from "../../shared/Footer";
-import Spinner from "../../shared/Spinner";
 import { mapGetters, mapActions } from "vuex";
 export default {
   name: "Welcome",
-  components: {
-    Spinner,
-  },
+  components: {},
   data: () => ({
     form: {
       code: null,

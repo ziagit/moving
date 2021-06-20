@@ -1,86 +1,69 @@
 <template>
   <div>
-    <md-card v-if="earning" class="outer-card">
-      <md-card-header class="head">
-        <div class="status">
-          <span>Status: {{ earning.status }}</span>
-          <div></div>
+    <div v-if="earning" class="outer-card">
+      <div class="status pl-3 pr-3 text-left">
+        <span
+          >Status: <b-badge pill variant="dark">{{ earning.status }}</b-badge></span
+        >
+      </div>
+      <div class="cols">
+        <div class="col">
+          <b-card class="border-0 shadow text-left" header="Revenue">
+            <div class="row">
+              <span class="col-4">Travel cost: </span>
+              <span class="col-8">${{ earning.order.travel_cost }}</span>
+            </div>
+            <div class="row">
+              <span class="col-4">Moving cost: </span>
+              <span class="col-5">${{ earning.order.moving_cost }}</span>
+            </div>
+            <div class="row">
+              <span class="col-4">Received tips: </span>
+              <span class="col-8"
+                >${{ earning.order.tips ? earning.order.tips : 0 }}</span
+              >
+            </div>
+            <div class="row">
+              <span class="col-4">Supplies cost: </span>
+              <span class="col-8">
+                ${{ earning.order.supplies_cost ? earning.order.supplies_cost : 0 }}</span
+              >
+            </div>
+            <div class="row">
+              <span class="col-4">Disposal fee: </span>
+              <span class="col-8">
+                ${{ earning.disposal_fee ? earning.order.disposal_fee : 0 }}</span
+              >
+            </div>
+            <div class="row">
+              <span class="col-4">Servoce fee: </span>
+              <span class="col-8">
+                -${{ earning.order.service_fee ? earning.order.service_fee : 0 }}</span
+              >
+            </div>
+            <div class="row">
+              <span class="col-4">Payable tax: </span>
+              <span class="col-8">
+                ${{ earning.unpaid_gst ? earning.unpaid_gst : 0 }}</span
+              >
+            </div>
+          </b-card>
         </div>
-      </md-card-header>
-      <md-card-content>
-        <div class="cols">
-          <div class="col">
-            <md-card class="col1">
-              <md-card-header><span class="md-title">Breakdown</span></md-card-header>
-              <md-card-content>
-                <div class="row">
-                  <span><strong>Total amount to be collected:</strong> </span>
-                  <span
-                    ><strong> ${{ earning.carrier_earning }}</strong></span
-                  >
-                </div>
-                <div class="break"></div>
-                <div class="row">
-                  <span>Travel cost: </span>
-                  <span>${{ earning.order_detail.travel_cost }}</span>
-                </div>
-                <div class="row">
-                  <span>Moving cost: </span>
-                  <span>${{ earning.order_detail.moving_cost }}</span>
-                </div>
-                <div class="row">
-                  <span>Received tips: </span>
-                  <span
-                    >${{
-                      earning.order_detail.tips ? earning.order_detail.tips : 0
-                    }}</span
-                  >
-                </div>
-                <div class="row">
-                  <span>Supplies cost: </span>
-                  <span>
-                    ${{
-                      earning.order_detail.supplies_cost
-                        ? earning.order_detail.supplies_cost
-                        : 0
-                    }}</span
-                  >
-                </div>
-              </md-card-content>
-            </md-card>
-          </div>
-          <div class="col">
-            <md-card>
-              <md-card-header><span class="md-body-2">Service fee</span></md-card-header>
-              <md-card-content
-                >${{
-                  earning.order_detail.service_fee ? earning.order_detail.service_fee : 0
-                }}
-              </md-card-content>
-            </md-card>
-            <md-card>
-              <md-card-header><span class="md-body-2">Disposal fee</span></md-card-header>
-              <md-card-content>
-                ${{ earning.disposal_fee ? earning.order_detail.disposal_fee : 0 }}
-              </md-card-content>
-            </md-card>
-
-            <md-card>
-              <md-card-header><span class="md-body-2">Payable tax</span></md-card-header>
-              <md-card-content>
-                ${{ earning.unpaid_gst ? earning.unpaid_gst : 0 }}
-              </md-card-content>
-            </md-card>
-          </div>
+        <div class="col">
+          <b-card class="border-0 shadow text-left" header="Earning">
+            <div class="row">
+              <span class="col-8">Total amount to be collected: </span>
+              <span class="col-8"> ${{ earning.carrier_earning }}</span>
+            </div>
+          </b-card>
         </div>
-      </md-card-content>
-    </md-card>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import axios from "axios";
-import Spinner from "../../../shared/Spinner";
 import formatter from "../../services/dateFormatter";
 export default {
   name: "JobDetails",
@@ -110,58 +93,13 @@ export default {
     this.details();
   },
 
-  components: {
-    Spinner,
-  },
+  components: {},
 };
 </script>
 
 <style lang="scss" scoped>
-.outer-card {
-  box-shadow: none;
-  .head {
-    margin: 0 !important;
-    padding: 10px 25px;
-  }
-}
 .cols {
   display: flex;
-  justify-content: space-between;
-  .col {
-    flex: 1;
-    .md-card {
-      text-align: left;
-      .row {
-        display: flex;
-        > :first-child {
-          min-width: 132px;
-        }
-        .list {
-          display: flex;
-          justify-content: space-between;
-        }
-      }
-    }
-  }
-  .col1 {
-    height: 98%;
-  }
-}
-.md-card {
-  text-align: center;
-  margin: 0 20px;
-  .status {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .md-card {
-    margin: 5px;
-  }
-  .inactive {
-    background: #ddd;
-    box-shadow: none;
-  }
+  justify-content: space-evenly;
 }
 </style>

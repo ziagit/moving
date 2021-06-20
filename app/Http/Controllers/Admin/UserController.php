@@ -127,7 +127,6 @@ class UserController extends Controller
                 'email' => 'required|email',
                 'phone' => 'required',
             ]);
-
             if ($validator->fails()) {
                 return response()->json(['error' => $validator->errors()], 400);
             }
@@ -149,9 +148,9 @@ class UserController extends Controller
     public function destroy($id)
     {
         $user = User::find($id);
-        $user->delete();
         $carrier = Carrier::where('user_id', $id)->first();
         $carrier->delete();
+        $user->delete();
         return response()->json("Deleted successfully!",200);
     }
 

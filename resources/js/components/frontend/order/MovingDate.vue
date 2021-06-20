@@ -1,5 +1,5 @@
 <template>
-  <div class="pickup-date">
+  <div class="origin">
     <span class="md-display-1">When should be picked up?</span>
     <div class="break"></div>
     <div class="break"></div>
@@ -10,22 +10,16 @@
       <div class="break"></div>
       <div class="break"></div>
       <div class="actions">
-        <md-button
-          to="/order/floors"
-          class="md-raised md-fab md-icon-button rounded-primary-button"
-        >
-          <md-icon>arrow_back</md-icon>
-        </md-button>
+        <b-button @click="back()" variant="light">
+          <b-icon icon="arrow-left"></b-icon>
+        </b-button>
         <div class="tab"></div>
-        <md-button
-          type="submit"
-          class="md-raised md-fab md-icon-button rounded-secondary-button"
-        >
-          <md-icon>arrow_forward</md-icon>
-        </md-button>
+        <b-button type="submit" variant="primary">
+          <b-icon icon="arrow-right"></b-icon>
+        </b-button>
       </div>
     </form>
-    <Snackbar :data="snackbar" />
+    <Toaster ref="toaster" />
   </div>
 </template>
 
@@ -33,24 +27,18 @@
 import localData from "../services/localData";
 import CustomCalendar from "../../shared/CustomCalendar";
 import NextMonthCalendar from "../../shared/NextMonthCalendar";
-import Snackbar from "../../shared/Snackbar";
-import axios from "axios";
+import Toaster from "../../shared/Toaster";
 export default {
   name: "PickupDate",
   components: {
     CustomCalendar,
-    Snackbar,
+    Toaster,
     NextMonthCalendar,
   },
   data: () => ({
     initDate: null,
     timeSelected: null,
     nextMonthTogal: true,
-    snackbar: {
-      show: false,
-      message: null,
-      statusCode: null,
-    },
     type: localData.read("moving-type"),
   }),
 
@@ -66,6 +54,9 @@ export default {
         this.$emit("progress", 5);
       }
     },
+    back() {
+      this.$router.push("/order/floors");
+    },
     next() {
       var date = localData.read("moving-date");
       if (date && date.date != null && date.time != null) {
@@ -75,9 +66,12 @@ export default {
           this.$router.push("moving-supplies");
         }
       } else {
-        this.snackbar.show = true;
-        this.snackbar.message = "Select a date and time to continue!";
-        this.snackbar.statusCode = "428";
+        this.$refs.toaster.show(
+          "danger",
+          "b-toaster-top-center",
+          "Error",
+          "Select a date and time to continue!"
+        );
       }
     },
   },
@@ -85,8 +79,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.pickup-date {
+.origin {
   text-align: center;
+  width: 100%;
   .time-range {
     display: flex;
     flex-wrap: wrap;

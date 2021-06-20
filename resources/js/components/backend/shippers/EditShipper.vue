@@ -1,71 +1,73 @@
 <template>
   <div>
-    <md-dialog :md-active.sync="checkoutTogal">
-      <md-dialog-content>
-        <Card v-on:close-dialog="refresh" />
-      </md-dialog-content>
-    </md-dialog>
-    <md-card>
-      <md-card-header>
-        <span class="md-title">Payment Method</span>
-        <md-button @click="$emit('close-it')" class="md-icon-button add-btn">
-          <md-icon>close</md-icon>
-        </md-button>
-      </md-card-header>
-      <md-divider></md-divider>
-      <md-card-content>
-        <div class="shipper-details">
-          <div class="row" v-if="stripe_customer_id">
-            <p>{{ paymentMethod.brand }}</p>
-            <p>************{{ paymentMethod.last4 }}</p>
-            <p>{{ paymentMethod.exp_month }}/{{ paymentMethod.exp_year }}</p>
-            <md-button class="md-primary" @click="checkoutTogal = true">Edit</md-button>
-          </div>
-          <div class="row">
-            <p>There is no payment method added</p>
-            <md-button class="md-button" @click="checkoutTogal = true">Add </md-button>
-          </div>
+    <b-modal id="modal-card" :hide-footer="true">
+      <Card />
+    </b-modal>
+    <b-card header="Payment Method" class="shadow border-0 mt-5">
+      <b-button @click="$emit('close-it')" class="add-btn" variant="light">
+        <b-icon icon="x"></b-icon>
+      </b-button>
+      <div class="shipper-details" v-if="paymentMethod">
+        <div class="row">
+          <span class="col-3">Brand: </span>
+          <span class="col-6">{{ paymentMethod[0].brand }}</span>
         </div>
-      </md-card-content>
-    </md-card>
+        <div class="row">
+          <span class="col-3">Last 4:</span>
+          <span class="col-6">************{{ paymentMethod[0].last4 }}</span>
+        </div>
+        <div class="row">
+          <span class="col-3">Expirateion date: </span>
+          <span class="col-6"
+            >{{ paymentMethod[0].exp_month }}/{{ paymentMethod[0].exp_year }}</span
+          >
+        </div>
+      </div>
+      <div class="row" v-else>
+        <p>There is no payment method added</p>
+      </div>
+      <div class="text-right">
+        <b-button v-if="paymentMethod" variant="primary" @click="editCard()"
+          >Edit</b-button
+        >
+        <b-button v-else variant="primary" @click="editCard()">Add</b-button>
+      </div>
+    </b-card>
     <br />
-    <md-card>
+    <b-card header="Edit Details" class="border-0 shadow">
       <form @submit.prevent="update" enctype="multipart/form-data">
-        <md-card-header>
-          <span class="md-title">Edit Details</span>
-          <md-button @click="$emit('close-it')" class="md-icon-button add-btn">
-            <md-icon>close</md-icon>
-          </md-button>
-        </md-card-header>
-        <md-divider></md-divider>
-        <md-card-content>
-          <div class="shipper-details">
-            <div class="row">
-              <md-field>
-                <label for="">First name</label>
-                <md-input
-                  type="text"
-                  v-model="form.first_name"
-                  required
-                  ref="focusable"
-                ></md-input>
-              </md-field>
-              <md-field>
-                <label for="">Last name</label>
-                <md-input type="text" v-model="form.last_name" required></md-input>
-              </md-field>
-              <div class="row">
-                <md-field>
-                  <label for="">Phone</label>
-                  <md-input type="tel" v-model="form.phone" required></md-input>
-                </md-field>
-                <md-field>
-                  <label for="">Email</label>
-                  <md-input type="tel" v-model="form.email" required></md-input>
-                </md-field>
-              </div>
-            </div>
-            <div class="row">
+        <b-button @click="$emit('close-it')" variant="light" class="add-btn">
+          <b-icon icon="x"></b-icon>
+        </b-button>
+        <div class="shipper-details">
+          <b-form-group>
+            <b-input-group>
+              <b-form-input
+                type="text"
+                v-model="form.first_name"
+                ref="focusable"
+                placeholder="First name"
+              ></b-form-input>
+              <b-form-input
+                type="text"
+                v-model="form.last_name"
+                placeholder="Last name"
+              ></b-form-input>
+              <b-form-input
+                type="tel"
+                v-model="form.phone"
+                placeholder="Phone"
+              ></b-form-input>
+            </b-input-group>
+          </b-form-group>
+          <b-form-group>
+            <b-input-group>
+              <b-form-input
+                type="email"
+                v-model="form.email"
+                placeholder="Email"
+              ></b-form-input>
+
               <GoogleAddress3
                 v-if="form.address != null"
                 v-on:google-valid-address="googleValidAddress"
@@ -73,20 +75,20 @@
                 :initialData="form.address"
                 label="Full adddress"
               />
-            </div>
-          </div>
-        </md-card-content>
-        <md-card-actions>
-          <md-button type="submit" class="md-primary">Update</md-button>
-        </md-card-actions>
+            </b-input-group>
+          </b-form-group>
+        </div>
+        <div class="text-right">
+          <b-button type="submit" variant="primary">Update</b-button>
+        </div>
       </form>
-    </md-card>
+    </b-card>
   </div>
 </template>
 
 <script>
 import GoogleAddress3 from "../../shared/GoogleAddress3.vue";
-import Card from "./Card.vue";
+import Card from "../../frontend/card/Card.vue";
 export default {
   props: ["shipper"],
   components: {
@@ -145,7 +147,7 @@ export default {
       axios
         .get("admin/card-details/" + this.shipper.stripe_customer_id)
         .then((res) => {
-          console.log("card res", res.data);
+          console.log("card res", res.data.data);
           if (res.data.data) {
             this.paymentMethod = res.data.data;
           }
@@ -185,47 +187,17 @@ export default {
         this.getCard();
       }
     },
+    editCard() {
+      this.$bvModal.show("modal-card");
+    },
   },
 };
 </script>
 
 <style scoped lang="scss">
-.md-card {
-  text-align: left;
-
-  .select-logo {
-    position: absolute;
-  }
-
-  .row {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-
-    .md-field {
-      flex: 25%;
-    }
-  }
-
-  .add-btn {
-    position: absolute;
-    top: 0;
-    right: 0;
-  }
-
-  .zip-address {
-    flex: 50%;
-  }
-}
-.company {
-  .row {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-
-    .md-field {
-      flex: 32%;
-    }
-  }
+.add-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 </style>

@@ -1,30 +1,30 @@
 <template>
-  <div class="contact">
+  <div class="origin">
     <div>
       <div v-if="me">
         <span class="md-display-1">Enter verification code</span>
         <div class="break"></div>
         <div class="break"></div>
-        <md-card>
-          <md-card-content>
-            <CodeInput
-              :loading="false"
-              class="input"
-              :fields="4"
-              :fieldWidth="60"
-              v-on:change="onChange"
-              v-on:complete="verify"
-            />
-            <p class="md-caption">We texted a code to your phone number.</p>
-            <div class="resend">
-              <p>Code not received?</p>
-              <md-button class="md-primary" @click="me = null">Resend</md-button>
-            </div>
-            <p class="md-caption">Test code: 0-0-0-0</p>
-            <p style="color: red" v-if="invalidCode">{{ invalidCode }}</p>
-            <Spinner v-if="isSubmitting" />
-          </md-card-content>
-        </md-card>
+        <b-card class="border-0 shadow my-card">
+          <CodeInput
+            :loading="false"
+            class="input"
+            :fields="4"
+            :fieldWidth="60"
+            v-on:change="onChange"
+            v-on:complete="verify"
+          />
+          <p class="blockquote-footer text-left">
+            We texted a code to your phone number.
+          </p>
+          <div class="resend">
+            <p class="mb-0">Code not received?</p>
+            <b-link class="ml-3" @click="me = null">Resend</b-link>
+          </div>
+          <p class="blockquote-footer">Test code: 0-0-0-0</p>
+          <p style="color: red" v-if="invalidCode">{{ invalidCode }}</p>
+          <b-spinner variant="primary" v-if="isSubmitting" />
+        </b-card>
         <div class="break"></div>
         <div class="break"></div>
         <div class="book"></div>
@@ -33,32 +33,29 @@
         <span class="md-display-1">What is your phone number?</span>
         <div class="break"></div>
         <div class="break"></div>
-        <md-card>
-          <md-card-content>
-            <VuePhoneNumberInput
-              v-model="form.formatted"
-              default-country-code="CA"
-              :no-country-selector="true"
-              :required="true"
-              error-color="#e42c2c"
-              :no-validator-state="true"
-              v-on:update="update"
-              :border-radius="0"
-            />
-            <p class="md-caption">
-              You’ll receive updates about the status of your order via this phone number.
-            </p>
-          </md-card-content>
-        </md-card>
-        <div class="break"></div>
-        <div class="break"></div>
-        <div class="book">
-          <Spinner v-if="isSubmitting" />
-          <md-button v-else @click="addPhone()" class="custom-button">Continue</md-button>
-        </div>
+        <b-card class="shadow border-0">
+          <VuePhoneNumberInput
+            v-model="form.formatted"
+            default-country-code="CA"
+            :no-country-selector="true"
+            :required="true"
+            error-color="#e42c2c"
+            :no-validator-state="true"
+            v-on:update="update"
+            :border-radius="0"
+          />
+          <p class="blockquote-footer text-left">
+            You’ll receive updates about the status of your order via this phone number.
+          </p>
+          <div class="break"></div>
+          <div class="book">
+            <b-spinner variant="primary" v-if="isSubmitting" />
+            <b-button v-else @click="addPhone()" variant="primary">Continue</b-button>
+          </div>
+        </b-card>
       </div>
     </div>
-    <Snackbar :data="snackbar" />
+    <Toaster ref="toaster" />
   </div>
 </template>
 
@@ -68,14 +65,12 @@ import CodeInput from "vue-verification-code-input";
 import VuePhoneNumberInput from "vue-phone-number-input";
 import "vue-phone-number-input/dist/vue-phone-number-input.css";
 import { mapActions, mapGetters } from "vuex";
-import Snackbar from "../../shared/Snackbar";
-import Spinner from "../../shared/Spinner";
+import Toaster from "../../shared/Toaster";
 import localData from "../services/localData";
 export default {
   name: "Movers",
   components: {
-    Snackbar,
-    Spinner,
+    Toaster,
     CodeInput,
     VuePhoneNumberInput,
   },
@@ -90,11 +85,6 @@ export default {
     invalidCode: null,
     isSubmitting: false,
     me: null,
-    snackbar: {
-      show: false,
-      message: null,
-      statusCode: null,
-    },
   }),
   created() {
     this.me = localData.read("me");
@@ -116,9 +106,12 @@ export default {
     },
     addPhone() {
       if (!this.form.phone) {
-        this.snackbar.statusCode = 400;
-        this.snackbar.message = "Invalid phone number!";
-        this.snackbar.show = true;
+        this.$refs.toaster.show(
+          "danger",
+          "b-toaster-top-center",
+          "Invalid",
+          "Provide a valid phone!"
+        );
       } else {
         localData.save("phone", this.form);
         if (this.authenticated && this.user.role[0].name === "customer") {
@@ -136,9 +129,12 @@ export default {
             .catch((err) => {
               console.log(err.response);
               this.isSubmitting = false;
-              this.snackbar.statusCode = err.response.status;
-              this.snackbar.message = err.response.data.phone;
-              this.snackbar.show = true;
+              this.$refs.toaster.show(
+                "danger",
+                "b-toaster-top-center",
+                "Error",
+                err.response.data.phone
+              );
             });
           /*         this.$router.push({
           name: "signin",
@@ -174,9 +170,10 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.contact {
+.origin {
+  width: 100%;
   text-align: center;
-  .md-card {
+  .my-card {
     text-align: left;
     min-width: 400px;
     padding: 20px;

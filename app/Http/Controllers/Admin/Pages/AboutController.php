@@ -15,7 +15,7 @@ class AboutController extends Controller
      */
     public function index()
     {
-        $about = About::all();
+        $about = About::first();
         return response()->json($about);
     }
 

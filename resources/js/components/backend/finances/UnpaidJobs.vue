@@ -1,37 +1,32 @@
 <template>
-  <div class="earnings" v-if="earnings">
-    <md-table md-sort="name" md-sort-order="asc" md-card>
-      <md-table-toolbar>
-        <div class="md-toolbar-section-start">
-          <h1 class="md-title">Unpaid Jobs</h1>
-        </div>
-
-        <md-field md-clearable class="md-toolbar-section-end">
-          <md-input placeholder="Search by name..." v-model="keywords" />
-        </md-field>
-      </md-table-toolbar>
-
-      <md-table-row>
-        <md-table-head md-numeric>Order</md-table-head>
-        <md-table-head>Date</md-table-head>
-        <md-table-head>Type</md-table-head>
-        <md-table-head>Status</md-table-head>
-        <md-table-head>Details</md-table-head>
-      </md-table-row>
-      <md-table-row v-for="(earning, index) in earnings.data" :key="index">
-        <md-table-cell md-numeric>{{ earning.order_detail.uniqid }}</md-table-cell>
-        <md-table-cell>{{ formatter(earning.order_detail.created_at) }}</md-table-cell>
-        <md-table-cell>{{ earning.order_detail.movingtype.title }}</md-table-cell>
-        <md-table-cell>{{ earning.status }}</md-table-cell>
-        <md-table-cell>
-          <md-button
-            class="md-icon-button"
-            :to="{ path: 'earning-details/' + earning.id }"
-            ><md-icon>more_horiz</md-icon></md-button
-          >
-        </md-table-cell>
-      </md-table-row>
-    </md-table>
+  <div class="container" v-if="earnings">
+    <b-card header="Unpaid Jobs" class="border-0 shadow mt-5">
+      <b-form-input placeholder="Search by order..." v-model="keywords" />
+      <table class="table">
+        <thead>
+          <tr>
+            <th md-numeric>Order</th>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Status</th>
+            <th>Details</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(earning, index) in earnings.data" :key="index">
+            <td md-numeric>{{ earning.order_detail.uniqid }}</td>
+            <td>{{ formatter(earning.order_detail.created_at) }}</td>
+            <td>{{ earning.order_detail.movingtype.title }}</td>
+            <td>{{ earning.status }}</td>
+            <td>
+              <b-button variant="light" @click="details(earning.id)"
+                ><b-icon variant="primary" icon="three-dots"></b-icon
+              ></b-button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </b-card>
     <pagination :limit="4" :data="earnings" @pagination-change-page="get"></pagination>
   </div>
 </template>
@@ -119,6 +114,9 @@ export default {
         this.totalGross = this.totalGross + data[i].tingsapp_earning;
       }
     },
+    details(id) {
+      this.$router.push("earning-details/" + id);
+    },
   },
   created() {
     this.get();
@@ -126,11 +124,7 @@ export default {
 };
 </script>
 <style scoped lang="scss">
-.earnings {
-  width: 100%;
-  th,
-  td {
-    text-align: left;
-  }
+.container {
+  min-height: calc(100vh - 50px);
 }
 </style>

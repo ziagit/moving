@@ -1,10 +1,10 @@
 <template>
-  <div class="container">
+  <div class="order">
     <Header v-on:togal-menu="$emit('togal-menu')" />
-    <div class="order-wrapper">
-      <div class="left">
+    <div class="order-wrapper row mb-5">
+      <div class="left col-7">
         <div v-if="progressTogal()">
-          <div class="row progress-bar">
+          <div class="progress">
             <radial-progress-bar
               :diameter="120"
               :completed-steps="completedSteps"
@@ -29,203 +29,243 @@
           ></router-view>
         </div>
       </div>
-      <div class="right">
-        <md-card>
+      <div class="right col-5">
+        <b-card class="border-0 shadow">
           <GoogleMap
             ref="drawRoute"
             :newSize="initSize"
             v-on:refresh-price="refreshPrice"
           />
-          <ul class="selected" id="ul_o" v-if="selected">
-            <li v-if="selected.from">
+          <ul class="selectedData" id="ul_o" v-if="selectedData">
+            <li v-if="selectedData.from">
               <div class="row">
-                <md-icon>place</md-icon>
+                <b-icon icon="geo" font-scale="1.5" variant="warning"></b-icon>
                 <div class="col">
                   <span>Pickup</span><br />
                   <GoogleAddress
                     v-on:google-valid-address="originChanged"
-                    :initialData="selected.from.formatted_address"
+                    :initialData="selectedData.from.formatted_address"
                     v-if="originTogal"
                   />
-                  <span v-else> {{ selected.from.formatted_address }}</span>
+                  <span v-else> {{ selectedData.from.formatted_address }}</span>
                 </div>
               </div>
-              <md-button class="md-icon-button" @click="originTogal = !originTogal">
-                <md-icon class="md-size-0x">edit</md-icon>
-              </md-button>
+              <b-icon
+                icon="pencil-square"
+                font-scale="1.2"
+                class="edit"
+                @click="originTogal = !originTogal"
+              ></b-icon>
             </li>
 
-            <li v-if="selected.to">
+            <li v-if="selectedData.to">
               <div class="row">
-                <md-icon>place</md-icon>
+                <b-icon icon="geo" font-scale="1.5" variant="warning"></b-icon>
                 <div class="col">
                   <span>Destination</span><br />
                   <GoogleAddress
                     v-on:google-valid-address="destinationChanged"
-                    :initialData="selected.to.formatted_address"
+                    :initialData="selectedData.to.formatted_address"
                     v-if="destinationTogal"
                   />
-                  <span v-else> {{ selected.to.formatted_address }}</span>
+                  <span v-else> {{ selectedData.to.formatted_address }}</span>
                 </div>
               </div>
-              <md-button
-                class="md-icon-button"
+
+              <b-icon
+                icon="pencil-square"
+                font-scale="1.2"
+                class="edit"
                 @click="destinationTogal = !destinationTogal"
-              >
-                <md-icon>edit</md-icon>
-              </md-button>
+              ></b-icon>
             </li>
-            <li v-if="selected.movingType">
+            <li v-if="selectedData.movingType">
               <div class="row">
-                <md-icon>filter_list</md-icon>
+                <b-icon icon="filter" font-scale="1.5" variant="warning"></b-icon>
                 <div class="col">
                   <span>Moving type:</span><br />
-                  <span> {{ selected.movingType.title }}</span>
+                  <span> {{ selectedData.movingType.title }}</span>
                 </div>
               </div>
-              <md-button class="md-icon-button" @click="edit('moving-types')">
-                <md-icon>edit</md-icon>
-              </md-button>
+
+              <b-icon
+                icon="pencil-square"
+                font-scale="1.2"
+                class="edit"
+                @click="edit('moving-types')"
+              ></b-icon>
             </li>
-            <li v-if="selected.movingSize">
+            <li v-if="selectedData.movingSize">
               <div class="row">
-                <md-icon>crop</md-icon>
+                <b-icon icon="aspect-ratio" font-scale="1.5" variant="warning"></b-icon>
                 <div class="col">
                   <span>Moving size:</span><br />
-                  <span> {{ selected.movingSize.title }}</span>
+                  <span> {{ selectedData.movingSize.title }}</span>
                 </div>
               </div>
-              <md-button class="md-icon-button" @click="edit('moving-sizes')">
-                <md-icon>edit</md-icon>
-              </md-button>
+
+              <b-icon
+                icon="pencil-square"
+                font-scale="1.2"
+                class="edit"
+                @click="edit('moving-sizes')"
+              ></b-icon>
             </li>
-            <li v-if="selected.items">
+            <li v-if="selectedData.items">
               <div class="row">
-                <md-icon>list</md-icon>
+                <b-icon icon="card-list" font-scale="1.5" variant="warning"></b-icon>
                 <div class="col">
                   <span>Items:</span><br />
-                  <span class="md-body-1" v-for="item in selected.items" :key="item.id">
+                  <span
+                    class="md-body-1"
+                    v-for="item in selectedData.items"
+                    :key="item.id"
+                  >
                     {{ item.name }}: {{ item.number }},
                   </span>
                 </div>
               </div>
-              <md-button class="md-icon-button" @click="edit('few-items')">
-                <md-icon>edit</md-icon>
-              </md-button>
+
+              <b-icon
+                icon="pencil-square"
+                font-scale="1.2"
+                class="edit"
+                @click="edit('few-items')"
+              ></b-icon>
             </li>
-            <li v-if="selected.numberOfMovers">
+            <li v-if="selectedData.numberOfMovers">
               <div class="row">
-                <md-icon
-                  ><span class="material-icons-outlined">
-                    format_list_numbered
-                  </span></md-icon
-                >
+                <b-icon
+                  icon="sort-numeric-up"
+                  font-scale="1.5"
+                  variant="warning"
+                ></b-icon>
                 <div class="col">
-                  <span>Number of selected movers:</span><br />
-                  <span> {{ selected.numberOfMovers.number }} movers</span>
+                  <span>Movers:</span><br />
+                  <span> {{ selectedData.numberOfMovers.number }} movers</span>
                 </div>
               </div>
-              <md-button class="md-icon-button" @click="edit('number-of-movers')">
-                <md-icon>edit</md-icon>
-              </md-button>
+              <b-icon
+                icon="pencil-square"
+                font-scale="1.2"
+                class="edit"
+                @click="edit('number-of-movers')"
+              ></b-icon>
             </li>
-            <li v-if="selected.vehicle">
+            <li v-if="selectedData.vehicle">
               <div class="row">
-                <md-icon
-                  ><span class="material-icons-outlined">
-                    emoji_transportation
-                  </span></md-icon
-                >
+                <b-icon icon="truck-flatbed" font-scale="1.5" variant="warning"></b-icon>
                 <div class="col">
-                  <span>Selected vehicle:</span><br />
-                  <span> {{ selected.vehicle.name }}</span>
+                  <span>Vehicle:</span><br />
+                  <span> {{ selectedData.vehicle.name }}</span>
                 </div>
               </div>
-              <md-button class="md-icon-button" @click="edit('vehicle-sizes')">
-                <md-icon>edit</md-icon>
-              </md-button>
+              <b-icon
+                icon="pencil-square"
+                font-scale="1.2"
+                class="edit"
+                @click="edit('vehicle-sizes')"
+              ></b-icon>
             </li>
-            <li v-if="selected.date">
+            <li v-if="selectedData.date">
               <div class="row">
-                <md-icon
-                  ><span class="material-icons-outlined"> event_available </span></md-icon
-                >
+                <b-icon
+                  icon="calendar2-check"
+                  font-scale="1.5"
+                  variant="warning"
+                ></b-icon>
                 <div class="col">
                   <span>Pickup date & time:</span><br />
                   <span>
                     {{
-                      selected.date.date.year +
+                      selectedData.date.date.year +
                       "-" +
-                      selected.date.date.month +
+                      selectedData.date.date.month +
                       "-" +
-                      selected.date.date.date
+                      selectedData.date.date.date
                     }},
-                    {{ buildTime(selected.date.time.from) }}
+                    {{ buildTime(selectedData.date.time.from) }}
                     -
-                    {{ buildTime(selected.date.time.to) }}</span
+                    {{ buildTime(selectedData.date.time.to) }}</span
                   >
                 </div>
               </div>
-              <md-button class="md-icon-button" @click="edit('moving-date')">
-                <md-icon>edit</md-icon>
-              </md-button>
+
+              <b-icon
+                icon="pencil-square"
+                font-scale="1.2"
+                class="edit"
+                @click="edit('moving-date')"
+              ></b-icon>
             </li>
             <li
               v-if="
-                (selected.floors && selected.floors.pickup != null) ||
-                (selected.floors && selected.floors.destination != null)
+                (selectedData.floors && selectedData.floors.pickup != null) ||
+                (selectedData.floors && selectedData.floors.destination != null)
               "
             >
               <div class="row">
-                <md-icon>location_city</md-icon>
+                <b-icon
+                  icon="bar-chart-steps"
+                  font-scale="1.5"
+                  variant="warning"
+                ></b-icon>
                 <div class="col">
                   <span>Floors:</span><br />
                   <span
                     >At pickup:
-                    {{ selected.floors.pickup ? selected.floors.pickup : "None" }},
+                    {{
+                      selectedData.floors.pickup ? selectedData.floors.pickup : "None"
+                    }},
                   </span>
                   <span
                     >At destination:
                     {{
-                      selected.floors.destination ? selected.floors.destination : "None"
+                      selectedData.floors.destination
+                        ? selectedData.floors.destination
+                        : "None"
                     }}</span
                   >
                 </div>
               </div>
-              <md-button class="md-icon-button" @click="edit('floors')">
-                <md-icon>edit</md-icon>
-              </md-button>
+              <b-icon
+                icon="pencil-square"
+                font-scale="1.2"
+                class="edit"
+                @click="edit('floors')"
+              ></b-icon>
             </li>
-            <li v-if="selected.supplies">
-              <div class="row" v-if="selected.supplies.length > 0">
-                <md-icon>takeout_dining</md-icon>
+            <li v-if="selectedData.supplies">
+              <div class="row" v-if="selectedData.supplies.length > 0">
+                <b-icon icon="box-seam" font-scale="1.5" variant="warning"></b-icon>
                 <div class="col">
-                  <span>Selected supplies:</span><br />
+                  <span>Supplies:</span><br />
                   <span
                     class="md-body-1"
-                    v-for="supply in selected.supplies"
+                    v-for="supply in selectedData.supplies"
                     :key="supply.id"
                   >
                     {{ supply.name }}: {{ supply.number }}
                   </span>
                 </div>
               </div>
-              <md-button
-                v-if="selected.supplies.length > 0"
-                class="md-icon-button"
+
+              <b-icon
+                v-if="selectedData.supplies.length > 0"
+                icon="pencil-square"
+                font-scale="1.2"
+                class="edit"
                 @click="edit('moving-supplies')"
-              >
-                <md-icon>edit</md-icon>
-              </md-button>
+              ></b-icon>
             </li>
-            <md-divider v-if="togal()"></md-divider>
+            <hr v-if="togal()" />
             <li v-if="togal()">
               <div class="footer">
-                <span class="md-title">Price: ${{ selected.carrier.price }}</span>
+                <span class="md-title">Price: ${{ selectedData.carrier.price }}</span>
               </div>
             </li>
           </ul>
-        </md-card>
+        </b-card>
       </div>
     </div>
     <Footer />
@@ -253,7 +293,7 @@ export default {
     completedSteps: 0,
     totalSteps: 6,
     percentage: 0,
-    selected: {},
+    selectedData: {},
     initSize: null,
     destinationTogal: false,
     originTogal: false,
@@ -266,6 +306,7 @@ export default {
   },
   methods: {
     progress(prgValue) {
+      console.log("yyyyyy", prgValue);
       this.init();
       this.listSize();
       this.completedSteps = prgValue;
@@ -284,20 +325,20 @@ export default {
       this.destinationTogal = false;
     },
     init() {
-      this.selected["from"] = localData.read("from");
-      this.selected["to"] = localData.read("to");
-      this.selected["distance"] = localData.read("distance");
-      this.selected["duration"] = localData.read("duration");
-      this.selected["movingType"] = localData.read("moving-type");
-      this.selected["movingSize"] = localData.read("moving-size");
-      this.selected["vehicle"] = localData.read("vehicle");
-      this.selected["numberOfMovers"] = localData.read("number-of-movers");
-      this.selected["date"] = localData.read("moving-date");
-      this.selected["floors"] = localData.read("floors");
-      this.selected["items"] = localData.read("moving-items");
-      this.selected["supplies"] = builder.buildSupplies();
-      this.selected["carrier"] = localData.read("carrier");
-      console.log("selected ", this.selected);
+      this.selectedData["from"] = localData.read("from");
+      this.selectedData["to"] = localData.read("to");
+      this.selectedData["distance"] = localData.read("distance");
+      this.selectedData["duration"] = localData.read("duration");
+      this.selectedData["movingType"] = localData.read("moving-type");
+      this.selectedData["movingSize"] = localData.read("moving-size");
+      this.selectedData["vehicle"] = localData.read("vehicle");
+      this.selectedData["numberOfMovers"] = localData.read("number-of-movers");
+      this.selectedData["date"] = localData.read("moving-date");
+      this.selectedData["floors"] = localData.read("floors");
+      this.selectedData["items"] = localData.read("moving-items");
+      this.selectedData["supplies"] = builder.buildSupplies();
+      this.selectedData["carrier"] = localData.read("carrier");
+      console.log("selectedData ", this.selectedData);
     },
     progressTogal() {
       if (
@@ -331,7 +372,7 @@ export default {
       this.$router.push(path);
     },
     togal() {
-      if (this.selected.carrier) {
+      if (this.selectedData.carrier) {
         if (this.$route.path != "/order/movers") {
           return true;
         }
@@ -350,7 +391,7 @@ export default {
 .edit-origin {
   min-width: 300px;
 }
-.container {
+.order {
   .order-wrapper {
     max-width: 1000px;
     margin: auto;
@@ -359,27 +400,23 @@ export default {
     display: flex;
     justify-content: space-evenly;
     .left {
-      width: 55%;
       padding: 30px;
-      .progress-bar {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
     }
     .right {
       margin-top: 30px;
-      width: 45%;
       ul {
         padding: 10px;
+        margin: 0;
         min-height: 132px;
         overflow: auto;
         li {
           display: flex;
           justify-content: space-between;
+          align-items: center;
           .row {
+            margin-left: 0px;
             display: flex;
-
+            align-items: center;
             .col {
               padding-left: 10px;
               padding-bottom: 10px;
@@ -389,11 +426,9 @@ export default {
               }
             }
           }
-          .md-icon {
+          .edit:hover {
+            cursor: pointer;
             color: #ffa500;
-          }
-          .md-button:hover {
-            background: #ffa60062;
           }
         }
         .footer {

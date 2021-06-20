@@ -1,24 +1,29 @@
 <template>
   <div>
     <form @submit.prevent="update">
-      <md-field class="">
-        <label>Name</label>
-        <md-input v-model="form.name" required></md-input>
-      </md-field>
-      <md-field class="">
-        <label>Code</label>
-        <md-input v-model="form.code" required></md-input>
-      </md-field>
-      <md-field class="">
-        <label>Moving recommended</label>
-        <md-input v-model="form.recommended" required></md-input>
-      </md-field>
+      <b-form-group class="">
+        <b-form-input v-model="form.name" required placeholder="Name"></b-form-input>
+      </b-form-group>
+      <b-form-group class="">
+        <b-form-input v-model="form.code" required placeholder="Code"></b-form-input>
+      </b-form-group>
+      <b-form-group class="">
+        <b-form-input
+          v-model="form.recommended"
+          required
+          placeholder="Recommended for"
+        ></b-form-input>
+      </b-form-group>
 
-      <md-field class="">
-        <label>Base fare</label>
-        <md-input v-model="form.base_fare" required type="number"></md-input>
-      </md-field>
-      <md-button type="submit" class="custom-button">Update</md-button>
+      <b-form-group class="">
+        <b-form-input
+          v-model="form.base_fare"
+          required
+          type="number"
+          placeholder="Base fare"
+        ></b-form-input>
+      </b-form-group>
+      <b-button type="submit" variant="primary">Save</b-button>
     </form>
   </div>
 </template>

@@ -1,22 +1,11 @@
 <template>
   <div class="account">
-    <md-card v-if="account">
-      <md-card-header>
-        <span class="md-title">Logo</span>
-      </md-card-header>
-      <md-divider></md-divider>
-      <md-card-content>
-        <div>
-          <img :src="'/images/pub/' + account.avatar" width="80" alt="" />
-        </div>
-      </md-card-content>
-      <md-card-actions>
-        <md-button :to="{ path: 'edit/' + account.id }" class="md-primary">
-          Change
-          <md-tooltip>Change logo</md-tooltip>
-        </md-button>
-      </md-card-actions>
-    </md-card>
+    <b-card v-if="account" header="Logo" class="border-0 shadow">
+      <div class="mb-3">
+        <img :src="'/images/pub/' + account.avatar" width="80" alt="" />
+      </div>
+      <b-button @click="edit()" variant="primary"> Change </b-button>
+    </b-card>
   </div>
 </template>
 <script>
@@ -36,6 +25,9 @@ export default {
         })
         .catch((err) => console.log(err));
     },
+    edit() {
+      this.$router.push("edit/" + this.account.id);
+    },
   },
   created() {
     this.get();
@@ -44,15 +36,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .account {
-  .md-card {
-    text-align: left;
-    .md-card-content {
-      padding: 20px;
-    }
-    .md-card-actions {
-      display: flex;
-      justify-content: flex-start;
-    }
-  }
+  text-align: left;
 }
 </style>

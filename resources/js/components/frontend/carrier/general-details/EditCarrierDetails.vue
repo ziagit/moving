@@ -1,136 +1,116 @@
 <template>
   <div>
-    <form @submit.prevent="update" enctype="multipart/form-data">
-      <md-card>
-        <md-card-header>
-          <span class="md-title">Edit Profile</span>
-          <md-button @click="$router.back()" class="md-icon-button add-btn">
-            <md-icon>close</md-icon>
-            <md-tooltip>Cancel</md-tooltip>
-          </md-button>
-        </md-card-header>
-        <md-divider></md-divider>
-        <md-card-content>
-          <div class="carrier-details">
-            <div class="row">
-              <md-field>
-                <label for="">First name</label>
-                <md-input
-                  type="text"
-                  v-model="form.first_name"
-                  required
-                  ref="focusable"
-                ></md-input>
-              </md-field>
-              <md-field>
-                <label for="">Last name</label>
-                <md-input type="text" v-model="form.last_name" required></md-input>
-              </md-field>
-              <md-field>
-                <label for="">Phone</label>
-                <md-input v-model="form.phone" required></md-input>
-              </md-field>
-            </div>
-            <div class="row">
-              <GoogleAddress3
-                v-if="form.address != null"
-                v-on:google-valid-address="googleValidAddress"
-                v-on:google-invalid-address="googleInvalidAddress"
-                :initialData="form.address"
-                label="Full address"
-              />
-            </div>
-          </div>
+    <form @submit.prevent="update" class="border-0 shadow text-left">
+      <b-card header="Edit Profile">
+        <b-button @click="$router.back()" variant="light add-btn">
+          <b-icon icon="backspace"></b-icon>
+        </b-button>
+        <div class="carrier-details">
+          <b-input-group class="mb-3">
+            <b-form-input
+              type="text"
+              v-model="form.first_name"
+              required
+              placeholder="First name"
+              ref="focusable"
+            ></b-form-input>
+            <b-form-input
+              type="text"
+              v-model="form.last_name"
+              required
+              placeholder="Last name"
+            ></b-form-input>
+            <b-form-input
+              placeholder="Phone number"
+              v-model="form.phone"
+              required
+            ></b-form-input>
+          </b-input-group>
+          <GoogleAddress3
+            v-if="form.address != null"
+            v-on:google-valid-address="googleValidAddress"
+            v-on:google-invalid-address="googleInvalidAddress"
+            :initialData="form.address"
+            label="Full address"
+            class="mb-3"
+          />
+        </div>
+        <b-input-group class="mb-3">
+          <b-form-input
+            v-model="form.company"
+            required
+            placeholder="Company name"
+          ></b-form-input>
+          <b-form-input
+            v-model="form.year_established"
+            required
+            placeholder="Year established"
+          ></b-form-input>
+          <b-form-input
+            v-model="form.website"
+            required
+            placeholder="Company name"
+          ></b-form-input>
+        </b-input-group>
+        <b-input-group class="mb-3">
+          <b-form-input
+            type="number"
+            :min="1"
+            v-model="form.employees"
+            required
+            placeholder="Number of employees"
+          ></b-form-input>
 
-          <div class="company">
-            <div class="row">
-              <md-field>
-                <label>Company name</label>
-                <md-input v-model="form.company" required></md-input>
-              </md-field>
-              <md-field>
-                <label>Year established</label>
-                <md-input
-                  type="number"
-                  v-model="form.year_established"
-                  required
-                ></md-input>
-              </md-field>
-              <md-field>
-                <label>Website</label>
-                <md-input v-model="form.website"></md-input>
-              </md-field>
-            </div>
-            <div class="row">
-              <md-field>
-                <label for="">Number of employees</label>
-                <md-input
-                  type="number"
-                  :min="1"
-                  v-model="form.employees"
-                  required
-                ></md-input>
-              </md-field>
-              <md-field>
-                <label for="">Number of vehicles</label>
-                <md-input
-                  type="number"
-                  :min="1"
-                  v-model="form.vehicles"
-                  required
-                ></md-input>
-              </md-field>
-              <md-field>
-                <label for="">Hourly rate($)</label>
-                <md-input
-                  type="number"
-                  :min="1"
-                  v-model="form.hourly_rate"
-                  required
-                  prefix="$"
-                ></md-input>
-              </md-field>
-            </div>
-            <div class="row">
-              <md-field>
-                <label>About your company</label>
-                <md-textarea v-model="form.detail" required></md-textarea>
-              </md-field>
-            </div>
-            <div class="row">
-              <md-field>
-                <md-tooltip>Upload Insurance paper</md-tooltip>
-                <md-file
-                  v-model="insurance_papers"
-                  accept="image/*"
-                  ref="insurance"
-                  @change="onInsuranceChange"
-                  placeholder="Upload Insurance paper"
-                />
-              </md-field>
-              <md-field>
-                <md-tooltip>Upload business licens</md-tooltip>
-                <md-file
-                  v-model="business_license"
-                  accept="image/*"
-                  ref="license"
-                  @change="onLicenseChange"
-                  placeholder="Upload business licens"
-                />
-              </md-field>
-            </div>
-          </div>
-        </md-card-content>
+          <b-form-input
+            type="number"
+            :min="1"
+            v-model="form.vehicles"
+            required
+            placeholder="Number of vehicles"
+          ></b-form-input>
+          <b-form-input
+            prepend="$"
+            type="number"
+            :min="1"
+            v-model="form.hourly_rate"
+            required
+            prefix="$"
+            placeholder="Hourly rate($)"
+          ></b-form-input>
+        </b-input-group>
+        <b-input-group class="mb-3">
+          <b-form-textarea
+            v-model="form.detail"
+            required
+            rows="3"
+            max-rows="6"
+            placeholder="About your company"
+          ></b-form-textarea>
+        </b-input-group>
+        <b-input-group class="mb-3">
+          <b-form-file
+            v-model="insurance_papers"
+            :state="Boolean(insurance_papers)"
+            placeholder="Upload Insurance paper"
+            drop-placeholder="Drop file here..."
+            @change="onInsuranceChange"
+          ></b-form-file>
+          <b-form-file
+            v-model="business_license"
+            :state="Boolean(business_license)"
+            placeholder="Upload business licens"
+            drop-placeholder="Drop file here..."
+            @change="onLicenseChange"
+          ></b-form-file>
+        </b-input-group>
 
-        <md-card-actions>
-          <Spinner v-if="isSubmitting" />
-          <md-button v-if="!isSubmitting" type="submit" class="md-primary md-small-fab"
-            >Update</md-button
-          >
-        </md-card-actions>
-      </md-card>
+        <div class="text-right">
+          <b-spinner variant="primary" v-if="isSubmitting" />
+          <b-button v-if="!isSubmitting" type="submit" variant="primary">Update</b-button>
+        </div>
+      </b-card>
     </form>
-    <Snackbar :data="snackbar" />
+    <Toaster ref="toast" />
   </div>
 </template>
 
@@ -138,14 +118,12 @@
 import GoogleAddress3 from "../../../shared/GoogleAddress3";
 import axios from "axios";
 import { mapGetters } from "vuex";
-import Snackbar from "../../../shared/Snackbar";
-import Spinner from "../../../shared/Spinner";
+import Toaster from "../../../shared/Toaster";
 export default {
   name: "EditGeneralInfo",
   components: {
     GoogleAddress3,
-    Snackbar,
-    Spinner,
+    Toaster,
   },
   data: () => ({
     initialData: null,
@@ -244,16 +222,20 @@ export default {
         .post("carrier/details/" + this.$route.params.id, fd)
         .then((res) => {
           this.isSubmitting = false;
+          this.$refs.toast.show("success", "My body", "my title");
           this.$router.push("/carrier/profile");
         })
         .catch((error) => {
           console.log("eerrr: ", error);
           this.isSubmitting = false;
-          this.snackbar.message = error.response.data.errors;
-          this.snackbar.statusCode = error.response.status;
-          this.snackbar.show = true;
+          this.$$refs.toast.show(
+            "danger",
+            "Failed to update",
+            error.response.data.errors
+          );
         });
     },
+
     init() {
       axios.get("carrier/details/" + this.$route.params.id).then(
         (res) => {

@@ -90,19 +90,19 @@ class ShipperController extends Controller
         $shipper = Shipper::find($id);
         $shipper->first_name = $request->first_name;
         $shipper->last_name = $request->last_name;
-        return$shipper->update();
+        $shipper->update();
 
-        $this->updateContact($request);
+        $this->updateContact($request,$id);
         $this->updateAddress($request);
         return response()->json(["message"=>"Updated successfully!"],200);
     }
-    public function updateContact($request){
-        $contact = Contact::find($request->contactId);
-        $contact->name = $request->last_name;
-        $contact->phone = $request->phone;
-        $contact->email = $request->email;
-        $contact->update();
-        return $contact->id;
+    public function updateContact($request,$id){
+        $shipper = Shipper::find($id);
+        $user = User::find($shipper->user_id);
+        $user->phone = $request->phone;
+        $user->email = $request->email;
+        $user->update();
+        return $user->id;
     }
     public function updateAddress($request){
         $address = Address::find($request->addressId);

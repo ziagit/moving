@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
-
+use Illuminate\Support\Facades\Validator;
 class ShipperAccountController extends Controller
 {
     /**
@@ -94,24 +94,23 @@ class ShipperAccountController extends Controller
         $user->update();
         return response()->json(['message' => 'Updated successfully!'], 200);
     }
-    public function update(Request $request, $id)
+    public function update(Request $data, $id)
     {
-        $this->validate($request, [
-            'avatar' => 'required',
-        ]);
-        $user = User::find($id);
-        if ($request->hasFile('avatar')) {
-            $old_image_path = public_path('images/pub/' . $user->avatar);
-            if (file_exists($old_image_path)) {
-               // @unlink($old_image_path);
+        if ($data->password) {
+            $validator = Validator::make($data->all(), [
+                'password_confirmation' => 'required|same:password',
+            ]);
+            if ($validator->fails()) {
+                return response()->json(['error' => $validator->errors()], 400);
             }
-            $file = $request->file('avatar');
-            $avatar_name = time() . '.' . $file->getClientOriginalName();
-            $file->move(public_path('images/pub'), $avatar_name);
-        } else {
-            $avatar_name = $user->avatar;
+            $user = User::find($id);
+            $user->email = $data->email;
+            $user->password = Hash::make($data->password);
+            $user->update();
+            return response()->json(['message' => 'Updated successfully!'], 200);
         }
-        $user->avatar = $avatar_name;
+        $user = User::find($id);
+        $user->email = $data->email;
         $user->update();
         return response()->json(['message' => 'Updated successfully!'], 200);
     }

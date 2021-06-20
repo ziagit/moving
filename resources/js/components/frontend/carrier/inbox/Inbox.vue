@@ -1,57 +1,49 @@
 <template>
   <div>
-    <md-card>
-      <md-card-header>
-        <span class="md-title">Inbox</span>
-      </md-card-header>
-      <md-divider></md-divider>
-      <md-card-content>
-        <div class="menu">
-          <md-list class="md-triple-line md-dense">
+    <b-card header="Notifications" class="border-0 shadow text-left">
+      <div class="row">
+        <div class="menu col-3">
+          <b-list-group>
             <div v-for="(not, index) in notifications" :key="index">
-              <md-list-item
+              <b-list-group-item
+                button
+                class="border-0"
                 @click="open(not)"
                 :class="{ selected: selectedNot == not.id }"
               >
-                <md-avatar>
-                  <img src="https://placeimg.com/40/40/people/1" alt="People" />
-                </md-avatar>
-                <div class="md-list-item-text">
-                  <span>{{ not.id }}</span>
-                  <span>{{ not.notifiable_type }}</span>
-                  <p>
-                    {{ not.created_at }}
-                  </p>
-                </div>
-              </md-list-item>
-              <md-divider class="md-inset"></md-divider>
+                <span class="not-id">{{ not.id.substring(0, 10) }}</span>
+                <span>{{ not.notifiable_type }}</span>
+                <p>
+                  {{ not.created_at.substring(0, 10) }}
+                </p>
+              </b-list-group-item>
             </div>
-          </md-list>
+          </b-list-group>
         </div>
-        <div class="content">
+        <div class="content col-9">
           <div v-if="details">
             <div v-if="details.type == 'App\\Notifications\\JobCreated'">
               <p>This Order is created at: {{ details.created_at }}</p>
-              <md-button class="md-primary" @click="readMore(details.data.job.id)"
-                >Read more</md-button
+              <b-button class="md-primary" @click="readMore(details.data.job.id)"
+                >Read more</b-button
               >
             </div>
             <div v-else-if="details.type == 'App\\Notifications\\JobUpdated'">
               <p>An Order is updated at: {{ details.created_at }}</p>
-              <md-button class="md-primary" @click="readMore(details.data.job.id)"
-                >Read more</md-button
+              <b-button class="md-primary" @click="readMore(details.data.job.id)"
+                >Read more</b-button
               >
             </div>
             <div v-else-if="details.type == 'App\\Notifications\\CarrierPaid'">
               <p>A mover paid at: {{ details.created_at }}</p>
-              <md-button class="md-primary" @click="readMore(details)"
-                >Read more</md-button
+              <b-button class="md-primary" @click="readPayment(details)"
+                >Read more</b-button
               >
             </div>
           </div>
         </div>
-      </md-card-content>
-    </md-card>
+      </div>
+    </b-card>
   </div>
 </template>
 <script>
@@ -84,42 +76,28 @@ export default {
         });
       }
     },
+    open(not) {
+      this.selectedNot = not.id;
+      this.details = not;
+    },
     readMore(id) {
       console.log("details", id);
       this.$router.push("/carrier/history/details/" + id);
     },
-    open(not) {
-      this.selectedNot = not.id;
-      this.details = not;
+    readPayment(detail) {
+      console.log("detais", detail);
     },
   },
 };
 </script>
 <style lang="scss" scoped>
-.md-card {
-  text-align: left;
-  height: calc(100vh - 100px);
-  margin-bottom: 30px;
-  .md-card-content {
-    height: calc(100vh - 180px);
-    display: flex;
-    justify-content: space-between;
-    .menu {
-      flex: 1;
-      max-width: 300px;
-      border-right: solid 1px #ddd;
-      padding-right: 10px;
-      .md-list-item:hover {
-        cursor: pointer;
-      }
-    }
-    .content {
-      padding: 20px;
-      flex: 9;
-    }
-  }
-}
 .selected {
   background: #ffa60017;
+}
+.not-id {
+  width: 100px;
+  word-break: keep-all;
+  display: inline-block;
+  overflow: hidden;
 }
 </style>

@@ -1,27 +1,17 @@
 <template>
   <div>
     <form>
-      <md-card>
-        <md-card-content>
-          <md-content class="md-layout">
-            <md-field
-              class="md-layout-item md-large-size-100 md-small-size-100 md-xsmall-size-100"
-            >
-              <md-input v-model="form.name" placeholder="Name"></md-input>
-            </md-field>
-            <md-field>
-              <md-select v-model="form.state" placeholder="State" id="state">
-                <md-option v-for="state in states" :key="state.id" :value="state.id">{{
-                  state.name
-                }}</md-option>
-              </md-select>
-            </md-field>
-          </md-content>
-        </md-card-content>
-        <md-card-actions>
-          <md-button v-on:click="update()">Done</md-button>
-        </md-card-actions>
-      </md-card>
+      <b-form-group>
+        <b-form-input v-model="form.name" placeholder="Name"></b-form-input>
+      </b-form-group>
+      <b-form-group>
+        <b-form-select v-model="form.state" placeholder="State" id="state">
+          <option v-for="state in states" :key="state.id" :value="state.id">
+            {{ state.name }}
+          </option>
+        </b-form-select>
+      </b-form-group>
+      <b-button variant="primary" v-on:click="update()">Done</b-button>
     </form>
   </div>
 </template>

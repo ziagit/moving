@@ -60,7 +60,7 @@
 
 <body onbeforeunload="return myFunction()">
   <div id="app">
-    <admin></admin>
+    <admin-component />
   </div>
   <script src="{{ asset('js/app.js') }}" defer></script>
 

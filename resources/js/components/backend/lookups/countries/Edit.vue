@@ -1,27 +1,17 @@
 <template>
   <div>
     <form>
-      <md-card>
-        <md-card-content>
-          <md-content class="md-layout">
-            <md-field
-              class="md-layout-item md-large-size-100 md-small-size-100 md-xsmall-size-100"
-            >
-              <label>Name</label>
-              <md-input v-model="form.name"></md-input>
-            </md-field>
-            <md-field
-              class="md-layout-item md-large-size-100 md-small-size-100 md-xsmall-size-100"
-            >
-              <label>Code</label>
-              <md-input v-model="form.code"></md-input>
-            </md-field>
-          </md-content>
-        </md-card-content>
-        <md-card-actions>
-          <md-button v-on:click="update()">Update</md-button>
-        </md-card-actions>
-      </md-card>
+      <b-form-group
+        class="md-layout-item md-large-size-100 md-small-size-100 md-xsmall-size-100"
+      >
+        <b-form-input placeholder="Name" v-model="form.name"></b-form-input>
+      </b-form-group>
+      <b-form-group
+        class="md-layout-item md-large-size-100 md-small-size-100 md-xsmall-size-100"
+      >
+        <b-form-input placeholder="Code" v-model="form.code"></b-form-input>
+      </b-form-group>
+      <b-button variant="primary" v-on:click="update()">Update</b-button>
     </form>
   </div>
 </template>

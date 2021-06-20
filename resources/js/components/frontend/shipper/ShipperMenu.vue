@@ -1,69 +1,70 @@
 <template>
   <div>
-    <md-toolbar md-elevation="0" v-if="authenticated" class="custom-toolbar">
-      <div class="row" v-if="authenticated">
-        <div class="avatar" @click="profile()">
-          <img :src="'/images/pub/' + user.avatar" width="80" alt="" />
-        </div>
-        <div class="break"></div>
-        <div class="text">
-          <div class="name md-list-item-text">{{ user.name }}</div>
-          <div class="email">{{ user.email ? user.email : formatPhone(user.phone) }}</div>
-        </div>
+    <div v-if="authenticated" class="custom-toolbar">
+      <b-avatar
+        button
+        :src="'/images/pub/' + user.avatar"
+        size="5rem"
+        @click="profile()"
+        class="mt-3 mb-3"
+      ></b-avatar>
+      <div class="text" v-if="user">
+        <p class="mb-0">
+          <b>{{ user.name }}</b>
+        </p>
+        <p class="mb-0">
+          {{ formatPhone(user.phone) }}
+        </p>
       </div>
-    </md-toolbar>
-    <md-divider></md-divider>
-    <md-list>
-      <md-list-item @click="navigate('/')">
+    </div>
+    <div class="line"></div>
+    <b-list-group>
+      <b-list-group-item class="border-0" button @click="navigate('/')">
         <span
-          class="md-list-item-text"
           v-bind:class="{
             active: $route.name == 'home',
           }"
           >Home</span
         >
-      </md-list-item>
-      <md-list-item @click="navigate('/help/shipper')">
+      </b-list-group-item>
+
+      <b-list-group-item class="border-0" button @click="navigate('/shipper/profile')">
         <span
-          class="md-list-item-text"
-          v-bind:class="{
-            active: $route.name == 'help',
-          }"
-          >Help</span
-        >
-      </md-list-item>
-      <md-list-item @click="navigate('/shipper/profile')">
-        <span
-          class="md-list-item-text"
           v-bind:class="{
             active: $route.name == 'shipper-details',
           }"
           >Profile</span
         >
-      </md-list-item>
-      <md-list-item @click="navigate('/shipper/orders')">
+      </b-list-group-item>
+      <b-list-group-item class="border-0" button @click="navigate('/shipper/orders')">
         <span
-          class="md-list-item-text"
           v-bind:class="{
             active: $route.name == 'order-list',
           }"
           >Orders</span
         >
-      </md-list-item>
-      <md-list-item @click="navigate('/shipper/payments')">
+      </b-list-group-item>
+      <b-list-group-item class="border-0" button @click="navigate('/shipper/payments')">
         <span
-          class="md-list-item-text"
           v-bind:class="{
             active: $route.name == 'payments',
           }"
           >Payment</span
         >
-      </md-list-item>
-      <md-divider></md-divider>
-      <md-list-item @click="logout('/')">
-        <span class="md-list-item-text">Signout</span>
-      </md-list-item>
-    </md-list>
+      </b-list-group-item>
+      <b-list-group-item class="border-0" button @click="navigate('/help')">
+        <span
+          v-bind:class="{
+            active: $route.name == 'help',
+          }"
+          >Help</span
+        >
+      </b-list-group-item>
+      <div class="line"></div>
+      <b-list-group-item class="border-0" button @click="logout('/')">
+        <span>Signout</span>
+      </b-list-group-item>
+    </b-list-group>
   </div>
 </template>
 
@@ -119,37 +120,7 @@ export default {
 .active {
   color: #ffa500 !important;
 }
-.md-list {
-  padding: 0 !important;
-  .md-list-item-text {
-    font-weight: 500;
-  }
-}
 .custom-toolbar {
-  background: #fff !important;
-  height: 155px;
-  .row {
-    width: 100%;
-    .avatar {
-      margin: auto;
-      text-align: center;
-      align-items: center;
-      display: flex;
-      justify-content: center;
-      cursor: pointer;
-    }
-    .text {
-      text-align: left;
-      .name {
-        font-weight: 600;
-      }
-      .email {
-        font-size: 11px;
-      }
-    }
-    .md-button {
-      font-size: 20px !important;
-    }
-  }
+  text-align: center;
 }
 </style>

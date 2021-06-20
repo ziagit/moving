@@ -1,14 +1,11 @@
 <template>
-  <div class="container">
-    <md-field>
-      <label>Address</label>
-      <md-input
-        v-model="list.formatted_address"
-        required
-        id="autocomplete3"
-        placeholder=""
-      ></md-input>
-    </md-field>
+  <div>
+    <b-form-input
+      v-model="list.formatted_address"
+      required
+      id="autocomplete3"
+      placeholder="Address"
+    ></b-form-input>
   </div>
 </template>
 <script>
@@ -133,8 +130,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.container {
-  width: 100%;
-}
-</style>
+<style lang="scss" scoped></style>

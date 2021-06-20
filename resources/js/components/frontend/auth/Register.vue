@@ -1,58 +1,83 @@
 <template>
-  <div class="container">
+  <div class="register">
     <Header v-on:togal-menu="$emit('togal-menu')" />
     <div class="content">
-      <md-card>
-        <md-card-header>
-          <div class="md-title">Register</div>
-        </md-card-header>
-        <md-card-content>
-          <form @submit.prevent="submit" enctype="multipart/form-data">
-            <md-field>
-              <label>Name</label>
-              <md-input v-model="form.name" required ref="focusable"></md-input>
-            </md-field>
-            <md-field>
-              <label>Email/Phone</label>
-              <md-input v-model="form.email" required></md-input>
-            </md-field>
-            <md-field>
-              <label>Password</label>
-              <md-input v-model="form.password" required type="password"></md-input>
-            </md-field>
-            <md-field>
-              <label>Confirm password</label>
-              <md-input
-                v-model="form.password_confirmation"
-                required
-                type="password"
-              ></md-input>
-            </md-field>
-            <div class="submit">
-              <p>
-                <span>&#8226;</span> By clicking submit you will agree to our terms and
-                conditions.
-              </p>
-              <Spinner v-if="isSubmitting" />
-
-              <md-button v-else type="submit" class="custom-button">Submit</md-button>
+      <b-card
+        title="TingsApp"
+        sub-title="Create new account"
+        class="border-0 shadow w-50 mx-auto"
+      >
+        <form @submit.prevent="submit" enctype="multipart/form-data">
+          <div class="break"></div>
+          <b-form-group id="fieldset-1" label-for="input-1">
+            <b-form-input
+              id="input-1"
+              v-model="form.name"
+              placeholder="Name"
+              required
+              ref="focusable"
+            ></b-form-input>
+          </b-form-group>
+          <b-form-group id="fieldset-1" label-for="input-1">
+            <b-form-input
+              id="input-1"
+              v-model="form.email"
+              type="email"
+              placeholder="Email/phone"
+              required
+            ></b-form-input>
+          </b-form-group>
+          <b-form-group id="fieldset-1" label-for="input-1">
+            <b-form-input
+              id="input-1"
+              type="password"
+              v-model="form.password"
+              placeholder="Password"
+              required
+            ></b-form-input>
+          </b-form-group>
+          <b-form-group id="fieldset-1" label-for="input-1">
+            <b-form-input
+              id="input-1"
+              type="password"
+              v-model="form.password_confirmation"
+              placeholder="Password confirmation"
+              required
+            ></b-form-input>
+          </b-form-group>
+          <div class="break"></div>
+          <div class="submit">
+            <b-form-checkbox
+              id="checkbox-1"
+              v-model="agreement"
+              name="checkbox-1"
+              value="accepted"
+              :unchecked-value="false"
+            >
+              I accept the terms and use
+            </b-form-checkbox>
+            <div class="action">
+              <b-spinner v-if="isSubmitting" variant="primary"></b-spinner>
+              <b-button :disabled="!agreement" v-else type="submit" variant="primary"
+                >Submit
+              </b-button>
             </div>
-          </form>
-          <div class="login">
-            <router-link to="/login">Sign in instead</router-link>
           </div>
-        </md-card-content>
-      </md-card>
+        </form>
+
+        <template #footer>
+          <small class="primary" @click="$router.push('/login')">Sign in instead</small>
+        </template>
+      </b-card>
     </div>
     <Footer />
-    <Snackbar :data="snackbar" />
+    <Toaster ref="toaster" />
   </div>
 </template>
 
 <script>
 import { mapActions } from "vuex";
-import Spinner from "../../shared/Spinner";
-import Snackbar from "../../shared/Snackbar";
+import Toaster from "../../shared/Toaster";
 import Header from "../../shared/Header";
 import Footer from "../../shared/Footer";
 import axios from "axios";
@@ -60,6 +85,7 @@ import localData from "../services/localData";
 export default {
   name: "SignUp",
   data: () => ({
+    agreement: false,
     form: {
       name: null,
       email: null,
@@ -69,11 +95,6 @@ export default {
     },
     isSubmitting: false,
     passwordTogal: false,
-    snackbar: {
-      show: false,
-      message: null,
-      statusCode: null,
-    },
   }),
   methods: {
     ...mapActions({
@@ -81,9 +102,12 @@ export default {
     }),
     submit() {
       if (this.form.password !== this.form.password_confirmation) {
-        this.snackbar.show = true;
-        this.snackbar.statusCode = 400;
-        this.snackbar.message = "Passwords not matching!";
+        this.$refs.toaster.show(
+          "warning",
+          "b-toaster-top-right",
+          "Warning",
+          "Passwords not matching!"
+        );
       } else {
         this.isSubmitting = true;
         axios
@@ -91,9 +115,12 @@ export default {
           .then((res) => {
             console.log("user created: ", res.data);
             if (res.status == 203) {
-              this.snackbar.statusCode = res.status;
-              this.snackbar.message = res.data;
-              this.snackbar.show = true;
+              this.$refs.toaster.show(
+                "success",
+                "b-toaster-top-right",
+                "Success",
+                res.data
+              );
             } else {
               localData.save("me", res.data);
               this.$router.push("verify");
@@ -104,23 +131,28 @@ export default {
           .catch((error) => {
             this.isSubmitting = false;
             if (error.response.status === 409) {
-              this.snackbar.statusCode = error.response.status;
-              this.snackbar.message = error.response.data.error;
+              this.$refs.toaster.show(
+                "danger",
+                "b-toaster-top-center",
+                "Faild",
+                error.response.data.error
+              );
             } else {
-              this.snackbar.statusCode = error.response.status;
-              this.snackbar.message = error.response.data.error;
+              this.$refs.toaster.show(
+                "danger",
+                "b-toaster-top-center",
+                "Faild",
+                error.response.data.error
+              );
             }
-            this.snackbar.show = true;
           });
       }
     },
   },
   mounted() {
-    this.$refs.focusable.$el.focus();
+    this.$refs.focusable.focus();
   },
   components: {
-    Spinner,
-    Snackbar,
     Header,
     Footer,
   },
@@ -128,55 +160,22 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.container {
-  width: 100%;
+.register {
   .content {
     padding: 60px 20px;
     height: calc(100vh - 3px);
-
-    .md-card {
-      max-width: 500px;
-      margin: auto;
-      text-align: center;
-      background: #fff;
-
-      .md-card-content {
-        padding: 20px;
-        .submit {
-          display: flex;
-          justify-content: space-between;
-          p {
-            text-align: left;
-            font-size: 11px;
-            display: flex;
-            span {
-              font-size: 26px;
-              color: #ffa500;
-            }
-          }
-          .custom-button {
-            box-shadow: none;
-          }
-        }
-        .login {
-          text-align: left;
-        }
-      }
+    .submit {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    small:hover {
+      cursor: pointer;
+      color: #007bff;
     }
   }
 }
 
 @media only screen and (max-width: 600px) {
-  .register {
-    .md-card {
-      margin-top: 3em;
-
-      .other-way {
-        .md-button {
-          font-size: 11px;
-        }
-      }
-    }
-  }
 }
 </style>

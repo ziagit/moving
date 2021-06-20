@@ -75,7 +75,6 @@ export default {
   },
 };
 </script>
-
 <style lang="scss" scoped>
 form {
   position: relative;
@@ -84,7 +83,6 @@ form {
     margin: 23px;
     height: 93px;
   }
-
   .md-button {
     margin-right: 16px;
     width: 185px;

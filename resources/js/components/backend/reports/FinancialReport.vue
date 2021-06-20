@@ -1,20 +1,23 @@
 <template>
-  <div>
-    <md-card v-if="result" id="printable">
-      <md-card-header>
-        <span class="md-title">TingsApp</span>
-        <div class="no-print">
-          <md-button class="md-icon-button md-primary" @click="printIt()"
-            ><md-icon class="md-primary">print</md-icon></md-button
-          >
-        </div>
-      </md-card-header>
-      <md-divider></md-divider>
-      <md-card-content>
-        <div class="break"></div>
+  <div class="container">
+    <b-card
+      v-if="result"
+      id="printable"
+      class="border-0 shadow mt-5 mb-5"
+      :header="'ID: ' + result.order.uniqid"
+    >
+      <div class="no-print">
+        <b-button variant="light" @click="printIt()"
+          ><b-icon variant="primary" icon="printer">print</b-icon></b-button
+        >
+        <b-button variant="light" @click="download()"
+          ><b-icon icon="download" variant="primary"></b-icon
+        ></b-button>
+      </div>
+      <div class="px-4">
         <div class="row">
-          <div class="col"></div>
-          <div class="col">
+          <div class="col-8"></div>
+          <div class="col-4">
             <table>
               <tr>
                 <th>Order number</th>
@@ -32,9 +35,10 @@
           </div>
         </div>
         <div class="break"></div>
+        <div class="break"></div>
         <div class="row">
           <div class="col">
-            <div class="md-title">Revenue</div>
+            <div><b>Revenue</b></div>
             <table>
               <tr>
                 <th>Travel cost</th>
@@ -57,9 +61,10 @@
           </div>
         </div>
         <div class="break"></div>
+        <div class="break"></div>
         <div class="row">
           <div class="col">
-            <div class="md-title">Payouts/Expenses</div>
+            <div><b>Payouts/Expenses</b></div>
             <table>
               <tr>
                 <th>Recevied amount</th>
@@ -73,9 +78,7 @@
                 <td>${{ result.order.cost }}</td>
                 <td>${{ result.carrier_earning }}</td>
                 <td>${{ result.received_gst }}</td>
-
                 <td>${{ result.paid_gst }}</td>
-
                 <td>${{ result.unpaid_gst }}</td>
                 <td>${{ result.tingsapp_earning }}</td>
               </tr>
@@ -83,29 +86,22 @@
           </div>
         </div>
         <div class="break"></div>
-
         <div class="break"></div>
         <div class="row">
           <div class="col">
-            <div class="md-title">Notes:</div>
+            <div>Notes: ...........</div>
             <div class="md-body-1">{{ result.order.instructions }}</div>
           </div>
         </div>
-
-        <div class="break"></div>
-        <div class="row">...................</div>
-      </md-card-content>
-    </md-card>
+      </div>
+    </b-card>
   </div>
 </template>
 <script>
-import Spinner from "../../shared/Spinner";
 import axios from "axios";
 import dateFormatter from "../../frontend/services/dateFormatter";
 export default {
-  components: {
-    Spinner,
-  },
+  components: {},
   data: () => ({
     result: null,
     total: 0,
@@ -144,45 +140,39 @@ export default {
     printIt() {
       window.print();
     },
+    download() {
+      var options = {
+        //'width': 800,
+      };
+      var pdf = new jsPDF("p", "pt", "a4");
+      pdf.addHTML("#content2", -1, 220, options, function () {
+        pdf.save("admit_card.pdf");
+      });
+    },
   },
 };
 </script>
 <style scoped lang="scss">
-.md-card {
-  margin-bottom: 30px;
-  .md-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
+.container {
+  min-height: calc(100vh - 50px);
+  .no-print {
+    position: absolute;
+    top: 0;
+    right: 0;
   }
-  .md-card-content {
-    padding: 18px 30px 30px 30px;
-    .row {
-      display: flex;
-      justify-content: space-between;
-      .col {
-        width: 100%;
-        margin: 1px;
+  table {
+    width: 100%;
+    border: 1px solid #ddd;
+    border-collapse: collapse;
+    tr {
+      border: 1px solid #ddd;
+      td,
+      th {
+        border: 1px solid #ddd;
+        text-align: left;
+        padding: 5px;
       }
     }
   }
-}
-
-table {
-  width: 100%;
-  border: 1px solid #ddd;
-  border-collapse: collapse;
-  tr {
-    border: 1px solid #ddd;
-    td,
-    th {
-      border: 1px solid #ddd;
-      text-align: left;
-      padding: 5px;
-    }
-  }
-}
-.md-title {
-  font-size: 20px !important;
 }
 </style>

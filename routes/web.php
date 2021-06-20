@@ -18,7 +18,6 @@ Route::get('/', function () {
     return view('shipbay');
 });
 
-
 Route::get('/address', function(){
     return view('address');
 });

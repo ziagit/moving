@@ -1,7 +1,7 @@
 <template>
-  <div class="services">
+  <div class="terms">
     <div class="section0">
-      <Header v-on:togal-menu="$emit('togal-menu')" :scrollValue="scrollValue" />
+      <Header v-on:togal-menu="$emit('togal-menu')" />
       <div class="content">
         <div class="md-display-1">Terms of Use</div>
         <div class="md-body-1">Read our terms and conditions</div>
@@ -26,7 +26,7 @@ import Header from "../../shared/Header";
 import Footer from "../../shared/Footer";
 import axios from "axios";
 export default {
-  name: "services",
+  name: "terms",
   props: ["scrollValue"],
   data: () => ({
     form: {
@@ -55,7 +55,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.services {
+.terms {
   min-height: 100vh !important;
   background: #fff;
 

@@ -1,10 +1,9 @@
 <template>
   <div>
     <form @submit.prevent="submit">
-      <md-field class="order-field">
-        <label>Order id</label>
-        <md-input v-model="keywords" required></md-input>
-      </md-field>
+      <b-form-group>
+        <b-form-input v-model="keywords" required placeholder="Order id"></b-form-input>
+      </b-form-group>
       <ul v-if="searchTogal">
         <li v-for="refund in refunds" :key="refund.id" @click="select(refund)">
           {{ refund.uniqid }}
@@ -13,32 +12,38 @@
       <ul v-if="notFoundTogal">
         <li>Not found</li>
       </ul>
-      <md-field>
-        <label>Customer</label>
-        <md-input v-model="form.shipper" required></md-input>
-      </md-field>
-      <md-field>
-        <label>Amount</label>
-        <span class="md-prefix">$</span>
-        <md-input v-model="form.amount" :min="1" required></md-input>
-      </md-field>
+      <b-form-group>
+        <b-form-input
+          v-model="form.shipper"
+          required
+          placeholder="Customer"
+        ></b-form-input>
+      </b-form-group>
+      <b-form-group>
+        <b-input-group prepend="$">
+          <b-form-input
+            v-model="form.amount"
+            :min="1"
+            required
+            class="Amount"
+          ></b-form-input>
+        </b-input-group>
+      </b-form-group>
       <div v-if="notExist">This mover has no earning in their dashboard!</div>
-
-      <div class="submit" v-else>
-        <Spinner v-if="isSubmitting" />
-        <md-button v-else type="submit" class="md-primary"> Save </md-button>
+      <div class="text-right" v-else>
+        <b-spinner v-if="isSubmitting" variant="primary" />
+        <b-button v-else type="submit" variant="primary"> Submit </b-button>
       </div>
     </form>
-    <Snackbar :data="snackbar" />
+    <Toaster ref="toaster" />
   </div>
 </template>
 <script>
 import axios from "axios";
-import Snackbar from "../../shared/Snackbar";
-import Spinner from "../../shared/Spinner";
+import Toaster from "../../shared/Toaster";
 export default {
-  name: "Add",
-  components: { Spinner, Snackbar },
+  name: "NewRefund",
+  components: { Toaster },
   data: () => ({
     refunds: [],
     searchTogal: false,
@@ -54,11 +59,6 @@ export default {
     isSubmitting: false,
     isLoading: false,
     notExist: false,
-    snackbar: {
-      show: false,
-      message: null,
-      statusCode: null,
-    },
   }),
   watch: {
     keywords(after, before) {
@@ -81,6 +81,7 @@ export default {
             this.searchTogal = true;
             this.refunds = res.data.data;
             this.notFoundTogal = false;
+            this.$refs.toaster;
           }
         })
         .catch((err) => {
@@ -136,33 +137,34 @@ export default {
         this.form.amount == null ||
         this.form.order == null
       ) {
-        this.snackbar.message = "All fields are required";
-        this.snackbar.statusCode = "409";
-        this.snackbar.show = true;
+        this.$refs.toaster.show(
+          "success",
+          "b-toaster-top-center",
+          "Invalid Data",
+          "All fields are required!"
+        );
       } else {
         this.isSubmitting = true;
-        axios.post("admin/refunds", this.form).then((res) => {
-          console.log("res", res.data);
-          this.isSubmitting = false;
-          this.$emit("close-dialog");
-        });
+        axios
+          .post("admin/refunds", this.form)
+          .then((res) => {
+            console.log("res", res.data);
+            this.isSubmitting = false;
+            this.$emit("close-dialog", res.data);
+          })
+          .catch((err) => {
+            this.$emit("close-dialog", err.response);
+          });
       }
     },
   },
 };
 </script>
 <style lang="scss" scoped>
-form {
-  position: relative;
-}
-.submit {
-  text-align: right;
-}
-
 ul {
   box-shadow: 1px 1px 1px 0px;
   position: absolute;
-  width: 100%;
+  width: 90%;
   background: #fff;
   z-index: 99;
   margin: -24px 0 0 0;

@@ -1,66 +1,89 @@
 <template>
-  <div class="card">
+  <div>
     <form
       @submit.prevent="getStripeToken"
       id="payment-form"
       enctype="multipart/form-data"
     >
       <span class="md-display-1">Add your card information</span>
-
+      <div class="break"></div>
+      <div class="break"></div>
       <div
         style="text-align: left"
         v-if="authenticated && user.role[0].name === 'customer' && user.email != null"
       >
-        <md-checkbox class="md-primary" v-model="sameAddress">
-          Is your billing address same to your profile address ?
-          <md-icon class="md-primary">
-            info
-            <md-tooltip>You wounldn't notified in case of different email!</md-tooltip>
-          </md-icon>
-        </md-checkbox>
+        <b-form-checkbox class="md-primary" v-model="sameAddress">
+          Is your billing address same as your profile address ?
+        </b-form-checkbox>
       </div>
-      <div class="row">
-        <md-field>
-          <label>Name</label>
-          <md-input type="text" v-model="form.name" required ref="focusable"></md-input>
-        </md-field>
-        <md-field>
-          <label>Email</label>
-          <md-input type="email" v-model="form.email" required></md-input>
-        </md-field>
-      </div>
+
+      <b-input-group class="mb-3">
+        <b-form-input
+          ref="focusable"
+          v-model="form.name"
+          type="text"
+          required
+          placeholder="Name"
+        ></b-form-input>
+        <b-form-input
+          v-model="form.email"
+          required
+          placeholder="Email"
+          type="email"
+        ></b-form-input>
+      </b-input-group>
+
       <GoogleAddress3
         v-on:google-valid-address="googleValidAddress"
         v-on:google-invalid-address="googleInvalidAddress"
         :initialData="form.formatted_address"
         label="Adddress"
+        class="mb-3"
       />
-      <div class="row">
-        <md-field>
-          <label>Country</label>
-          <md-input type="text" v-model="form.country" required disabled></md-input>
-        </md-field>
+      <b-input-group class="mb-3">
+        <b-form-input
+          ref="focusable"
+          v-model="form.country"
+          type="text"
+          required
+          disabled
+          placeholder="Country"
+        ></b-form-input>
+        <b-form-input
+          v-model="form.state"
+          disabled
+          required
+          placeholder="State"
+          type="text"
+        ></b-form-input>
+      </b-input-group>
 
-        <md-field>
-          <label>State</label>
-          <md-input type="text" v-model="form.state" required disabled></md-input>
-        </md-field>
-      </div>
-      <div class="row">
-        <md-field>
-          <label>City</label>
-          <md-input type="text" v-model="form.city" required disabled></md-input>
-        </md-field>
+      <b-input-group class="mb-3">
+        <b-form-input
+          ref="focusable"
+          v-model="form.city"
+          type="text"
+          required
+          disabled
+          placeholder="City"
+        ></b-form-input>
+        <b-form-input
+          v-model="form.postalcode"
+          disabled
+          required
+          placeholder="Postalcode"
+          type="text"
+        ></b-form-input>
+      </b-input-group>
+      <b-input-group class="mb-3">
+        <b-form-input
+          v-model="form.name_oncard"
+          required
+          placeholder="Name on card"
+          type="text"
+        ></b-form-input>
+      </b-input-group>
 
-        <md-field>
-          <label>Postal code</label>
-          <md-input type="text" v-model="form.postalcode" required disabled></md-input>
-        </md-field>
-      </div>
-      <md-field>
-        <label>Name on card</label>
-        <md-input type="text" v-model="form.name_oncard" required></md-input>
-      </md-field>
       <div ref="card">
         <!-- A Stripe Element will be inserted here. -->
       </div>
@@ -69,28 +92,18 @@
       <div class="break"></div>
       <div class="break"></div>
       <div class="action">
-        <md-button
-          v-if="!isSubmitting"
-          id="submit-button"
-          class="custom-button"
-          type="submit"
-          >Pay</md-button
-        >
-      </div>
-      <Spinner v-if="isSubmitting" />
-      <div v-if="cardAdded">
-        <div>Your payment is in process...</div>
+        <b-spinner variant="primary" v-if="isSubmitting" />
+        <b-button v-else id="submit-button" variant="primary" type="submit">Pay</b-button>
       </div>
     </form>
-    <Snackbar :data="snackbar" />
+    <Toaster ref="toaster" />
   </div>
 </template>
 
 <script>
 import GoogleAddress3 from "../../shared/GoogleAddress3";
 import axios from "axios";
-import Snackbar from "../../shared/Snackbar";
-import Spinner from "../../shared/Spinner";
+import Toaster from "../../shared/Toaster";
 import { mapGetters } from "vuex";
 import localData from "../services/localData";
 import validator from "../services/validator";
@@ -114,8 +127,7 @@ var card = undefined;
 export default {
   name: "Card",
   components: {
-    Spinner,
-    Snackbar,
+    Toaster,
     GoogleAddress3,
   },
   data: () => ({
@@ -161,7 +173,6 @@ export default {
           axios
             .get("shipper/shipper-address")
             .then((res) => {
-              console.log("xxxxxxxxxxxxxx", res.data);
               this.form.name = res.data.first_name;
               this.form.formatted_address = res.data.address.formatted_address;
               this.form.country = res.data.address.country;
@@ -235,9 +246,12 @@ export default {
         stripe.createToken(card).then((result) => {
           if (result.error) {
             this.isSubmitting = false;
-            this.snackbar.message = result.error.message;
-            this.snackbar.statusCode = "400";
-            this.snackbar.show = true;
+            this.$refs.toaster.show(
+              "danger",
+              "b-toaster-top-center",
+              "Error",
+              result.error.message
+            );
           } else {
             this.handleStripeToken(result.token);
           }
@@ -262,9 +276,12 @@ export default {
         })
         .catch((err) => {
           this.isSubmitting = false;
-          this.snackbar.show = true;
-          this.snackbar.message = err.response.data.message;
-          this.snackbar.statusCode = err.response.status;
+          this.$refs.toaster.show(
+            "danger",
+            "b-toaster-top-center",
+            "Error",
+            err.response.data.message
+          );
           this.togalMassage = err;
         });
     },
@@ -279,27 +296,9 @@ export default {
     font-size: 11px;
   }
 }
-.card {
-  margin: auto;
-  text-align: center;
 
-  .md-display-1 {
-    font-size: 24px;
-  }
-
-  .row {
-    display: flex;
-    justify-content: space-between;
-    .md-field {
-      flex: 10%;
-      label {
-        font-size: 14px;
-      }
-    }
-  }
-  .action {
-    text-align: right;
-  }
+.action {
+  text-align: right;
 }
 
 /**
@@ -313,8 +312,8 @@ export default {
 
   padding: 10px 12px;
 
-  border-bottom: 1px solid #ddd;
-  /* border-radius: 4px; */
+  border: 1px solid #ddd;
+  border-radius: 4px;
   background-color: white;
 
   /* box-shadow: 0 1px 3px 0 #e6ebf1; */

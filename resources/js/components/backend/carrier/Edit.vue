@@ -1,136 +1,108 @@
 <template>
-  <div>
-    <form @submit.prevent="update" enctype="multipart/form-data">
-      <md-card>
-        <md-card-header>
-          <span class="md-title">Edit Details</span>
-          <md-button @click="$emit('close-it')" class="md-icon-button add-btn">
-            <md-icon>close</md-icon>
-            <md-tooltip>Cancel</md-tooltip>
-          </md-button>
-        </md-card-header>
-        <md-divider></md-divider>
-        <md-card-content>
-
-          <div class="carrier-details">
-            <div class="row">
-              <md-field>
-                <label for="">First name</label>
-                <md-input
-                  type="text"
-                  v-model="form.first_name"
-                  required
-                  ref="focusable"
-                ></md-input>
-              </md-field>
-              <md-field>
-                <label for="">Last name</label>
-                <md-input
-                  type="text"
-                  v-model="form.last_name"
-                  required
-                ></md-input>
-              </md-field>
-              <md-field>
-                <label for="">Phone</label>
-                <md-input type="tel" v-model="form.phone" required></md-input>
-              </md-field>
-            </div>
-            <div class="row">
-              <md-field>
-                <label for="">Address</label>
-                <md-input v-model="form.address" required></md-input>
-              </md-field>
-            </div>
-          </div>
-
-          <div class="company">
-            <div class="row">
-              <md-field>
-                <label>Company name</label>
-                <md-input v-model="form.company" required></md-input>
-              </md-field>
-              <md-field>
-                <label>Year established</label>
-                <md-input
-                  type="number"
-                  v-model="form.year_established"
-                  required
-                ></md-input>
-              </md-field>
-              <md-field>
-                <label>Website</label>
-                <md-input v-model="form.website"></md-input>
-              </md-field>
-            </div>
-            <div class="row">
-              <md-field>
-                <label for="">Number of employees</label>
-                <md-input
-                  type="number"
-                  :min="1"
-                  v-model="form.employees"
-                  required
-                ></md-input>
-              </md-field>
-              <md-field>
-                <label for="">Number of vehicles</label>
-                <md-input
-                  type="number"
-                  :min="1"
-                  v-model="form.vehicles"
-                  required
-                ></md-input>
-              </md-field>
-              <md-field>
-                <label for="">Hourly rate</label>
-                <md-input
-                  type="number"
-                  :min="1"
-                  v-model="form.hourly_rate"
-                  required
-                ></md-input>
-              </md-field>
-            </div>
-            <div class="row">
-              <md-field>
-                <label>About your company</label>
-                <md-textarea v-model="form.detail" required></md-textarea>
-              </md-field>
-            </div>
-            <div class="row">
-              <md-field>
-                <md-tooltip>Upload Insurance paper</md-tooltip>
-                <md-file
-                  v-model="insurance_papers"
-                  accept="image/*"
-                  ref="insurance"
-                  @change="onInsuranceChange"
-                  placeholder="Upload Insurance paper"
-                />
-              </md-field>
-              <md-field>
-                <md-tooltip>Upload business licens</md-tooltip>
-                <md-file
-                  v-model="business_license"
-                  accept="image/*"
-                  ref="license"
-                  @change="onLicenseChange"
-                  placeholder="Upload business licens"
-                />
-              </md-field>
-            </div>
-          </div>
-        </md-card-content>
-        <md-card-actions>
-          <md-button type="submit" class="md-primary md-small-fab"
-            >Update</md-button
-          >
-        </md-card-actions>
-      </md-card>
-    </form>
-  </div>
-</template>
+  <form @submit.prevent="update" enctype="multipart/form-data">
+    <b-card header="Edit Details" class="shadow border-0">
+      <b-button variant="light" @click="$emit('close-it')" class="add-btn">
+        <b-icon icon="x"></b-icon>
+      </b-button>
+      <div class="carrier-details">
+        <b-form-group>
+          <b-input-group>
+            <b-form-input
+              type="text"
+              v-model="form.first_name"
+              required
+              ref="focusable"
+              placeholder="First name"
+            ></b-form-input>
+            <b-form-input
+              type="text"
+              v-model="form.last_name"
+              required
+              placeholder="Last name"
+            ></b-form-input>
+            <b-form-input
+              type="tel"
+              v-model="form.phone"
+              required
+              placeholder="Phone"
+            ></b-form-input>
+          </b-input-group>
+        </b-form-group>
+        <b-form-group>
+          <b-form-input></b-form-input>
+        </b-form-group>
+        <b-form-group>
+          <b-input-group>
+            <b-form-input
+              v-model="form.company"
+              required
+              placeholder="Company name"
+            ></b-form-input>
+            <b-form-input
+              type="number"
+              v-model="form.year_established"
+              required
+              placeholder="Year established"
+            ></b-form-input>
+            <b-form-input v-model="form.website" placeholder="Website"></b-form-input>
+          </b-input-group>
+        </b-form-group>
+        <b-form-group>
+          <b-input-group>
+            <b-form-input
+              type="number"
+              :min="1"
+              v-model="form.employees"
+              required
+              placeholder="Number of employees"
+            ></b-form-input>
+            <b-form-input
+              type="number"
+              :min="1"
+              v-model="form.vehicles"
+              required
+              placeholder="Number of vehicles"
+            ></b-form-input>
+            <b-form-input
+              type="number"
+              :min="1"
+              v-model="form.hourly_rate"
+              required
+              placeholder="Hourly rate"
+            ></b-form-input>
+          </b-input-group>
+        </b-form-group>
+        <b-form-group>
+          <b-form-textarea
+            v-model="form.detail"
+            required
+            placeholder="Company details"
+          ></b-form-textarea>
+        </b-form-group>
+        <b-form-group>
+          <b-input-group>
+            <b-form-file
+              v-model="insurance_papers"
+              accept="image/*"
+              ref="insurance"
+              @change="onInsuranceChange"
+              placeholder="Upload Insurance paper"
+            />
+            <b-form-file
+              v-model="business_license"
+              accept="image/*"
+              ref="license"
+              @change="onLicenseChange"
+              placeholder="Upload business licens"
+            />
+          </b-input-group>
+        </b-form-group>
+      </div>
+      <div class="text-right mt-3">
+        <b-button type="submit" variant="primary">Update</b-button>
+      </div>
+    </b-card>
+  </form>
 </template>
 
 <script lang="ts">
@@ -140,7 +112,7 @@ export default Vue.extend({
   props: ["carrier"],
   data: () => {
     return {
-      id:null,
+      id: null,
       form: {
         first_name: null,
         last_name: null,
@@ -190,13 +162,13 @@ export default Vue.extend({
       fd.append("vehicles", this.form.vehicles);
       fd.append("hourly_rate", this.form.hourly_rate);
       fd.append("year_established", this.form.year_established);
-      fd.append("userId",this.carrier.user.id);
+      fd.append("userId", this.carrier.user.id);
       fd.append("_method", "put");
       axios
         .post("admin/carriers/" + this.id, fd)
         .then((res) => {
           console.log("res", res.data);
-          this.$emit("refresh")
+          this.$emit("refresh");
         })
         .catch((error) => {
           console.log("eerrr: ", error);
@@ -239,37 +211,9 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="scss">
-.md-card {
-  text-align: left;
-  .row {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-
-    .md-field {
-      flex: 25%;
-    }
-  }
-
-  .add-btn {
-    position: absolute;
-    top: 0;
-    right: 0;
-  }
-
-  .zip-address {
-    flex: 50%;
-  }
-}
-.company {
-  .row {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-
-    .md-field {
-      flex: 32%;
-    }
-  }
+.add-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 </style>

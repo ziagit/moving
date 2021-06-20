@@ -15,7 +15,7 @@ class TermsController extends Controller
      */
     public function index()
     {
-        $term = Term::all();
+        $term = Term::first();
         return response()->json($term);
     }
 

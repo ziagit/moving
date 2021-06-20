@@ -1,43 +1,43 @@
 <template>
-  <div class="refunds" v-if="refunds">
-    <md-dialog :md-active.sync="addTogal">
-      <md-dialog-title>Create new refund</md-dialog-title>
-      <md-dialog-content>
-        <NewRefund v-on:close-dialog="refresh" />
-      </md-dialog-content>
-    </md-dialog>
-    <md-table md-sort="name" md-sort-order="asc" md-card>
-      <md-table-toolbar>
-        <div class="md-toolbar-section-start">
-          <md-button class="md-primary" @click="addTogal = true">New refund</md-button>
-        </div>
-        <md-field md-clearable class="md-toolbar-section-end">
-          <md-input placeholder="Search by mover name..." v-model="keywords" />
-        </md-field>
-      </md-table-toolbar>
-
-      <md-table-row>
-        <md-table-head md-numeric>#</md-table-head>
-        <md-table-head>Customer</md-table-head>
-        <md-table-head>Date</md-table-head>
-        <md-table-head>Amount</md-table-head>
-      </md-table-row>
-      <md-table-row v-for="(refund, index) in refunds.data" :key="index">
-        <md-table-cell>{{ index + 1 }}</md-table-cell>
-        <md-table-cell>{{ refund.shipper.first_name }}</md-table-cell>
-        <md-table-cell>{{ formatter(refund.created_at) }}</md-table-cell>
-        <md-table-cell>${{ refund.amount }}</md-table-cell>
-      </md-table-row>
-    </md-table>
+  <div class="container" v-if="refunds">
+    <b-modal id="modal-add" size="md" title="New Refund" :hide-footer="true">
+      <NewRefund v-on:close-dialog="refresh" />
+    </b-modal>
+    <b-card header="Refunds" class="border-0 shadow mt-5 mb-5">
+      <b-form-input placeholder="Search by mover name..." v-model="keywords" />
+      <table class="table">
+        <thead>
+          <tr>
+            <th md-numeric>#</th>
+            <th>Customer</th>
+            <th>Date</th>
+            <th>Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(refund, index) in refunds.data" :key="index">
+            <td>{{ index + 1 }}</td>
+            <td>{{ refund.shipper.first_name }}</td>
+            <td>{{ formatter(refund.created_at) }}</td>
+            <td>${{ refund.amount }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="text-right">
+        <b-button variant="primary" class="add-btn" v-b-modal.modal-add>New</b-button>
+      </div>
+    </b-card>
     <pagination :limit="4" :data="refunds" @pagination-change-page="get"></pagination>
+    <Toaster ref="toaster" />
   </div>
 </template>
 
 <script>
 import formatter from "../../frontend/services/dateFormatter";
 import NewRefund from "./NewRefund";
+import Toaster from "../../shared/Toaster.vue";
 export default {
-  components: { NewRefund },
+  components: { NewRefund, Toaster },
   name: "refunds",
   data: () => ({
     keywords: null,
@@ -48,7 +48,6 @@ export default {
     totalPaid: 0,
     totalOwing: 0,
     totalGross: 0,
-    addTogal: false,
   }),
   watch: {
     keywords(after, before) {
@@ -90,8 +89,9 @@ export default {
       } */
     },
 
-    refresh() {
-      this.addTogal = false;
+    refresh(data) {
+      this.$bvModal.hide("modal-add");
+      this.$refs.toaster.show("success", "b-toaster-top-center", "Invalid Data", data);
       this.get();
     },
   },
@@ -101,11 +101,12 @@ export default {
 };
 </script>
 <style scoped lang="scss">
-.refunds {
-  width: 100%;
-  th,
-  td {
-    text-align: left;
+.container {
+  min-height: calc(100vh - 50px);
+  .add-btn {
+    position: absolute;
+    top: 1px;
+    right: 1px;
   }
 }
 </style>

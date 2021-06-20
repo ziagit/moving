@@ -1,12 +1,12 @@
 <template>
-  <div class="container">
+  <div class="faq">
     <div class="left">
-      <div class="md-display-1">Carrier</div>
-      <div class="md-body-1 text-16">
+      <h1>Carrier</h1>
+      <p>
         Ask us anything! When you need assistance, our knowledgeable experts are ready.
         Here are some common situations along with guidance we’re pleased to share with
         you.
-      </div>
+      </p>
       <br />
       <infoList v-for="(item, index) in dynamicList" :key="index" :list="item">
         <div v-html="item.body"></div>
@@ -14,22 +14,18 @@
     </div>
     <div class="right">
       <div class="contact">
-        <div class="md-title">Contact us</div>
-        <div class="md-body-1">If you want to know more about us, drop us an email.</div>
+        <h5>Contact us</h5>
+        <p>If you want to know more about us, drop us an email.</p>
         <div>
           <router-link to="/contact">Contact us</router-link>
           <md-icon>keyboard_arrow_right</md-icon>
         </div>
       </div>
       <div class="download-app">
-        <div class="md-title">Download our Application</div>
-        <div class="md-body-1">
-          By downloading our application the task will be much easier.
-        </div>
+        <h5>Download our Application</h5>
+        <p>By downloading our application the task will be much easier.</p>
         <div>
-          <md-button class="custom-button" to="https://play.google.com"
-            >Download</md-button
-          >
+          <b-button @click="Window.open('https://play.google.com')">Download</b-button>
         </div>
       </div>
     </div>
@@ -59,7 +55,7 @@ export default {
 };
 </script>
 <style scoped lang="scss">
-.container {
+.faq {
   display: flex;
   justify-content: space-around;
   flex-wrap: wrap;

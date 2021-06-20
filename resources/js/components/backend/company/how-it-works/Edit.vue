@@ -1,12 +1,15 @@
 <template>
-  <div>
-    <form @submit.prevent="update"></form>
-    <md-field class="">
-      <label>Pate title</label>
-      <md-input v-model="form.title"></md-input>
-    </md-field>
-    <tinymce id="d1" v-model="form.body"></tinymce>
-    <md-button type="submit" class="custom-button">Update</md-button>
+  <div class="container">
+    <b-card class="shadow border-0 mt-5 mb-5">
+      <form @submit.prevent="update"></form>
+      <b-form-group class="">
+        <b-form-input v-model="form.title" placeholder="Title"></b-form-input>
+      </b-form-group>
+      <tinymce id="d1" v-model="form.body"></tinymce>
+      <div class="text-right">
+        <b-button type="submit" variant="primary mt-3">Update</b-button>
+      </div>
+    </b-card>
   </div>
 </template>
 <script>

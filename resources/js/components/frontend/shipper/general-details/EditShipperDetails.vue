@@ -1,69 +1,64 @@
 <template>
-  <div>
-    <md-card>
-      <form @submit.prevent="update" enctype="multipart/form-data">
-        <md-card-header>
-          <span class="md-title">Edit Account Details</span>
-          <md-button @click="$router.back()" class="md-icon-button add-btn">
-            <md-icon>close</md-icon>
-            <md-tooltip>Cancel</md-tooltip>
-          </md-button>
-        </md-card-header>
-
-        <md-card-content>
-          <div class="row">
-            <md-field>
-              <label for="">First name</label>
-              <md-input
-                type="text"
-                v-model="form.first_name"
-                required
-                ref="focusable"
-              ></md-input>
-            </md-field>
-            <md-field>
-              <label for="">Last name</label>
-              <md-input type="text" v-model="form.last_name" required></md-input>
-            </md-field>
-            <md-field>
-              <label for="">Email</label>
-              <md-input type="tel" v-model="form.email" required></md-input>
-            </md-field>
-            <md-field>
-              <label for="">Phone</label>
-              <md-input type="tel" v-model="form.phone" required></md-input>
-            </md-field>
-          </div>
-          <div class="row">
-            <GoogleAddress3
-              v-on:google-valid-address="googleValidAddress"
-              v-on:google-invalid-address="googleInvalidAddress"
-              :initialData="form.formatted_address"
-              label="Full adddress"
-            />
-          </div>
-        </md-card-content>
-        <md-card-actions>
-          <Spinner v-if="isSubmitting" />
-          <md-button v-else type="submit" class="md-primary">Update</md-button>
-        </md-card-actions>
-      </form>
-    </md-card>
-  </div>
+  <b-card class="border-0 shadow text-left" header="Edit Details">
+    <form @submit.prevent="submit" enctype="multipart/form-data">
+      <div>
+        <b-form-group>
+          <b-form-input
+            type="text"
+            v-model="form.first_name"
+            ref="focusable"
+            placeholder="First name"
+          ></b-form-input>
+        </b-form-group>
+        <b-form-group>
+          <b-form-input
+            type="text"
+            v-model="form.last_name"
+            placeholder="Last name"
+          ></b-form-input>
+        </b-form-group>
+        <b-form-group>
+          <b-form-input
+            type="tel"
+            v-model="form.phone"
+            required
+            placeholder="Phone"
+          ></b-form-input>
+        </b-form-group>
+        <b-form-group>
+          <b-form-input
+            type="tel"
+            v-model="form.email"
+            required
+            placeholder="Email"
+          ></b-form-input>
+        </b-form-group>
+        <GoogleAddress3
+          v-on:google-valid-address="googleValidAddress"
+          v-on:google-invalid-address="googleInvalidAddress"
+          :initialData="form.formatted_address"
+          label="Full adddress"
+        />
+        <div class="text-right">
+          <b-spinner variant="primary" v-if="isSubmitting" />
+          <b-button v-else type="submit" variant="primary" class="mt-3">Save</b-button>
+        </div>
+      </div>
+    </form>
+    <Toaster ref="toaster" />
+  </b-card>
 </template>
 
 <script>
 import GoogleAddress3 from "../../../shared/GoogleAddress3";
 import axios from "axios";
-import Snackbar from "../../../shared/Snackbar";
-import Spinner from "../../../shared/Spinner";
+import Toaster from "../../../shared/Toaster";
 import { mapActions, mapGetters } from "vuex";
 export default {
   name: "EditGeneralInfo",
   components: {
     GoogleAddress3,
-    Snackbar,
-    Spinner,
+    Toaster,
   },
   data: () => ({
     form: {
@@ -79,6 +74,7 @@ export default {
       addressId: null,
     },
     isSubmitting: false,
+    snackbar: {},
   }),
   computed: {
     ...mapGetters({
@@ -107,7 +103,7 @@ export default {
       this.form.street_number = null;
       this.form.formatted_address = null;
     },
-    update() {
+    submit() {
       this.isSubmitting = true;
       axios
         .put("shipper/details/" + this.$route.params.id, this.form)
@@ -118,9 +114,12 @@ export default {
         .catch((error) => {
           console.log("eerrr: ", error);
           this.isSubmitting = false;
-          this.snackbar.message = error.response.data.errors;
-          this.snackbar.statusCode = error.response.status;
-          this.snackbar.show = true;
+          this.$refs.toaster.show(
+            "danger",
+            "b-toaster-top-center",
+            "Error",
+            error.response.data.errors
+          );
         });
     },
     init() {
@@ -150,19 +149,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.md-card {
-  text-align: left;
-  padding: 20px;
-  .add-btn {
-    position: absolute;
-    top: 0;
-    right: 0;
-  }
-  .md-card-actions {
-    text-align: right;
-    display: flex;
-    justify-content: flex-start;
-  }
-}
-</style>
+<style lang="scss" scoped></style>

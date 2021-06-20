@@ -1,73 +1,45 @@
 <template>
-  <div class="cities" v-if="cities">
+  <div class="container" v-if="cities">
     <!-- delete dialog-->
-    <md-dialog-confirm
-      :md-active.sync="deleteTogal"
-      md-title="I assure what you doing"
-      md-content
-      md-confirm-text="OK"
-      md-cancel-text="Cancel"
-      @md-confirm="confirm()"
-      @md-cancel="cancel"
-    />
-    <!-- edit dialog -->
-    <md-dialog :md-active.sync="editTogal">
-      <md-dialog-title>Update city data</md-dialog-title>
-      <md-dialog-content>
-        <Edit v-on:close-dialog="refresh" :city="city" />
-      </md-dialog-content>
-    </md-dialog>
+    <b-modal id="modal-update" title="Update Country Data" :hide-footer="true">
+      <Edit v-on:close-dialog="refresh" :city="city" />
+    </b-modal>
     <!-- add dialog -->
-    <md-dialog :md-active.sync="addTogal">
-      <md-dialog-title>Add new city</md-dialog-title>
-      <md-dialog-content>
-        <Add v-on:close-dialog="refresh" />
-      </md-dialog-content>
-    </md-dialog>
-
-    <md-table md-sort="name" md-sort-order="asc" md-card>
-      <md-table-toolbar>
-        <div class="md-toolbar-section-start">
-          <h1 class="md-title">Cities</h1>
-        </div>
-
-        <md-field md-clearable class="md-toolbar-section-end">
-          <md-input placeholder="Search by name..." v-model="keywords" />
-        </md-field>
-      </md-table-toolbar>
-
-      <md-table-empty-state
-        md-label="No state found"
-        :md-description="`No state found for this query. Try a different search term or create a new state.`"
-      >
-        <md-button class="md-primary md-raised" @click="add()">Create new city</md-button>
-      </md-table-empty-state>
-      <md-table-row>
-        <md-table-head md-numeric>ID</md-table-head>
-        <md-table-head>Name</md-table-head>
-        <md-table-head>State</md-table-head>
-        <md-table-head>Actions</md-table-head>
-      </md-table-row>
-      <md-table-row v-for="city in cities.data" :key="city.id">
-        <md-table-cell md-numeric>{{ city.id }}</md-table-cell>
-        <md-table-cell md-sort-by="city.name">{{ city.name }}</md-table-cell>
-        <md-table-cell>{{ city.state.name }}</md-table-cell>
-
-        <md-table-cell md-label="Actions">
-          <md-button class="md-icon-button md-primary" @click="edit(city)">
-            <md-icon>edit</md-icon>
-          </md-button>
-          <md-button class="md-icon-button md-accent" @click="remove(city.id)">
-            <md-icon>delete</md-icon>
-          </md-button>
-        </md-table-cell>
-      </md-table-row>
-    </md-table>
+    <b-modal id="modal-add" size="md" title="Add new country" :hide-footer="true">
+      <Add v-on:close-dialog="refresh" />
+    </b-modal>
+    <b-card header="Cities" class="border-0 shadow text-left mt-5">
+      <b-input type="search" placeholder="Search by name..." v-model="keywords" />
+      <table class="table">
+        <thead>
+          <tr>
+            <th md-numeric>ID</th>
+            <th>Name</th>
+            <th>State</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="city in cities.data" :key="city.id">
+            <td md-numeric>{{ city.id }}</td>
+            <td md-sort-by="city.name">{{ city.name }}</td>
+            <td>{{ city.state.name }}</td>
+            <td md-label="Actions">
+              <b-button variant="light" @click="edit(city)">
+                <b-icon icon="pencil" variant="primary"></b-icon>
+              </b-button>
+              <b-button variant="light" @click="remove(city.id)">
+                <b-icon icon="trash-fill" variant="danger"></b-icon>
+              </b-button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <b-button class="add-btn" variant="primary" v-b-modal.modal-add>
+        <b-icon icon="plus"></b-icon>
+      </b-button>
+    </b-card>
     <pagination :limit="4" :data="cities" @pagination-change-page="get"></pagination>
-    <md-button class="md-fab md-primary add-btn" @click="add()">
-      <md-icon>add</md-icon>
-      <md-tooltip>Add new city</md-tooltip>
-    </md-button>
   </div>
 </template>
 
@@ -116,7 +88,6 @@ export default {
         .get("admin/cities?page=" + page)
         .then((res) => {
           console.log("cities ", res.data.data);
-
           this.cities = res.data;
         })
         .catch((err) => {
@@ -124,27 +95,30 @@ export default {
         });
     },
 
-    add() {
-      this.addTogal = true;
-      this.stateData = this.states;
-    },
     refresh() {
-      this.addTogal = false;
-      this.editTogal = false;
+      this.$bvModal.hide("modal-add");
+      this.$bvModal.hide("modal-update");
       this.get();
     },
     edit(data) {
-      this.editTogal = true;
       this.city = data;
+      this.$bvModal.show("modal-update");
     },
     remove(id) {
-      this.deleteTogal = true;
-      this.selectedId = id;
+      this.$bvModal
+        .msgBoxConfirm("Are you sure?")
+        .then((value) => {
+          if (value) {
+            this.confirm(id);
+          }
+        })
+        .catch((err) => {
+          console.log("err", err);
+        });
     },
-
-    confirm() {
+    confirm(id) {
       axios
-        .delete("admin/cities/" + this.selectedId)
+        .delete("admin/cities/" + id)
         .then((res) => {
           console.log("deleted", res.data);
           this.get();
@@ -153,17 +127,16 @@ export default {
           console.log("Error: ", err);
         });
     },
-    cancel() {},
   },
 };
 </script>
 <style scoped lang="scss">
-.cities {
-  width: 100%;
+.container {
+  height: calc(100vh - 50px);
   .add-btn {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
+    position: absolute;
+    top: 0px;
+    right: 0px;
   }
 }
 </style>

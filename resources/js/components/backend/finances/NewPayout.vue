@@ -1,46 +1,49 @@
 <template>
   <div>
     <form @submit.prevent="submit">
-      <md-datepicker v-model="form.from" :md-immediately="true" required>
-        <label>Start of earning period</label>
-      </md-datepicker>
-      <md-datepicker v-model="form.to" :md-immediately="true" required>
-        <label>End of earning period</label>
-      </md-datepicker>
-      <md-field>
-        <md-select
+      <b-form-group>
+        <b-form-datepicker
+          v-model="form.from"
+          placeholder="Start of earning period"
+        ></b-form-datepicker>
+      </b-form-group>
+      <b-form-group>
+        <b-form-datepicker
+          v-model="form.to"
+          placeholder="End of earning period"
+        ></b-form-datepicker>
+      </b-form-group>
+      <b-form-group>
+        <b-form-select
           v-model="form.carrier"
           placeholder="Mover"
-          @md-selected="getCost()"
+          @change="getCost()"
           required
         >
-          <md-option v-for="carrier in carriers" :key="carrier.id" :value="carrier.id">{{
-            carrier.first_name
-          }}</md-option>
-        </md-select>
-      </md-field>
-      <Spinner v-if="isLoading" />
-      <md-field v-else>
-        <label>Amount</label>
-        <span class="md-prefix">$</span>
-        <md-input v-model="form.amount" :min="1" required></md-input>
-      </md-field>
-      <div v-if="notExist">This mover has no earning in their dashboard!</div>
-
-      <div class="submit" v-else>
-        <Spinner v-if="isSubmitting" />
-        <md-button v-else type="submit" class="md-primary"> Save </md-button>
+          <option v-for="carrier in carriers" :key="carrier.id" :value="carrier.id">
+            {{ carrier.first_name }}
+          </option>
+        </b-form-select>
+      </b-form-group>
+      <b-spinner variant="primary" v-if="isLoading" />
+      <b-form-group v-else>
+        <b-input-group prepend="$">
+          <b-form-input v-model="form.amount" :min="1" required></b-form-input>
+        </b-input-group>
+      </b-form-group>
+      <div v-if="notExist" class="footer-quote">
+        This mover has no earning in their dashboard!
+      </div>
+      <div class="text-right" v-else>
+        <b-spinner variant="primary" v-if="isSubmitting" />
+        <b-button v-else type="submit" variant="primary"> Save </b-button>
       </div>
     </form>
-    <Snackbar :data="snackbar" />
   </div>
 </template>
 <script>
-import Snackbar from "../../shared/Snackbar";
-import Spinner from "../../shared/Spinner";
 export default {
   name: "Add",
-  components: { Spinner, Snackbar },
   data: () => ({
     carriers: null,
     form: {
@@ -53,11 +56,6 @@ export default {
     isSubmitting: false,
     isLoading: false,
     notExist: false,
-    snackbar: {
-      show: false,
-      message: null,
-      statusCode: null,
-    },
   }),
 
   created() {
@@ -103,9 +101,12 @@ export default {
         this.form.amount == null ||
         this.form.earning_ids.length < 1
       ) {
-        this.snackbar.message = "All fields are required";
-        this.snackbar.statusCode = "409";
-        this.snackbar.show = true;
+        this.$refs.toaster.show(
+          "warning",
+          "b-toaster-top-center",
+          "Warning",
+          "All fields are required"
+        );
       } else {
         this.isSubmitting = true;
         axios.post("admin/payouts", this.form).then((res) => {
@@ -118,8 +119,4 @@ export default {
   },
 };
 </script>
-<style lang="scss" scoped>
-.submit {
-  text-align: right;
-}
-</style>
+<style lang="scss" scoped></style>

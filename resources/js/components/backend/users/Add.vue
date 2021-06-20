@@ -1,57 +1,57 @@
 <template>
-  <div>
-    <md-card>
+  <div class="container">
+    <b-card header="Edit User">
       <form @submit.prevent="update">
-        <md-card-header>
-          <span class="md-title">Add User</span>
-          <md-button @click="$emit('cancel')" class="md-icon-button add-btn">
-            <md-icon>close</md-icon>
-            <md-tooltip>Cancel</md-tooltip>
-          </md-button>
-        </md-card-header>
-        <md-divider></md-divider>
-        <md-card-content>
-          <md-field class="">
-            <label>Name</label>
-            <md-input v-model="form.name" required></md-input>
-          </md-field>
-          <div class="row">
-            <md-field class="">
-              <label>Email</label>
-              <md-input v-model="form.email" required></md-input>
-            </md-field>
-            <md-field class="">
-              <label>Phone</label>
-              <md-input v-model="form.phone" required></md-input>
-            </md-field>
-          </div>
-          <md-field>
-            <md-select v-model="form.role" placeholder="Role">
-              <md-option v-for="role in roles" :key="role.id" :value="role.id">{{
-                role.name
-              }}</md-option>
-            </md-select>
-          </md-field>
-          <div class="row">
-            <md-field>
-              <label>New nassword</label>
-              <md-input type="password" v-model="form.password" required></md-input>
-            </md-field>
-            <md-field>
-              <label>Password confirmation</label>
-              <md-input
+        <b-button variant="light" @click="$emit('cancel')" class="add-btn">
+          <b-icon icon="x"></b-icon>
+        </b-button>
+        <div>
+          <b-form-group>
+            <b-form-input v-model="form.name" required placeholder="Name"></b-form-input>
+          </b-form-group>
+          <b-form-group>
+            <b-form-input
+              v-model="form.email"
+              required
+              placeholder="Email"
+            ></b-form-input>
+          </b-form-group>
+          <b-form-group>
+            <b-form-input
+              v-model="form.phone"
+              required
+              placeholder="Phone"
+            ></b-form-input>
+          </b-form-group>
+          <b-form-group>
+            <b-form-select v-model="form.role" placeholder="Role">
+              <option v-for="role in roles" :key="role.id" :value="role.id">
+                {{ role.name }}
+              </option>
+            </b-form-select>
+          </b-form-group>
+          <b-form-group>
+            <b-input-group>
+              <b-form-input
+                type="password"
+                v-model="form.password"
+                required
+                placeholder="New password"
+              ></b-form-input>
+              <b-form-input
                 type="password"
                 v-model="form.password_confirmation"
                 required
-              ></md-input>
-            </md-field>
-          </div>
-        </md-card-content>
-        <md-card-actions>
-          <md-button type="submit" class="md-primary">Save</md-button>
-        </md-card-actions>
+                placeholder="Password confirmation"
+              ></b-form-input>
+            </b-input-group>
+          </b-form-group>
+        </div>
+        <div class="text-right">
+          <b-button type="submit" variant="primary">Save</b-button>
+        </div>
       </form>
-    </md-card>
+    </b-card>
   </div>
 </template>
 <script>

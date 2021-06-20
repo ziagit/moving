@@ -1,53 +1,53 @@
 <template>
-  <div>
-    <md-card v-if="result" id="printable">
-      <md-card-header>
-        <span class="md-title">ID: {{ result.uniqid }}</span>
-        <div class="no-print">
-          <md-button class="md-icon-button md-primary" @click="printIt()"
-            ><md-icon class="md-primary">print</md-icon></md-button
-          >
-        </div>
-      </md-card-header>
-      <md-divider></md-divider>
-      <md-card-content>
+  <div class="container">
+    <b-card
+      v-if="result"
+      :header="'ID: ' + result.uniqid"
+      header-bg-variant="light"
+      id="printable"
+      class="border-0 shadow mt-5 mb-5"
+    >
+      <div class="no-print">
+        <b-button variant="light" class="print-btn" @click="printIt()"
+          ><b-icon variant="primary" icon="printer"></b-icon
+        ></b-button>
+      </div>
+      <div class="px-4">
         <div class="row">
-          <div class="col">
-            <div class="md-title">Pickup</div>
-            <div class="md-body-1">
+          <div class="col-md-6">
+            <div><b>Pickup</b></div>
+            <div>
               {{ result.addresses[0].formatted_address }}
             </div>
-            <div class="md-body-1">Stairs</div>
+            <div>Stairs</div>
           </div>
-          <div class="col">
-            <div class="md-title">Destination</div>
-            <div class="md-body-1">
+          <div class="col-md-6">
+            <div><b>Destination</b></div>
+            <div>
               {{ result.addresses[1].formatted_address }}
             </div>
-            <div class="md-body-1">Stairs</div>
+            <div>Stairs</div>
           </div>
         </div>
         <div class="break"></div>
-        <div class="row">
-          <div class="col">
-            <div class="md-title">Customer information</div>
-            <div class="md-body-1">Email: {{ result.shipper_contacts.user.email }}</div>
-            <div class="md-body-1">Phone: {{ result.shipper_contacts.user.phone }}</div>
-          </div>
-          <div class="col">
-            <div class="md-title">Mover information</div>
-            <div class="md-body-1">
-              Email: {{ result.job_with_carrier.carrier_detail.user.email }}
-            </div>
-            <div class="md-body-1">
-              Phone: {{ result.job_with_carrier.carrier_detail.user.phone }}
-            </div>
-          </div>
-        </div>
         <div class="break"></div>
         <div class="row">
           <div class="col">
-            <div class="md-title">General Informations</div>
+            <div><b>Customer information</b></div>
+            <div>Email: {{ result.shipper_contacts.user.email }}</div>
+            <div>Phone: {{ result.shipper_contacts.user.phone }}</div>
+          </div>
+          <div class="col">
+            <div><b>Mover information</b></div>
+            <div>Email: {{ result.job_with_carrier.carrier_detail.user.email }}</div>
+            <div>Phone: {{ result.job_with_carrier.carrier_detail.user.phone }}</div>
+          </div>
+        </div>
+        <div class="break"></div>
+        <div class="break"></div>
+        <div class="row">
+          <div class="col">
+            <div><b>General Informations</b></div>
             <table>
               <tr>
                 <th>Type</th>
@@ -68,15 +68,16 @@
                 <td>{{ result.vehicle.name }}</td>
                 <td>{{ result.pickup_date }}</td>
                 <td>{{ result.appointment_time }}</td>
-                <td>{{ result.cost }}</td>
+                <td>${{ result.cost }}</td>
               </tr>
             </table>
           </div>
         </div>
         <div class="break"></div>
+        <div class="break"></div>
         <div class="row">
           <div class="col">
-            <div class="md-title">Selected Supplies</div>
+            <div><b>Selected Supplies</b></div>
             <table>
               <tr>
                 <th>ID</th>
@@ -101,9 +102,10 @@
           </div>
         </div>
         <div class="break"></div>
+        <div class="break"></div>
         <div class="row" v-if="result.items.length > 0">
           <div class="col">
-            <div class="md-title">Selected Items</div>
+            <div class=""><b>Selected Items</b></div>
             <table>
               <tr>
                 <th>ID</th>
@@ -119,12 +121,14 @@
           </div>
         </div>
         <div class="break"></div>
+        <div class="break"></div>
         <div class="row">
           <div class="col">
-            <div class="md-title">Customer notes:</div>
-            <div class="md-body-1">{{ result.instructions }}</div>
+            <div>Notes:</div>
+            <div>{{ result.instructions }}</div>
           </div>
         </div>
+        <div class="break"></div>
         <div class="break"></div>
         <div class="row">
           <div class="col"></div>
@@ -139,17 +143,14 @@
         </div>
         <div class="break"></div>
         <div class="row">...................</div>
-      </md-card-content>
-    </md-card>
+      </div>
+    </b-card>
   </div>
 </template>
 <script>
-import Spinner from "../../shared/Spinner";
 import axios from "axios";
 export default {
-  components: {
-    Spinner,
-  },
+  components: {},
   data: () => ({
     result: null,
     id: "TAO202106071775124695",
@@ -182,41 +183,26 @@ export default {
 };
 </script>
 <style scoped lang="scss">
-.md-card {
-  margin-bottom: 30px;
-  .md-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
+.container {
+  min-height: calc(100vh - 50px);
+  .print-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
   }
-  .md-card-content {
-    padding: 18px 30px 30px 30px;
-    .row {
-      display: flex;
-      justify-content: space-between;
-      .col {
-        width: 100%;
-        margin: 1px;
+  table {
+    width: 100%;
+    border: 1px solid #ddd;
+    border-collapse: collapse;
+    tr {
+      border: 1px solid #ddd;
+      td,
+      th {
+        border: 1px solid #ddd;
+        text-align: left;
+        padding: 5px;
       }
     }
   }
-}
-
-table {
-  width: 100%;
-  border: 1px solid #ddd;
-  border-collapse: collapse;
-  tr {
-    border: 1px solid #ddd;
-    td,
-    th {
-      border: 1px solid #ddd;
-      text-align: left;
-      padding: 5px;
-    }
-  }
-}
-.md-title {
-  font-size: 20px !important;
 }
 </style>

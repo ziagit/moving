@@ -9,8 +9,7 @@ use Illuminate\Http\Request;
 class FinancialReportsController extends Controller
 {
     public function index(){
-        $month = date('m');
-        $order = Earning::whereMonth('created_at', $month)->with('order')->get();
+        $order = Earning::with('order')->get();
         return response()->json($order);
     }
     public function show($id){
@@ -19,8 +18,11 @@ class FinancialReportsController extends Controller
     }
     public function filter(Request $request){
         $data = Earning::query();
-        if($request->month !=null){
-            $data->whereMonth('created_at', $request->input('month'));
+        if($request->from !=null){
+            $data->where('created_at','>=', $request->input('from'));
+        }
+        if($request->to !=null){
+            $data->where('created_at','<=', $request->input('to'));
         }
         if($request->status!=null){
             $data->where('status',$request->input('status'));

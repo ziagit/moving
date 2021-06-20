@@ -1,44 +1,34 @@
 <template>
-  <div>
-    <!-- edit dialog -->
-    <md-dialog :md-active.sync="dialogTogal">
-      <md-dialog-content>
-        <SalesFilter v-on:close-dialog="refresh" />
-      </md-dialog-content>
-    </md-dialog>
-    <md-card>
-      <md-card-header
-        ><span class="md-title">Sales Reports</span>
-        <div class="no-print">
-          <md-button class="md-icon-button md-primary" @click="dialogTogal = true"
-            ><md-icon class="md-primary">sort</md-icon></md-button
-          >
-          <md-button class="md-icon-button md-primary" @click="printIt()"
-            ><md-icon class="md-primary">print</md-icon></md-button
-          >
-        </div>
-      </md-card-header>
-      <md-divider></md-divider>
-      <md-card-content>
-        <div class="total">
-          <div></div>
-          <table>
+  <div class="container">
+    <b-modal id="modal-filter" size="md" title="Filter By" :hide-footer="true">
+      <SalesFilter v-on:close-dialog="refresh" />
+    </b-modal>
+    <b-card id="printable" header="Sales Reports" class="border-0 shadow mt-5 mb-5">
+      <div class="no-print">
+        <b-button variant="light" v-b-modal.modal-filter
+          ><b-icon variant="primary" icon="filter-left"></b-icon
+        ></b-button>
+        <b-button variant="light" @click="printIt()"
+          ><b-icon icon="printer" variant="primary"></b-icon
+        ></b-button>
+        <b-button variant="light" @click="download()"
+          ><b-icon icon="download" variant="primary"></b-icon
+        ></b-button>
+      </div>
+      <div>
+        <div class="row mr-0">
+          <div class="col-8"></div>
+          <table class="col-4">
             <tr>
-              <th>Month</th>
               <th>Quantity</th>
             </tr>
             <tr>
-              <th>{{ currentMonth }}</th>
               <th>{{ orderQty }}</th>
             </tr>
           </table>
         </div>
         <div class="break"></div>
         <table v-if="result">
-          <tr>
-            <th>Month</th>
-            <th colspan="8">{{ currentMonth }}</th>
-          </tr>
           <tr>
             <th>Order</th>
             <th>Type</th>
@@ -59,34 +49,30 @@
             <td>{{ res.addresses[0].city }}</td>
             <td>{{ res.addresses[0].city }}</td>
             <td>{{ dateFormatter(res.updated_at) }}</td>
-            <td>{{ res.cost }}</td>
+            <td>${{ res.cost }}</td>
             <td>{{ res.shipper_contacts.first_name }}</td>
             <td>
               {{ res.job_with_carrier.carrier_detail.company }}
             </td>
           </tr>
         </table>
-        <Spinner v-else />
-      </md-card-content>
-    </md-card>
+        <b-spinner v-else />
+      </div>
+    </b-card>
   </div>
 </template>
 <script>
-import Spinner from "../../shared/Spinner";
-import SalesFilter from "./SalesFilter.vue";
+import SalesFilter from "./SalesFilter";
 import dateFormatter from "../../frontend/services/dateFormatter";
+import jsPDF from "jspdf";
 import axios from "axios";
 export default {
   components: {
-    Spinner,
     SalesFilter,
   },
   data: () => ({
     result: null,
     orderQty: 0,
-    filterTogal: false,
-    dialogTogal: false,
-    currentMonth: null,
   }),
   created() {
     this.get();
@@ -96,7 +82,7 @@ export default {
       axios
         .get("admin/sales-reports")
         .then((res) => {
-          this.monthName(new Date());
+          console.log("res", res.data);
           this.totalOrders(res.data);
           this.result = res.data;
         })
@@ -106,12 +92,10 @@ export default {
       axios
         .post("admin/filter-sales-report", data)
         .then((res) => {
+          console.log("filter res", res.data);
+          this.$bvModal.hide("modal-filter");
           this.result = res.data;
           this.totalOrders(res.data);
-          this.currentMonth = dateFormatter.monthName(
-            data.month ? JSON.parse(data.month) : new Date().getMonth() + 1
-          );
-          this.dialogTogal = false;
         })
         .catch((err) => console.log(err));
     },
@@ -125,9 +109,7 @@ export default {
     printIt() {
       window.print();
     },
-    monthName(d) {
-      this.currentMonth = dateFormatter.monthName(d.getMonth() + 1);
-    },
+
     totalOrders(data) {
       var t = 0;
       for (let i = 0; i < data.length; i++) {
@@ -135,39 +117,42 @@ export default {
       }
       this.orderQty = t;
     },
+    download() {
+      var options = {
+        //'width': 800,
+      };
+      var pdf = new jsPDF("p", "pt", "a4");
+      pdf.addHTML("#content2", -1, 220, options, function () {
+        pdf.save("admit_card.pdf");
+      });
+    },
   },
 };
 </script>
 <style scoped lang="scss">
-.md-card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-}
-.md-card-content {
-  .total {
-    display: flex;
-    justify-content: space-between;
-    table {
-      max-width: 200px;
+.container {
+  min-height: calc(100vh - 50px);
+  table {
+    width: 100%;
+    border: 1px solid #ddd;
+    border-collapse: collapse;
+    tr {
+      border: 1px solid #ddd;
+      td,
+      th {
+        border: 1px solid #ddd;
+        text-align: left;
+        padding: 5px;
+      }
+      td {
+        font-size: 12px;
+      }
     }
   }
-}
-table {
-  width: 100%;
-  border: 1px solid #ddd;
-  border-collapse: collapse;
-  tr {
-    border: 1px solid #ddd;
-    td,
-    th {
-      border: 1px solid #ddd;
-      text-align: left;
-      padding: 5px;
-    }
-    td {
-      font-size: 12px;
-    }
+  .no-print {
+    position: absolute;
+    top: 1px;
+    right: 1px;
   }
 }
 </style>

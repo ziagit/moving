@@ -1,50 +1,55 @@
 <template>
-  <div>
-    <md-card>
-      <form @submit.prevent="submit">
-        <md-card-header>
-          <span class="md-title">Edit Account v</span>
-          <md-button @click="$emit('close-it')" class="md-icon-button add-btn">
-            <md-icon>close</md-icon>
-            <md-tooltip>Cancel</md-tooltip>
-          </md-button>
-        </md-card-header>
-        <md-card-content>
-          <md-field>
-            <label for="">Email</label>
-            <md-input
-              type="text"
-              v-model="form.email"
-              required
-              ref="focusable"
-            ></md-input>
-          </md-field>
-          <md-switch v-model="passwordTogal">Change my password</md-switch>
-          <md-field v-if="passwordTogal">
-            <label for="">New Password</label>
-            <md-input
-              type="password"
-              v-model="form.password"
-              :required="passwordTogal"
-              ref="focusable"
-            ></md-input>
-          </md-field>
-          <md-field v-if="passwordTogal">
-            <label for="">Confirm password</label>
-            <md-input
-              type="password"
-              v-model="form.password_confirmation"
-              :required="passwordTogal"
-              ref="focusable"
-            ></md-input>
-          </md-field>
-        </md-card-content>
-        <md-card-actions>
-          <md-button type="submit" class="md-primary"> Update </md-button>
-        </md-card-actions>
-      </form>
-    </md-card>
-  </div>
+  <b-card header="Edit Account" class="shadow text-left border-0">
+    <form @submit.prevent="submit">
+      <b-button variant="light" @click="$emit('close-it')" class="add-btn">
+        <b-icon icon="x"></b-icon>
+      </b-button>
+      <div>
+        <b-form-group>
+          <b-form-input
+            type="text"
+            v-model="form.name"
+            required
+            ref="focusable"
+            placeholder="Name"
+          ></b-form-input>
+        </b-form-group>
+        <b-form-group>
+          <b-form-input
+            type="text"
+            v-model="form.email"
+            required
+            placeholder="Email"
+          ></b-form-input>
+        </b-form-group>
+        <b-form-group>
+          <b-form-checkbox id="checkbox-1" v-model="passwordTogal" name="checkbox-1">
+            Change my password
+          </b-form-checkbox>
+        </b-form-group>
+        <b-form-group v-if="passwordTogal">
+          <label for="">New Password</label>
+          <b-form-input
+            type="password"
+            v-model="form.password"
+            :required="passwordTogal"
+            placeholder="Password"
+          ></b-form-input>
+        </b-form-group>
+        <b-form-group v-if="passwordTogal">
+          <b-form-input
+            type="password"
+            v-model="form.password_confirmation"
+            :required="passwordTogal"
+            placeholder="Confirm password"
+          ></b-form-input>
+        </b-form-group>
+      </div>
+      <div class="text-right mt-3">
+        <b-button type="submit" variant="primary"> Update </b-button>
+      </div>
+    </form>
+  </b-card>
 </template>
 <script>
 import axios from "axios";
@@ -54,6 +59,7 @@ export default {
     return {
       passwordTogal: false,
       form: {
+        name: this.user.name,
         email: this.user.email,
         password: null,
         password_confirmation: null,
@@ -63,9 +69,9 @@ export default {
   methods: {
     submit() {
       axios
-        .post("admin/users", this.form)
+        .put("admin/users/" + this.user.id, this.form)
         .then((res) => {
-          //this.$emit("refresh");
+          this.$emit("close-dialog");
           console.log("updated: ", res.data);
         })
         .catch((err) => console.log("error: ", err));

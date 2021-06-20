@@ -1,70 +1,45 @@
 <template>
-  <div class="main-container">
-    <!-- delete dialog-->
-    <md-dialog-confirm
-      :md-active.sync="deleteTogal"
-      md-title="I assure what you doing"
-      md-content
-      md-confirm-text="OK"
-      md-cancel-text="Cancel"
-      @md-confirm="confirm()"
-      @md-cancel="cancel"
-    />
-    <!-- edit dialog -->
-    <md-dialog :md-active.sync="editTogal">
-      <md-dialog-title>Update data</md-dialog-title>
-      <md-dialog-content>
-        <Edit v-on:close-dialog="refresh" :mover="mover" />
-      </md-dialog-content>
-    </md-dialog>
+  <div class="container">
+    <b-modal id="modal-update" title="Update Data" :hide-footer="true">
+      <Edit v-on:close-dialog="refresh" :mover="mover" />
+    </b-modal>
     <!-- add dialog -->
-    <md-dialog :md-active.sync="addTogal">
-      <md-dialog-title>Add new </md-dialog-title>
-      <md-dialog-content>
-        <Add v-on:close-dialog="refresh" />
-      </md-dialog-content>
-    </md-dialog>
-
-    <md-table md-card>
-      <md-table-toolbar>
-        <div class="md-toolbar-section-start">
-          <h1 class="md-title">Movers</h1>
-        </div>
-      </md-table-toolbar>
-
-      <md-table-empty-state
-        md-label="No state found"
-        :md-description="`No state found for this query. Try a different search term or create a new state.`"
-      >
-        <md-button class="md-primary md-raised" @click="add()">Create new</md-button>
-      </md-table-empty-state>
-      <md-table-row>
-        <md-table-head md-numeric>ID</md-table-head>
-        <md-table-head>Number of Movers</md-table-head>
-        <md-table-head>Code</md-table-head>
-        <md-table-head>Recommended for</md-table-head>
-        <md-table-head>Actions</md-table-head>
-      </md-table-row>
-      <md-table-row v-for="mover in movers" :key="mover.id">
-        <md-table-cell md-numeric>{{ mover.id }}</md-table-cell>
-        <md-table-cell>{{ mover.number }}</md-table-cell>
-        <md-table-cell>{{ mover.code }}</md-table-cell>
-        <md-table-cell>{{ mover.recommended }}</md-table-cell>
-
-        <md-table-cell md-label="Actions">
-          <md-button class="md-icon-button md-primary" @click="edit(mover)">
-            <md-icon>edit</md-icon>
-          </md-button>
-          <md-button class="md-icon-button md-accent" @click="remove(mover.id)">
-            <md-icon>delete</md-icon>
-          </md-button>
-        </md-table-cell>
-      </md-table-row>
-    </md-table>
-    <md-button class="md-fab md-primary add-btn" @click="add()">
-      <md-icon>add</md-icon>
-      <md-tooltip>Add new </md-tooltip>
-    </md-button>
+    <b-modal id="modal-add" size="md" title="Add New Type" :hide-footer="true">
+      <Add v-on:close-dialog="refresh" />
+    </b-modal>
+    <b-card header="Number of Movers" class="border-0 shadow text-left mt-5">
+      <b-form-input type="search" placeholder="Search by name..." v-model="keywords" />
+      <table class="table">
+        <thead>
+          <tr>
+            <th md-numeric>ID</th>
+            <th>Number of Movers</th>
+            <th>Code</th>
+            <th>Recommended for</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="mover in movers" :key="mover.id">
+            <td md-numeric>{{ mover.id }}</td>
+            <td>{{ mover.number }}</td>
+            <td>{{ mover.code }}</td>
+            <td>{{ mover.recommended }}</td>
+            <td md-label="Actions">
+              <b-button variant="light" @click="edit(mover)">
+                <b-icon icon="pencil" variant="primary"></b-icon>
+              </b-button>
+              <b-button variant="light" @click="remove(mover.id)">
+                <b-icon icon="trash" variant="danger"></b-icon>
+              </b-button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <b-button variant="primary" v-b-modal.modal-add class="add-btn">
+        <b-icon icon="plus"></b-icon>
+      </b-button>
+    </b-card>
   </div>
 </template>
 
@@ -83,7 +58,6 @@ export default {
     editTogal: false,
     deleteTogal: false,
   }),
-
   methods: {
     get() {
       axios
@@ -97,27 +71,34 @@ export default {
         });
     },
 
-    add() {
-      this.addTogal = true;
-      this.stateData = this.states;
-    },
     refresh() {
-      this.addTogal = false;
-      this.editTogal = false;
+      this.$bvModal.hide("modal-update");
+      this.$bvModal.hide("modal-add");
       this.get();
     },
     edit(data) {
-      this.editTogal = true;
       this.mover = data;
+      this.$bvModal.show("modal-update");
     },
     remove(id) {
       this.deleteTogal = true;
       this.selectedId = id;
     },
-
-    confirm() {
+    remove(id) {
+      this.$bvModal
+        .msgBoxConfirm("Are you sure?")
+        .then((value) => {
+          if (value) {
+            this.confirm(id);
+          }
+        })
+        .catch((err) => {
+          console.log("err", err);
+        });
+    },
+    confirm(id) {
       axios
-        .delete("admin/mover-number/" + this.selectedId)
+        .delete("admin/mover-number/" + id)
         .then((res) => {
           console.log("deleted", res.data);
           this.get();
@@ -139,12 +120,12 @@ export default {
 };
 </script>
 <style scoped lang="scss">
-.main-container {
-  width: 100%;
+.container {
+  height: calc(100vh - 50px);
   .add-btn {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
+    position: absolute;
+    top: 0;
+    right: 0;
   }
 }
 </style>

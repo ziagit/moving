@@ -8,23 +8,23 @@
     <div class="legend">
       <span class="md-caption">
         <span class="dot" style="background: #4472c4"></span>
-        <span>Jobs received : {{ received }}</span></span
+        <span>orders received : {{ received }}</span></span
       >
       <span class="md-caption">
         <span class="dot" style="background: #ed7d31"></span>
-        <span>Jobs accepted: {{ accepted }}</span></span
+        <span>orders accepted: {{ accepted }}</span></span
       >
       <span class="md-caption">
         <span class="dot" style="background: #a5a5a5"></span>
-        <span>Jobs declined : {{ declined }}</span></span
+        <span>orders declined : {{ declined }}</span></span
       >
       <span class="md-caption">
         <span class="dot" style="background: #ffc000"></span>
-        <span>Jobs compledted {{ completed }}</span></span
+        <span>orders compledted {{ completed }}</span></span
       >
       <span class="md-caption">
         <span class="dot" style="background: #5b9bd5"></span>
-        <span>Jobs pending {{ pending }}</span></span
+        <span>orders pending {{ pending }}</span></span
       >
     </div>
   </div>
@@ -40,15 +40,8 @@ export default {
     declined: 0,
     pending: 0,
     received: 0,
-    defaultData: [
-      ["Jobs", "Qty"],
-      ["Received", 1],
-      ["Accepted", 1],
-      ["Declined", 1],
-      ["Completed", 1],
-      ["Pending", 1],
-    ],
-    chartData: [["Jobs", "Qty"]],
+
+    chartData: [["orders", "Qty"]],
     chartOptions: {
       chart: {
         title: "Company Performance",
@@ -64,6 +57,7 @@ export default {
         height: "600",
         width: "600",
       },
+      colors: [],
     },
   }),
   created() {
@@ -74,40 +68,40 @@ export default {
       axios
         .get("admin/dashboard/daily-projections")
         .then((res) => {
-          console.log("xxx ", res.data);
           if (res.data.length > 0) {
             this.feedChart(res.data);
           }
         })
         .catch((err) => console.log(err));
     },
-    feedChart(jobs) {
-      for (let i = 0; i < jobs.length; i++) {
+    feedChart(orders) {
+      for (let i = 0; i < orders.length; i++) {
+        console.log("orders", orders[i]);
         this.received += 1;
-        switch (jobs[i].order.status) {
+        switch (orders[i].status) {
           case "Completed":
             this.completed += 1;
-            this.chartData.push(["Completed jobs", this.completed]);
+            this.chartData.push(["Completed orders", this.completed]);
             this.chartOptions.colors.push("#FFC000");
             break;
           case "Accepted":
             this.accepted += 1;
-            this.chartData.push(["Accepted jobs", this.accepted]);
+            this.chartData.push(["Accepted orders", this.accepted]);
             this.chartOptions.colors.push("#ED7D31");
           case "Declined":
             this.declined += 1;
-            this.chartData.push(["Declined jobs", this.declined]);
+            this.chartData.push(["Declined orders", this.declined]);
             this.chartOptions.colors.push("#A5A5A5");
           case "Canceled":
-            this.chartData.push(["Canceled jobs", this.canceled]);
+            this.chartData.push(["Canceled orders", this.canceled]);
             this.chartOptions.colors.push("#A5A5A5");
           case "New":
-            this.chartData.push(["Pending jobs", this.pending]);
+            this.chartData.push(["Pending orders", this.pending]);
             this.chartOptions.colors.push("#5B9BD5");
         }
+        this.chartData.push(["Received orders", this.received]);
+        this.chartOptions.colors.push("#4472C4");
       }
-      this.chartData.push(["Received jobs", this.received]);
-      this.chartOptions.colors.push("#4472C4");
       this.isLoaded = true;
     },
   },

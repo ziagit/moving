@@ -1,29 +1,29 @@
 <template>
-  <div class="supplies">
+  <div class="origin">
     <span class="md-display-1"
       >Do you need moving supplies?
-
-      <md-menu md-direction="top-start" :md-active.sync="togal">
-        <md-icon md-menu-trigger class="md-seconday info">info</md-icon>
-        <md-menu-content>
-          <SuppliesInfo />
-        </md-menu-content>
-      </md-menu>
+      <b-button id="popover-target-1" variant="ligth">
+        <b-icon icon="info-circle-fill" aria-hidden="true"></b-icon>
+      </b-button>
+      <b-popover target="popover-target-1" triggers="hover" placement="top">
+        <template #title>Price breakdown</template>
+        <SuppliesInfo />
+      </b-popover>
     </span>
     <div class="break"></div>
     <div class="break"></div>
     <form @submit.prevent="next()">
       <div class="options">
         <div v-for="(supply, index) in supplies" :key="index" class="row">
-          <md-checkbox
-            type="checkbox"
+          <b-form-checkbox
             v-model="form.supplies.enabled[index]"
             :value="supply.name"
             class="md-check"
             @change="checkboxToggle($event, index)"
           >
             {{ supply.name }}
-          </md-checkbox>
+          </b-form-checkbox>
+
           <input
             type="number"
             class="number"
@@ -38,20 +38,13 @@
       <div class="break"></div>
       <div class="break"></div>
       <div class="actions">
-        <md-button
-          to="/order/moving-date"
-          class="md-raised md-fab md-icon-button rounded-primary-button"
-        >
-          <md-icon>arrow_back</md-icon>
-        </md-button>
+        <b-button @click="back()" variant="light">
+          <b-icon icon="arrow-left"></b-icon>
+        </b-button>
         <div class="tab"></div>
-
-        <md-button
-          type="submit"
-          class="md-raised md-fab md-icon-button rounded-secondary-button"
-        >
-          <md-icon>arrow_forward</md-icon>
-        </md-button>
+        <b-button type="submit" variant="primary">
+          <b-icon icon="arrow-right"></b-icon>
+        </b-button>
       </div>
     </form>
   </div>
@@ -88,7 +81,9 @@ export default {
         this.form.supplies.number.splice(index, 1, null);
       }
     },
-
+    back() {
+      this.$router.push("/order/moving-date");
+    },
     next() {
       localData.save("supplies", this.form.supplies);
       this.$router.push("movers");
@@ -123,8 +118,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.supplies {
+.origin {
   text-align: center;
+  width: 100%;
 }
 .options {
   max-width: 300px;

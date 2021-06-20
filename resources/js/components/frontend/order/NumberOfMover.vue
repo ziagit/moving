@@ -1,6 +1,6 @@
 <template>
   <div class="origin">
-    <span class="md-display-1">How many movers do you need?</span>
+    <h3>How many movers do you need?</h3>
     <div class="break"></div>
     <form v-if="movers">
       <div class="break"></div>
@@ -8,7 +8,7 @@
 
       <div class="row">
         <div class="col" v-for="mover in movers" :key="mover.id" @click="select(mover)">
-          <md-card>
+          <b-card class="mini-card px-0 shadow-sm border-0">
             <div class="icon">
               <img
                 :src="'/images/uploads/checked.svg'"
@@ -19,51 +19,40 @@
               <img :src="'/images/uploads/unchecked.svg'" v-else width="22" alt="" />
             </div>
             <div class="text">
-              <div class="md-display-1">{{ mover.number }}</div>
-              <div class="md-body-1">{{ mover.recommended }}</div>
+              <h6 class="mb-1">{{ mover.number }}</h6>
+              <small class="text-muted">{{ mover.recommended }}</small>
             </div>
-          </md-card>
+          </b-card>
         </div>
       </div>
       <div class="break"></div>
       <div class="break"></div>
-      <div class="actions">
-        <md-button
-          to="/order/vehicle-sizes"
-          class="md-raised md-fab md-icon-button rounded-primary-button"
-        >
-          <md-icon>arrow_back</md-icon>
-        </md-button>
-        <div class="tab"></div>
 
-        <md-button
-          @click="next()"
-          class="md-raised md-fab md-icon-button rounded-secondary-button"
-        >
-          <md-icon>arrow_forward</md-icon>
-        </md-button>
+      <div class="actions">
+        <b-button @click="back()" variant="light">
+          <b-icon icon="arrow-left"></b-icon>
+        </b-button>
+        <div class="tab"></div>
+        <b-button @click="next()" variant="primary">
+          <b-icon icon="arrow-right"></b-icon>
+        </b-button>
       </div>
     </form>
-    <Snackbar :data="snackbar" />
+    <Toaster ref="toaster" />
   </div>
 </template>
 
 <script>
 import localData from "../services/localData";
-import Snackbar from "../../shared/Snackbar";
+import Toaster from "../../shared/Toaster";
 export default {
   name: "Origin",
-  components: { Snackbar },
+  components: { Toaster },
   data: () => ({
     movers: null,
     selected: null,
     selectedIndex: null,
     togal: false,
-    snackbar: {
-      show: false,
-      message: null,
-      statusCode: null,
-    },
   }),
   created() {
     this.$emit("progress", 3);
@@ -76,14 +65,20 @@ export default {
       this.selected = mover;
       this.selectedIndex = mover.code;
     },
+    back() {
+      this.$router.push("/order/vehicle-sizes");
+    },
     next() {
       if (this.selected != null) {
         localData.save("number-of-movers", this.selected);
         this.$router.push("floors");
       } else {
-        this.snackbar.show = true;
-        this.snackbar.message = "Select an option to continue!";
-        this.snackbar.statusCode = "428";
+        this.$refs.toaster.show(
+          "danger",
+          "b-toaster-top-center",
+          "Error",
+          "Select an option to continue!"
+        );
       }
     },
     get() {
@@ -108,4 +103,10 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.text-muted {
+  margin: 0;
+  padding: 0;
+  line-height: 1;
+}
+</style>

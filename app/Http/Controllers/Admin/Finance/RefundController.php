@@ -53,7 +53,7 @@ class RefundController extends Controller
             $ref->earning_id = $er->id;
             $ref->shipper_id = $request->shipper_id;
             $ref->save();
-            $this->updateEarning($er->id);
+            $this->updateEarning($request, $er->id);
             return response()->json('Refunded successfully!',200);
         } catch (Exception $e) {
             return response()->json($e->getMessage());
@@ -101,15 +101,15 @@ class RefundController extends Controller
             $ref->earning_id = $id;
             $ref->shipper_id = $request->order_detail['shipper_id'];
             $ref->save();
-            $this->updateEarning($ref, $id);
+            return $this->updateEarning($request, $id);
             return response()->json('Refunded successfully!',200);
         } catch (Exception $e) {
             return response()->json($e->getMessage());
         }
     }
-    public function updateEarning($id){
+    public function updateEarning($request, $id){
         $earning = Earning::find($id);
-        $earning->status = 'Refunded';
+        $earning->status = $request->status;
         $earning->update();
         return true;
     }

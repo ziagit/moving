@@ -1,7 +1,7 @@
 <template>
   <div class="services">
     <div class="section0">
-      <Header v-on:togal-menu="$emit('togal-menu')" :scrollValue="scrollValue" />
+      <Header v-on:togal-menu="$emit('togal-menu')" />
       <div class="content">
         <div class="md-display-1">Privacy Notice</div>
         <div class="md-body-1">Read our privacy policy</div>

@@ -1,44 +1,34 @@
 <template>
-  <div>
-    <!-- edit dialog -->
-    <md-dialog :md-active.sync="dialogTogal">
-      <md-dialog-content>
-        <FinancialFilter v-on:close-dialog="refresh" />
-      </md-dialog-content>
-    </md-dialog>
-    <md-card>
-      <md-card-header
-        ><span class="md-title">Financial Reports</span>
-        <div class="no-print">
-          <md-button class="md-icon-button md-primary" @click="dialogTogal = true"
-            ><md-icon class="md-primary">sort</md-icon></md-button
-          >
-          <md-button class="md-icon-button md-primary" @click="printIt()"
-            ><md-icon class="md-primary">print</md-icon></md-button
-          >
-        </div>
-      </md-card-header>
-      <md-divider></md-divider>
+  <div class="container">
+    <b-modal id="modal-filter" size="md" title="Filter By" :hide-footer="true">
+      <FinancialFilter v-on:close-dialog="refresh" />
+    </b-modal>
+    <b-card class="mt-5 mb-5 border-0 shadow" header="Financial Reports">
+      <div class="no-print">
+        <b-button variant="light" v-b-modal.modal-filter
+          ><b-icon variant="primary" icon="filter-left"></b-icon
+        ></b-button>
+        <b-button variant="light" @click="printIt()"
+          ><b-icon icon="printer" variant="primary"></b-icon
+        ></b-button>
+        <b-button variant="light" @click="download()"
+          ><b-icon icon="download" variant="primary"></b-icon
+        ></b-button>
+      </div>
       <md-card-content>
-        <div class="total">
-          <div></div>
-          <table>
+        <div class="row mr-0">
+          <div class="col-8"></div>
+          <table class="col-4">
             <tr>
-              <th>Month</th>
-              <th>Total net profit</th>
+              <th>Total gross profit</th>
             </tr>
             <tr>
-              <th>{{ currentMonth }}</th>
-              <th>${{ totalIncome }}</th>
+              <th>${{ totalGross }}</th>
             </tr>
           </table>
         </div>
         <div class="break"></div>
         <table v-if="result">
-          <tr>
-            <th>Month</th>
-            <th colspan="8">{{ currentMonth }}</th>
-          </tr>
           <tr>
             <th>Order</th>
             <th>Date</th>
@@ -48,7 +38,7 @@
             <th>Paid GST</th>
             <th>Unpaid GST</th>
             <th>Status</th>
-            <th>Net profit</th>
+            <th>Gross profit</th>
           </tr>
           <tr v-for="(res, index) in result" :key="index">
             <td>
@@ -64,27 +54,22 @@
             <td>${{ res.tingsapp_earning }}</td>
           </tr>
         </table>
-        <Spinner v-else />
+        <b-spinner v-else />
       </md-card-content>
-    </md-card>
+    </b-card>
   </div>
 </template>
 <script>
-import Spinner from "../../shared/Spinner";
 import FinancialFilter from "./FinancialFilter.vue";
 import dateFormatter from "../../frontend/services/dateFormatter";
 import axios from "axios";
 export default {
   components: {
-    Spinner,
     FinancialFilter,
   },
   data: () => ({
     result: null,
-    totalIncome: 0,
-    filterTogal: false,
-    dialogTogal: false,
-    currentMonth: null,
+    totalGross: 0,
   }),
   created() {
     this.get();
@@ -108,12 +93,9 @@ export default {
       axios
         .post("admin/filter-financial-report", data)
         .then((res) => {
+          this.$bvModal.hide("modal-filter");
           this.totalAmount(res.data);
-          this.currentMonth = dateFormatter.monthName(
-            data.month ? JSON.parse(data.month) : new Date().getMonth() + 1
-          );
           this.result = res.data;
-          this.dialogTogal = false;
         })
         .catch((err) => console.log(err));
     },
@@ -134,41 +116,34 @@ export default {
       for (let i = 0; i < data.length; i++) {
         t = t + data[i].tingsapp_earning;
       }
-      this.totalIncome = t;
+      this.totalGross = t;
     },
   },
 };
 </script>
 <style scoped lang="scss">
-.md-card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-}
-.md-card-content {
-  .total {
-    display: flex;
-    justify-content: space-between;
-    table {
-      max-width: 200px;
-    }
+.container {
+  min-height: calc(100vh - 50px);
+  .no-print {
+    position: absolute;
+    top: 0;
+    right: 0;
   }
-}
-
-table {
-  width: 100%;
-  border: 1px solid #ddd;
-  border-collapse: collapse;
-  tr {
+  table {
+    width: 100%;
     border: 1px solid #ddd;
-    td,
-    th {
+    border-collapse: collapse;
+    tr {
       border: 1px solid #ddd;
-      text-align: left;
-      padding: 5px;
-    }
-    td {
-      font-size: 12px;
+      td,
+      th {
+        border: 1px solid #ddd;
+        text-align: left;
+        padding: 5px;
+      }
+      td {
+        font-size: 12px;
+      }
     }
   }
 }

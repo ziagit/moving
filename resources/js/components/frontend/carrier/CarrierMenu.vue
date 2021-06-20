@@ -1,101 +1,123 @@
 <template>
   <div>
-    <md-toolbar md-elevation="0" v-if="authenticated" class="custom-toolbar">
-      <div class="row">
-        <div class="avatar" @click="profile()">
-          <img :src="'/images/pub/' + user.avatar" width="80" alt="" />
-        </div>
-        <div class="break"></div>
-        <div class="text" v-if="details">
-          <div class="name md-list-item-text">{{ details.company }}</div>
-          <div class="email">
-            <star-rating
-              v-model="details.votes"
-              :star-size="11"
-              :read-only="true"
-              :show-rating="false"
-            />
-          </div>
+    <div v-if="authenticated" class="custom-toolbar">
+      <b-avatar
+        button
+        :src="'/images/pub/' + user.avatar"
+        size="5rem"
+        @click="profile()"
+        class="mt-3 mb-3"
+      ></b-avatar>
+      <div class="text" v-if="details">
+        <p class="mb-0">{{ details.company }}</p>
+        <div>
+          <div></div>
+          <b-form-rating
+            variant="warning"
+            id="rating-md-no-border"
+            readonly
+            v-model="details.votes"
+            no-border
+            inline
+          ></b-form-rating>
+          <div></div>
         </div>
       </div>
-    </md-toolbar>
-    <md-divider></md-divider>
-    <md-list>
-      <div v-if="authenticated">
-        <md-list-item @click="navigate('/carrier/inbox')">
-          <span class="md-list-item-text">Notifications</span>
-        </md-list-item>
-        <md-list-item @click="navigate('/carrier/dashboard')">
-          <span
-            class="md-list-item-text"
-            v-bind:class="{
-              active: $route.name == 'dashboard',
-            }"
-            >Dashboard</span
-          >
-        </md-list-item>
-        <md-list-item @click="navigate('/carrier/profile')">
-          <span
-            class="md-list-item-text"
-            v-bind:class="{
-              active: $route.name == 'carrier-details',
-            }"
-            >Account</span
-          >
-        </md-list-item>
-
-        <md-list-item @click="navigate('/carrier/history')">
-          <span
-            class="md-list-item-text"
-            v-bind:class="{
-              active: $route.name == 'jobs',
-            }"
-            >Jobs</span
-          >
-        </md-list-item>
-        <md-list-item @click="navigate('/carrier/earnings')">
-          <span
-            class="md-list-item-text"
-            v-bind:class="{
-              active: $route.name == 'earning-list',
-            }"
-            >Earnings</span
-          >
-        </md-list-item>
-        <md-list-item @click="navigate('/carrier/payments')">
-          <span
-            class="md-list-item-text"
-            v-bind:class="{
-              active: $route.name == 'details',
-            }"
-            >Wallet</span
-          >
-        </md-list-item>
-        <md-list-item @click="navigate('/carrier/calendar')">
-          <span
-            class="md-list-item-text"
-            v-bind:class="{
-              active: $route.name == 'calendar',
-            }"
-            >Calendar</span
-          >
-        </md-list-item>
-
-        <md-list-item @click="navigate('/help/' + 'carrier')">
-          <span
-            class="md-list-item-text"
-            v-bind:class="{
-              active: $route.name == 'help',
-            }"
-            >Help</span
-          >
-        </md-list-item>
-      </div>
-      <md-divider></md-divider>
-      <md-list-item @click="signOut()" v-if="authenticated">
-        <span class="md-list-item-text">Signout</span>
-      </md-list-item>
-    </md-list>
+    </div>
+    <div class="line"></div>
+    <b-list-group>
+      <b-list-group-item button class="border-0" @click="navigate('/carrier/inbox')">
+        <span
+          class="mb-0"
+          v-bind:class="{
+            active: $route.name == 'inbox',
+          }"
+        >
+          Notifications
+        </span>
+      </b-list-group-item>
+      <b-list-group-item button class="border-0" @click="navigate('/carrier/dashboard')">
+        <span
+          class="mb-0"
+          v-bind:class="{
+            active: $route.name == 'dashboard',
+          }"
+        >
+          Dashboard
+        </span>
+      </b-list-group-item>
+      <b-list-group-item button class="border-0" @click="navigate('/carrier/profile')">
+        <span
+          class="mb-0"
+          v-bind:class="{
+            active: $route.name == 'carrier-details',
+          }"
+        >
+          Account
+        </span>
+      </b-list-group-item>
+      <b-list-group-item button class="border-0" @click="navigate('/carrier/history')">
+        <span
+          class="mb-0"
+          v-bind:class="{
+            active: $route.name == 'jobs',
+          }"
+        >
+          Jobs
+        </span>
+      </b-list-group-item>
+      <b-list-group-item button class="border-0" @click="navigate('/carrier/earnings')">
+        <span
+          class="mb-0"
+          v-bind:class="{
+            active: $route.name == 'earning-list',
+          }"
+        >
+          Earnings
+        </span>
+      </b-list-group-item>
+      <b-list-group-item button class="border-0" @click="navigate('/carrier/payments')">
+        <span
+          class="mb-0"
+          v-bind:class="{
+            active: $route.name == 'details',
+          }"
+        >
+          Wallet
+        </span>
+      </b-list-group-item>
+      <b-list-group-item button class="border-0" @click="navigate('/carrier/calendar')">
+        <span
+          class="mb-0"
+          v-bind:class="{
+            active: $route.name == 'calendar',
+          }"
+        >
+          Calendar
+        </span>
+      </b-list-group-item>
+      <b-list-group-item button class="border-0" @click="navigate('/help')">
+        <span
+          class="mb-0"
+          v-bind:class="{
+            active: $route.name == 'help',
+          }"
+        >
+          Help
+        </span>
+      </b-list-group-item>
+      <div class="line"></div>
+      <b-list-group-item button class="border-0" @click="signOut()">
+        <span
+          class="mb-0"
+          v-bind:class="{
+            active: $route.name == 'logout',
+          }"
+        >
+          Signout
+        </span>
+      </b-list-group-item>
+    </b-list-group>
   </div>
 </template>
 <script>
@@ -164,36 +186,8 @@ export default {
 .active {
   color: #ffa500 !important;
 }
-.md-list {
-  padding: 0 !important;
-}
-.md-list-item-text {
-  font-weight: 500;
-}
+
 .custom-toolbar {
-  height: 155px;
-  display: flex;
-  justify-content: center;
-  background: #fff !important;
-  .row {
-    width: 100%;
-    .avatar {
-      margin: auto;
-      text-align: center;
-      align-items: center;
-      display: flex;
-      justify-content: center;
-      cursor: pointer;
-    }
-    .text {
-      text-align: left;
-      .name {
-        font-weight: 600;
-      }
-      .email {
-        font-size: 11px;
-      }
-    }
-  }
+  text-align: center;
 }
 </style>

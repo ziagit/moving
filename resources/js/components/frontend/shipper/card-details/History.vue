@@ -1,42 +1,36 @@
 <template>
-  <div class="shipper-card">
-    <md-table v-if="orders.length > 0" md-sort="zip" md-sort-order="asc" md-card>
-      <md-table-row>
-        <md-table-head>Order</md-table-head>
-        <md-table-head>Date</md-table-head>
-        <md-table-head>Order cost</md-table-head>
-        <md-table-head>Given tips</md-table-head>
-        <md-table-head>Total</md-table-head>
-      </md-table-row>
-      <md-table-row v-for="(order, index) in orders" :key="index">
-        <md-table-cell>{{ order.uniqid }}</md-table-cell>
-        <md-table-cell>{{ order.pickup_date }}</md-table-cell>
-        <md-table-cell>${{ order.cost }}</md-table-cell>
-        <md-table-cell>${{ order.tips }}</md-table-cell>
-        <md-table-cell>${{ order.tips + order.cost }}</md-table-cell>
-      </md-table-row>
-    </md-table>
-    <md-empty-state
-      v-else
-      class="md-primary"
-      md-icon="sentiment_satisfied_alt"
-      md-label="Not available"
-      md-description="There is no payment history"
-    >
-    </md-empty-state>
+  <div>
+    <table class="table" v-if="orders.length > 0">
+      <thead>
+        <tr>
+          <th>Order</th>
+          <th>Date</th>
+          <th>Order cost</th>
+          <th>Given tips</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(order, index) in orders" :key="index">
+          <td>{{ order.uniqid }}</td>
+          <td>{{ order.pickup_date }}</td>
+          <td>${{ order.cost }}</td>
+          <td>${{ order.tips }}</td>
+          <td>${{ order.tips + order.cost }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <div v-else class="mx-5">
+      <p>No payment history!</p>
+    </div>
   </div>
 </template>
 
 <script>
 import axios from "axios";
-import Spinner from "../../../shared/Spinner";
-import Snackbar from "../../../shared/Snackbar";
 export default {
   name: "ShipperPaymentDetails",
-  components: {
-    Spinner,
-    Snackbar,
-  },
+  components: {},
   data: () => ({
     orders: [],
     snackbar: {

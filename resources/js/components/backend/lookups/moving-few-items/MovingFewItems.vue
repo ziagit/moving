@@ -1,76 +1,49 @@
 <template>
-  <div class="main-container">
-    <!-- delete dialog-->
-    <md-dialog-confirm
-      :md-active.sync="deleteTogal"
-      md-title="I assure what you doing"
-      md-content
-      md-confirm-text="OK"
-      md-cancel-text="Cancel"
-      @md-confirm="confirm()"
-      @md-cancel="cancel"
-    />
-    <!-- edit dialog -->
-    <md-dialog :md-active.sync="editTogal">
-      <md-dialog-title>Update data</md-dialog-title>
-      <md-dialog-content>
-        <Edit v-on:close-dialog="refresh" :item="item" />
-      </md-dialog-content>
-    </md-dialog>
+  <div class="container">
+    <b-modal id="modal-update" title="Update Data" :hide-footer="true">
+      <Edit v-on:close-dialog="refresh" :item="item" />
+    </b-modal>
     <!-- add dialog -->
-    <md-dialog :md-active.sync="addTogal">
-      <md-dialog-title>Add new </md-dialog-title>
-      <md-dialog-content>
-        <Add v-on:close-dialog="refresh" />
-      </md-dialog-content>
-    </md-dialog>
+    <b-modal id="modal-add" size="md" title="Add New Type" :hide-footer="true">
+      <Add v-on:close-dialog="refresh" />
+    </b-modal>
+    <b-card header="Number of Movers" class="border-0 shadow text-left mt-5">
+      <b-form-input placeholder="Search by name..." v-model="keywords" />
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Titel</th>
+            <th>Code</th>
+            <th>Time to move</th>
+            <th>Disposal fee</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="item in items.data" :key="item.id">
+            <td>{{ item.id }}</td>
+            <td>{{ item.name }}</td>
+            <td>{{ item.code }}</td>
+            <td>{{ item.moving_cost }} min</td>
+            <td>${{ item.disposal_fee }}</td>
 
-    <md-table md-card>
-      <md-table-toolbar>
-        <div class="md-toolbar-section-start">
-          <h1 class="md-title">Few Items</h1>
-        </div>
-        <md-field md-clearable class="md-toolbar-section-end">
-          <md-input placeholder="Search by name..." v-model="keywords" />
-        </md-field>
-      </md-table-toolbar>
-
-      <md-table-empty-state
-        md-label="No state found"
-        :md-description="`No state found for this query. Try a different search term or create a new state.`"
-      >
-        <md-button class="md-primary md-raised" @click="add()">Create new</md-button>
-      </md-table-empty-state>
-      <md-table-row>
-        <md-table-head md-numeric>ID</md-table-head>
-        <md-table-head>Titel</md-table-head>
-        <md-table-head>Code</md-table-head>
-        <md-table-head>Time to move</md-table-head>
-        <md-table-head>Disposal fee</md-table-head>
-        <md-table-head>Actions</md-table-head>
-      </md-table-row>
-      <md-table-row v-for="item in items.data" :key="item.id">
-        <md-table-cell md-numeric>{{ item.id }}</md-table-cell>
-        <md-table-cell>{{ item.name }}</md-table-cell>
-        <md-table-cell>{{ item.code }}</md-table-cell>
-        <md-table-cell>{{ item.moving_cost }} min</md-table-cell>
-        <md-table-cell>${{ item.disposal_fee }}</md-table-cell>
-
-        <md-table-cell md-label="Actions">
-          <md-button class="md-icon-button md-primary" @click="edit(item)">
-            <md-icon>edit</md-icon>
-          </md-button>
-          <md-button class="md-icon-button md-accent" @click="remove(item.id)">
-            <md-icon>delete</md-icon>
-          </md-button>
-        </md-table-cell>
-      </md-table-row>
-    </md-table>
+            <td>
+              <b-button variant="light" @click="edit(item)">
+                <b-icon variant="primary" icon="pencil"></b-icon>
+              </b-button>
+              <b-button variant="light" @click="remove(item.id)">
+                <b-icon variant="danger" icon="trash"></b-icon>
+              </b-button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <b-button class="add-btn" variant="primary" v-b-modal.modal-add>
+        <b-icon icon="plus"></b-icon>
+      </b-button>
+    </b-card>
     <pagination :limit="4" :data="items" @pagination-change-page="get"></pagination>
-    <md-button class="md-fab md-primary add-btn" @click="add()">
-      <md-icon>add</md-icon>
-      <md-tooltip>Add new </md-tooltip>
-    </md-button>
   </div>
 </template>
 
@@ -85,9 +58,6 @@ export default {
     keywords: null,
     items: null,
     item: null,
-    addTogal: false,
-    editTogal: false,
-    deleteTogal: false,
   }),
   watch: {
     keywords(after, before) {
@@ -118,27 +88,31 @@ export default {
         });
     },
 
-    add() {
-      this.addTogal = true;
-      this.stateData = this.states;
-    },
     refresh() {
-      this.addTogal = false;
-      this.editTogal = false;
+      this.$bvModal.hide("modal-update");
+      this.$bvModal.hide("modal-add");
       this.get();
     },
     edit(data) {
-      this.editTogal = true;
       this.item = data;
+      this.$bvModal.show("modal-update");
     },
     remove(id) {
-      this.deleteTogal = true;
-      this.selectedId = id;
+      this.$bvModal
+        .msgBoxConfirm("Are you sure?")
+        .then((value) => {
+          if (value) {
+            this.confirm(id);
+          }
+        })
+        .catch((err) => {
+          console.log("err", err);
+        });
     },
 
-    confirm() {
+    confirm(id) {
       axios
-        .delete("admin/few-items/" + this.selectedId)
+        .delete("admin/few-items/" + id)
         .then((res) => {
           console.log("deleted", res.data);
           this.get();
@@ -160,12 +134,12 @@ export default {
 };
 </script>
 <style scoped lang="scss">
-.main-container {
-  width: 100%;
+.container {
+  height: calc(100vh - 5px);
   .add-btn {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
+    position: absolute;
+    top: 0;
+    right: 0;
   }
 }
 </style>

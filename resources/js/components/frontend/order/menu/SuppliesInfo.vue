@@ -1,23 +1,20 @@
 <template>
-  <div class="info">
-    <div class="md-title">Supplies Details</div>
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Items</th>
-          <th>ُSizes</th>
-          <th>Prices</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="supply in supplies" :key="supply.item">
-          <td>{{ supply.item }}</td>
-          <td>{{ supply.size }}</td>
-          <td>{{ supply.price }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Size</th>
+        <th>Price</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="supply in supplies" :key="supply.item">
+        <td>{{ supply.item }}</td>
+        <td>{{ supply.size }}</td>
+        <td>{{ supply.price }}</td>
+      </tr>
+    </tbody>
+  </table>
 </template>
 
 <script>

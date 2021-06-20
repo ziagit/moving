@@ -1,8 +1,7 @@
 <template>
-  <div class="container">
+  <div class="cities">
     <div class="section0">
       <Header v-on:togal-menu="$emit('togal-menu')" />
-
       <iframe
         src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d31958839.600046597!2d-128.4053053!3d60.7318475!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x537a66c7aa6b6aaf%3A0x881b41e937e7f1f9!2sBritish%20Columbia%2C%20Canada!5e0!3m2!1sen!2s!4v1603098152028!5m2!1sen!2s"
         width="600"
@@ -48,20 +47,20 @@
         </div>
       </div>
     </div>
-    <Snackbar :data="snackbar" />
+    <Toaster ref="toaster" />
     <Footer />
   </div>
 </template>
 
 <script>
-import Snackbar from "../../shared/Snackbar";
+import Toaster from "../../shared/Toaster";
 import Footer from "../../shared/Footer";
 import Header from "../../shared/Header";
 import axios from "axios";
 export default {
   name: "ContactUs",
   components: {
-    Snackbar,
+    Toaster,
     Footer,
     Header,
   },
@@ -71,29 +70,31 @@ export default {
       email: null,
       message: null,
     },
-    snackbar: {
-      show: false,
-      message: null,
-      statusCode: null,
-    },
   }),
   methods: {
     submit() {
       axios
         .post("about-form", this.form)
         .then((res) => {
-          this.snackbar.message = "Thanks for contacting us!";
-          this.snackbar.statusCode = "200";
-          this.snackbar.show = true;
+          this.$refs.toaster.show(
+            "success",
+            "b-toaster-top-center",
+            "Success",
+            "Thanks for contacting us!"
+          );
+
           this.form.name = null;
           this.form.email = null;
           this.form.message = null;
           console.log("thanks for contacting", res.data);
         })
         .catch((err) => {
-          this.snackbar.message = "There is something wrong, please try again!";
-          this.snackbar.statusCode = "408";
-          this.snackbar.show = true;
+          this.$refs.toaster.show(
+            "danger",
+            "b-toaster-top-center",
+            "Error",
+            "There is something wrong, please try again!"
+          );
           console.log("something wrong");
         });
     },
@@ -102,7 +103,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.container {
+.cities {
   background: #fff;
   iframe {
     left: 0;

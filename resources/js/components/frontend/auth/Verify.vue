@@ -1,52 +1,50 @@
 <template>
-  <div class="container">
+  <div class="verify">
     <Header v-on:togal-menu="$emit('togal-menu')" />
     <div class="content">
-      <md-card>
-        <md-card-header>
-          <div class="md-title">TingsApp</div>
-        </md-card-header>
-        <md-card-content>
-          <div class="break"></div>
-          <div class="md-body-2">Enter the verification code</div>
-          <div class="md-caption">We texted a code to your email/phone number</div>
-          <div class="break"></div>
-          <CodeInput
-            :loading="false"
-            class="input"
-            :fields="4"
-            :fieldWidth="80"
-            v-on:change="onChange"
-            v-on:complete="verify"
-          />
-          <div class="resend">
-            <p>Code not received?</p>
-            <md-button class="md-primary" to="/login">Resend</md-button>
-          </div>
-          <p class="md-caption">Test code: 0-0-0-0</p>
-          <p style="color: red" v-if="invalidCode">{{ invalidCode }}</p>
-          <Spinner v-if="isSubmitting" />
-        </md-card-content>
-      </md-card>
+      <b-card title="TingsApp" class="border-0 shadow w-50 mx-auto">
+        <div class="break"></div>
+        <div class="body-2">Enter the verification code</div>
+        <div class="break"></div>
+        <CodeInput
+          :loading="false"
+          class="input"
+          :fields="4"
+          :fieldWidth="80"
+          v-on:change="onChange"
+          v-on:complete="verify"
+        />
+        <div class="caption">We texted a code to your email/phone number</div>
+        <div class="break"></div>
+
+        <div class="resend">
+          <span>Code not received?</span>
+          <b-button to="/login">Resend</b-button>
+        </div>
+        <p class="md-caption">Test code: 0-0-0-0</p>
+        <p style="color: red" v-if="invalidCode">{{ invalidCode }}</p>
+        <b-spinner variant="primary" v-if="isSubmitting"></b-spinner>
+        <template #footer>
+          <small variant="light" @click="$router.push('/login')">Resnd</small>
+        </template>
+      </b-card>
     </div>
     <Footer />
-    <Snackbar :data="snackbar" />
+    <Toaster ref="toaster" />
   </div>
 </template>
 
 <script>
 import CodeInput from "vue-verification-code-input";
 import { mapActions, mapGetters } from "vuex";
-import Spinner from "../../shared/Spinner";
-import Snackbar from "../../shared/Snackbar";
+import Toaster from "../../shared/Toaster";
 import Header from "../../shared/Header";
 import Footer from "../../shared/Footer";
 import localData from "../services/localData";
 export default {
   name: "SignUp",
   components: {
-    Spinner,
-    Snackbar,
+    Toaster,
     Header,
     Footer,
     CodeInput,
@@ -110,9 +108,12 @@ export default {
           console.log("err: ", error.response);
           localData.remove("me");
           this.isSubmitting = false;
-          this.snackbar.statusCode = error.response.status;
-          this.snackbar.message = error.response.data;
-          this.snackbar.show = true;
+          this.$refs.toaster.show(
+            "danger",
+            "b-toaster-top-center",
+            "Faild",
+            error.response.data
+          );
         });
     },
   },
@@ -120,16 +121,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.container {
+.verify {
   width: 100%;
   .content {
     padding: 60px 20px;
     height: calc(100vh - 3px);
-    .md-card {
-      max-width: 500px;
-      margin: auto;
-      padding: 20px;
-    }
     .resend {
       display: flex;
       align-items: center;

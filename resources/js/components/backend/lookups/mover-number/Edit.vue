@@ -1,21 +1,17 @@
 <template>
-  <div>
-    <form @submit.prevent="update">
-      <md-field class="">
-        <label>Number</label>
-        <md-input v-model="form.number" required></md-input>
-      </md-field>
-      <md-field class="">
-        <label>Recommended for</label>
-        <md-input v-model="form.recommended" required></md-input>
-      </md-field>
-      <md-field class="">
-        <label>Code</label>
-        <md-input v-model="form.code" required></md-input>
-      </md-field>
-      <md-button type="submit" class="custom-button">Update</md-button>
-    </form>
-  </div>
+  <form @submit.prevent="update">
+    <b-form-group>
+      <b-form-input v-model="form.number" required></b-form-input>
+    </b-form-group>
+    <b-form-group>
+      <b-form-input v-model="form.recommended" required></b-form-input>
+    </b-form-group>
+    <b-form-group>
+      <label>Code</label>
+      <b-form-input v-model="form.code" required></b-form-input>
+    </b-form-group>
+    <b-button type="submit" variant="primary">Update</b-button>
+  </form>
 </template>
 <script>
 import axios from "axios";

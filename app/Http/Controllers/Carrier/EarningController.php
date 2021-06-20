@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\User;
 use App\Earning;
+
 class EarningController extends Controller
 {
     /**
@@ -19,9 +20,9 @@ class EarningController extends Controller
         //['moving_cost','travel_cost','supplies_cost','paid_gst','carrier_earning']
         $carrierId = User::with('carrier')->find(Auth::id())->carrier->id;
         $earnings = Earning::with('order')
-        ->where('carrier_id', $carrierId)
-        ->where('status','unpaid')
-        ->paginate(5);
+            ->where('carrier_id', $carrierId)
+            ->where('status', 'unpaid')
+            ->paginate(5);
         return response()->json($earnings);
     }
     public function paid()
@@ -29,9 +30,9 @@ class EarningController extends Controller
         //['moving_cost','travel_cost','supplies_cost','paid_gst','carrier_earning']
         $carrierId = User::with('carrier')->find(Auth::id())->carrier->id;
         $earnings = Earning::with('order')
-        ->where('carrier_id', $carrierId)
-        ->where('status','paid')
-        ->paginate(5);
+            ->where('carrier_id', $carrierId)
+            ->where('status', 'paid')
+            ->paginate(5);
         return response()->json($earnings);
     }
 
@@ -64,8 +65,8 @@ class EarningController extends Controller
      */
     public function show($id)
     {
-        $earning = Earning::with('orderDetail')
-        ->where('status','unpaid')->find($id);
+        $earning = Earning::with('order')
+            ->find($id);
         return response()->json($earning);
     }
 

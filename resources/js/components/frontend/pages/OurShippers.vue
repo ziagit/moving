@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="shippers">
     <div
       class="section0"
       v-bind:style="{
@@ -109,7 +109,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.container {
+.shippers {
   background: #fff;
 
   .section0 {

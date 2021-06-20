@@ -1,96 +1,81 @@
 <template>
-  <div class="account" v-if="carrier">
+  <div class="account mb-5" v-if="carrier">
     <edit-account v-if="myTogal" :user="carrier.user" v-on:close-child="close" />
-    <md-card v-else>
-      <md-card-header><span class="md-title">Account</span></md-card-header>
-      <md-divider></md-divider>
-      <md-card-content>
-        <div>
-          <div class="row">
-            <span>Email:</span>
-            <span>{{ carrier.user.email }}</span>
-          </div>
-          <div class="row">
-            <span>Password:</span>
-            <span>********</span>
-          </div>
+    <b-card v-else header="Account" class="border-0 shadow text-left mb-4">
+      <div class="px-3">
+        <div class="row">
+          <span class="col-3 text-left">Email:</span>
+          <span class="col-9 text-left">{{ carrier.user.email }}</span>
         </div>
-      </md-card-content>
-      <md-card-actions>
-        <md-button @click="editAccount()" class="md-primary">
-          Edit
-          <md-tooltip>Edit profile</md-tooltip>
-        </md-button>
-      </md-card-actions>
-    </md-card>
-    <div class="break"></div>
-    <md-card>
-      <md-card-header>
-        <span class="md-title">Profile </span>
-      </md-card-header>
-      <md-divider></md-divider>
-      <md-card-content v-if="carrier">
-        <div>
-          <div>
-            <div class="row">
-              <span>First name:</span>
-              <span>{{ carrier.first_name }}</span>
-            </div>
-            <div class="row">
-              <span>Last name:</span>
-              <span>{{ carrier.last_name }}</span>
-            </div>
-            <div class="row">
-              <span>Phone:</span>
-              <span>{{ carrier.user.phone }}</span>
-            </div>
-            <div class="row">
-              <span>Website:</span>
-              <span>{{ carrier.website }}</span>
-            </div>
-            <div class="row">
-              <span>Address:</span>
-              <span>{{ carrier.address.formatted_address }}</span>
-            </div>
-            <div class="row">
-              <span>Number of employees:</span>
-              <span>{{ carrier.employees }}</span>
-            </div>
-            <div class="row">
-              <span>Number of vehicles:</span>
-              <span>{{ carrier.vehicles }}</span>
-            </div>
-            <div class="row">
-              <span>Rate per hour for two movers and a vehicle:</span>
-              <span>${{ carrier.hourly_rate }}</span>
-            </div>
-            <div class="row">
-              <span>Company name:</span>
-              <span>{{ carrier.company }}</span>
-            </div>
-            <div class="row">
-              <span>Established year:</span>
-              <span>{{ carrier.year_established }}</span>
-            </div>
-            <div class="row">
-              <span>More details:</span>
-              <span>{{ carrier.detail }}</span>
-            </div>
-            <div class="row">
-              <span>Insurance paper:</span>
-              <span>Not attached</span>
-            </div>
-            <div class="row">
-              <span>Business license:</span>
-              <span>Not attached</span>
-            </div>
-          </div>
+        <div class="row">
+          <span class="col-3 text-left">Password:</span>
+          <span class="col-9 text-left">********</span>
         </div>
-      </md-card-content>
-      <md-card-actions v-if="carrier">
-        <md-button @click="edit(carrier.id)" class="md-primary"> Edit </md-button>
-      </md-card-actions>
-    </md-card>
+      </div>
+
+      <div class="text-right">
+        <b-button @click="editAccount()" variant="primary"> Edit </b-button>
+      </div>
+    </b-card>
+    <b-card header="Profile" class="border-0 shadow text-left">
+      <div v-if="carrier" class="px-3">
+        <div class="row">
+          <span class="col-3 text-left">First name:</span>
+          <span class="col-9 text-left">{{ carrier.first_name }}</span>
+        </div>
+        <div class="row">
+          <span class="col-3 text-left">Last name:</span>
+          <span class="col-9 text-left">{{ carrier.last_name }}</span>
+        </div>
+        <div class="row">
+          <span class="col-3 text-left">Phone:</span>
+          <span class="col-9 text-left">{{ carrier.user.phone }}</span>
+        </div>
+        <div class="row">
+          <span class="col-3 text-left">Website:</span>
+          <span class="col-9 text-left">{{ carrier.website }}</span>
+        </div>
+        <div class="row">
+          <span class="col-3 text-left">Address:</span>
+          <span class="col-9 text-left">{{ carrier.address.formatted_address }}</span>
+        </div>
+        <div class="row">
+          <span class="col-3 text-left">Number of employees:</span>
+          <span class="col-9 text-left">{{ carrier.employees }}</span>
+        </div>
+        <div class="row">
+          <span class="col-3 text-left">Number of vehicles:</span>
+          <span class="col-9 text-left">{{ carrier.vehicles }}</span>
+        </div>
+        <div class="row">
+          <span class="col-3 text-left">Rate per hour for two movers and a vehicle:</span>
+          <span class="col-9 text-left">${{ carrier.hourly_rate }}</span>
+        </div>
+        <div class="row">
+          <span class="col-3 text-left">Company name:</span>
+          <span class="col-9 text-left">{{ carrier.company }}</span>
+        </div>
+        <div class="row">
+          <span class="col-3 text-left">Established year:</span>
+          <span class="col-9 text-left">{{ carrier.year_established }}</span>
+        </div>
+        <div class="row">
+          <span class="col-3 text-left">More details:</span>
+          <span class="col-9 text-left">{{ carrier.detail }}</span>
+        </div>
+        <div class="row">
+          <span class="col-3 text-left">Insurance paper:</span>
+          <span class="col-9 text-left">Not attached</span>
+        </div>
+        <div class="row">
+          <span class="col-3 text-left">Business license:</span>
+          <span class="col-9 text-left">Not attached</span>
+        </div>
+      </div>
+      <div class="text-right" v-if="carrier">
+        <b-button @click="edit(carrier.id)" variant="primary"> Edit </b-button>
+      </div>
+    </b-card>
   </div>
 </template>
 
@@ -134,29 +119,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.account {
-  padding-bottom: 30px;
-  .md-card {
-    text-align: left;
-    .md-card-content {
-      padding: 20px;
-      .row {
-        display: flex;
-        > :first-child {
-          width: 200px;
-        }
-      }
-    }
-    .md-card-actions {
-      display: flex;
-      justify-content: flex-start;
-    }
-  }
-}
-.add-btn {
-  position: absolute;
-  top: 0;
-  right: 0;
-}
-</style>
+<style lang="scss" scoped></style>

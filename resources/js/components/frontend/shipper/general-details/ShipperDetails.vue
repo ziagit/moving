@@ -1,51 +1,36 @@
 <template>
-  <md-card>
-    <md-card-header><span class="md-title">Account Details</span></md-card-header>
-    <md-divider></md-divider>
-    <md-card-content>
+  <b-card class="border-0 shadow text-left" header="Details">
+    <div>
       <div v-if="shipper">
-        <div>
-          <div class="row">
-            <span>Firs name:</span>
-            <span>{{ shipper.first_name }}</span>
-          </div>
-          <div class="row">
-            <span>Last name:</span>
-            <span>{{ shipper.last_name }}</span>
-          </div>
-          <div class="row">
-            <span>Email:</span>
-            <span>{{ shipper.user.email }}</span>
-          </div>
-          <div class="row">
-            <span>Phone:</span>
-            <span>{{ shipper.user.phone }}</span>
-          </div>
-          <div class="row">
-            <span>Address:</span>
-            <span>{{ shipper.address.formatted_address }}</span>
-          </div>
+        <div class="row">
+          <span class="col-3">Firs name:</span>
+          <span class="col-6">{{ shipper.first_name }}</span>
+        </div>
+        <div class="row">
+          <span class="col-3">Last name:</span>
+          <span class="col-6">{{ shipper.last_name }}</span>
+        </div>
+        <div class="row">
+          <span class="col-3">Email:</span>
+          <span class="col-6">{{ shipper.user.email }}</span>
+        </div>
+        <div class="row">
+          <span class="col-3">Phone:</span>
+          <span class="col-6">{{ shipper.user.phone }}</span>
+        </div>
+        <div class="row">
+          <span class="col-3">Address:</span>
+          <span class="col-6">{{ shipper.address.formatted_address }}</span>
         </div>
       </div>
-      <md-empty-state
-        v-else
-        class="md-primary"
-        md-icon="sentiment_satisfied_alt"
-        md-label="No details available"
-        md-description="Click bellow link to add new details"
-      >
-        <md-button to="add" class="md-default md-raised md-icon-button">
-          <md-icon>add</md-icon>
-        </md-button>
-      </md-empty-state>
-    </md-card-content>
-    <md-card-actions>
-      <md-button v-if="shipper" :to="{ path: 'edit/' + shipper.id }" class="md-primary">
-        Edit
-        <md-tooltip>Edit profile</md-tooltip>
-      </md-button>
-    </md-card-actions>
-  </md-card>
+      <div v-else class="text-center">
+        <b-button to="add" variant="primary"> Add </b-button>
+      </div>
+    </div>
+    <div class="mt-3 text-right">
+      <b-button v-if="shipper" @click="edit()" variant="primary"> Edit </b-button>
+    </div>
+  </b-card>
 </template>
 
 <script>
@@ -68,6 +53,9 @@ export default {
           console.log("Error: ", error);
         });
     },
+    edit() {
+      this.$router.push("edit/" + this.shipper.id);
+    },
   },
   computed: {
     ...mapGetters({
@@ -82,19 +70,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.md-card {
-  padding: 20px;
-  text-align: left;
-  .row {
-    display: flex;
-    > :first-child {
-      min-width: 100px;
-    }
-  }
-
-  .md-card-actions {
-    display: flex;
-    justify-content: flex-start;
-  }
+.container {
+  height: calc(100vh);
 }
 </style>

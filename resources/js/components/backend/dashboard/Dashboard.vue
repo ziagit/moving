@@ -1,43 +1,37 @@
 <template>
-  <div>
-    <div class="row">
-      <md-card class="card-1">
-        <md-card-header><span class="md-title">DAYLY PROJECTIONS</span></md-card-header>
-        <md-card-content>
-          <DailyProjections />
-        </md-card-content>
-      </md-card>
-    </div>
-    <br />
-    <div class="row">
-      <md-card>
-        <md-card-header>MONTHLY SALES</md-card-header>
-        <md-card-content>
+  <div class="container">
+    <b-card
+      class="mb-1 mt-3 bg-white rounded border-0"
+      align="center"
+      title="DAYLY PROJECTIONS"
+    >
+      <DailyProjections />
+    </b-card>
+    <b-card-group>
+      <div class="p-2 w-50">
+        <b-card class="shadow border-0" header="MONTHLY SALES">
           <Sales />
-        </md-card-content>
-      </md-card>
-      <md-card>
-        <md-card-header>PERFOMANCE</md-card-header>
-        <md-card-content>
+        </b-card>
+      </div>
+      <div class="p-2 w-50">
+        <b-card class="shadow border-0" header="PERFOMANCE">
           <Performance />
-        </md-card-content>
-      </md-card>
-    </div>
+        </b-card>
+      </div>
+    </b-card-group>
     <br />
-    <div class="row">
-      <md-card>
-        <md-card-header>CUSTOMERS</md-card-header>
-        <md-card-content>
+    <b-card-group class="mb-5">
+      <div class="p-2 w-50">
+        <b-card class="shadow border-0" header="CUSTOMERS">
           <Customers />
-        </md-card-content>
-      </md-card>
-      <md-card>
-        <md-card-header>MOVERS</md-card-header>
-        <md-card-content>
+        </b-card>
+      </div>
+      <div class="p-2 w-50">
+        <b-card header="MOVERS" class="shadow border-0">
           <Movers />
-        </md-card-content>
-      </md-card>
-    </div>
+        </b-card>
+      </div>
+    </b-card-group>
   </div>
 </template>
 
@@ -58,16 +52,4 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
-.row {
-  display: flex;
-  justify-content: space-between;
-  .card-1 {
-    box-shadow: none;
-  }
-  .md-card {
-    width: 100%;
-    text-align: center;
-  }
-}
-</style>
+<style scoped lang="scss"></style>

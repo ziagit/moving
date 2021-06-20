@@ -1,67 +1,40 @@
 <template>
-  <div class="states" v-if="states">
-    <!-- delete dialog-->
-    <md-dialog-confirm
-      :md-active.sync="deleteDialog"
-      md-title="I assure what you doing"
-      md-content
-      md-confirm-text="OK"
-      md-cancel-text="Cancel"
-      @md-confirm="confirm()"
-      @md-cancel="cancel"
-    />
-    <!-- edit dialog -->
-    <md-dialog :md-active.sync="editDialog">
-      <md-dialog-title>Update State Data</md-dialog-title>
-      <md-dialog-content>
-        <Edit v-on:close-dialog="refresh" :state="state" />
-      </md-dialog-content>
-    </md-dialog>
+  <div class="container" v-if="states">
+    <b-modal id="modal-update" title="Update Country Data" :hide-footer="true">
+      <Edit v-on:close-dialog="refresh" :state="state" />
+    </b-modal>
     <!-- add dialog -->
-    <md-dialog :md-active.sync="addDialog">
-      <md-dialog-title>Add new state</md-dialog-title>
-      <md-dialog-content>
-        <Add v-on:close-dialog="refresh" />
-      </md-dialog-content>
-    </md-dialog>
-
-    <md-table md-card>
-      <md-table-toolbar>
-        <div class="md-toolbar-section-start">
-          <h1 class="md-title">States</h1>
-        </div>
-
-        <md-field md-clearable class="md-toolbar-section-end">
-          <md-input placeholder="Search by name..." v-model="keywords" />
-        </md-field>
-      </md-table-toolbar>
-
-      <md-table-row>
-        <md-table-head md-numeric>ID</md-table-head>
-        <md-table-head>Name</md-table-head>
-        <md-table-head>Country</md-table-head>
-        <md-table-head>Actions</md-table-head>
-      </md-table-row>
-
-      <md-table-row v-for="state in states.data" :key="state.id">
-        <md-table-cell md-numeric>{{ state.id }}</md-table-cell>
-        <md-table-cell>{{ state.name }}</md-table-cell>
-        <md-table-cell>{{ state.country.name }}</md-table-cell>
-        <md-table-cell>
-          <md-button class="md-icon-button" @click="edit(state)">
-            <md-icon class="md-primary">edit</md-icon>
-          </md-button>
-          <md-button class="md-icon-button md-accent" @click="remove(state.id)">
-            <md-icon class="md-danger">delete</md-icon>
-          </md-button>
-        </md-table-cell>
-      </md-table-row>
-    </md-table>
+    <b-modal id="modal-add" size="md" title="Add new country" :hide-footer="true">
+      <Add v-on:close-dialog="refresh" />
+    </b-modal>
+    <b-card class="border-0 shadow text-left mt-5" header="States">
+      <b-form-input type="search" placeholder="Search by name..." v-model="keywords" />
+      <table class="table">
+        <tr>
+          <th md-numeric>ID</th>
+          <th>Name</th>
+          <th>Country</th>
+          <th>Actions</th>
+        </tr>
+        <tr v-for="state in states.data" :key="state.id">
+          <td md-numeric>{{ state.id }}</td>
+          <td>{{ state.name }}</td>
+          <td>{{ state.country.name }}</td>
+          <td>
+            <b-button variant="light" @click="edit(state)">
+              <b-icon icon="pencil" variant="primary"></b-icon>
+            </b-button>
+            <b-button variant="light" @click="remove(state.id)">
+              <b-icon icon="trash-fill" variant="danger"></b-icon>
+            </b-button>
+          </td>
+        </tr>
+      </table>
+      <b-button class="add-btn" variant="primary" v-b-modal.modal-add>
+        <b-icon icon="plus"></b-icon>
+      </b-button>
+    </b-card>
     <pagination :limit="4" :data="states" @pagination-change-page="get"></pagination>
-    <md-button class="md-fab md-primary add-btn" @click="add()">
-      <md-icon>add</md-icon>
-      <md-tooltip>Add new country</md-tooltip>
-    </md-button>
   </div>
 </template>
 
@@ -79,8 +52,6 @@ export default {
     countryId: null,
     addDialog: false,
     editDialog: false,
-    deleteDialog: false,
-    deletedId: null,
   }),
   watch: {
     keywords(after, before) {
@@ -114,21 +85,29 @@ export default {
       this.addDialog = true;
     },
     edit(state) {
-      this.editDialog = true;
       this.state = state;
+      this.$bvModal.show("modal-update");
     },
     remove(id) {
-      this.deleteDialog = true;
-      this.deletedId = id;
+      this.$bvModal
+        .msgBoxConfirm("Are you sure?")
+        .then((value) => {
+          if (value) {
+            this.confirm(id);
+          }
+        })
+        .catch((err) => {
+          console.log("err", err);
+        });
     },
     refresh() {
-      this.addDialog = false;
-      this.editDialog = false;
+      this.$bvModal.hide("modal-update");
+      this.$bvModal.hide("modal-add");
       this.get();
     },
-    confirm() {
+    confirm(id) {
       axios
-        .delete("admin/states/" + this.deletedId)
+        .delete("admin/states/" + id)
         .then((res) => {
           console.log("deleted", res.data);
           this.get();
@@ -150,12 +129,12 @@ export default {
 };
 </script>
 <style scoped lang="scss">
-.states {
-  width: 100%;
+.container {
+  height: calc(100vh - 50px);
   .add-btn {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
+    position: absolute;
+    top: 0px;
+    right: 0px;
   }
 }
 </style>

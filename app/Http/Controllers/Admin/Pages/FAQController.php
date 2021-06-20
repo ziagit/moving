@@ -15,7 +15,7 @@ class FAQController extends Controller
      */
     public function index()
     {
-        $faq =Faq::all();
+        $faq =Faq::first();
         return response()->json($faq);
     }
 

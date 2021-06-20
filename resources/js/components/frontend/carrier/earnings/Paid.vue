@@ -1,50 +1,38 @@
 <template>
   <div>
-    <md-table md-sort="zip" md-sort-order="asc" md-card>
-      <!--       <md-table-toolbar>
-        <md-field md-clearable class="md-toolbar-section-end">
-          <md-input placeholder="Search by order id" v-model="keywords" />
-        </md-field>
-      </md-table-toolbar>
+    <table class="table text-left">
+      <tr>
+        <th>Order</th>
+        <th>Date</th>
+        <th>Type</th>
+        <th>Price</th>
+        <th>Status</th>
+        <th>Details</th>
+      </tr>
+      <tr v-for="(earning, index) in earnings.data" :key="index">
+        <td>{{ earning.order.uniqid }}</td>
+        <td>{{ formatter(earning.created_at) }}</td>
+        <td>{{ earning.order.movingtype_id }}</td>
+        <td>${{ earning.carrier_earning }}</td>
+        <td>{{ earning.status }}</td>
 
-      <md-table-empty-state
-        md-label="No state found"
-        :md-description="`No state found for this query. Try a different search term or create a new state.`"
-      >
-      </md-table-empty-state> -->
-
-      <md-table-row>
-        <md-table-head>Order</md-table-head>
-        <md-table-head>Date</md-table-head>
-        <md-table-head>Type</md-table-head>
-        <md-table-head>Price</md-table-head>
-        <md-table-head>Status</md-table-head>
-        <md-table-head>Details</md-table-head>
-      </md-table-row>
-      <md-table-row v-for="(earning, index) in earnings.data" :key="index">
-        <md-table-cell>{{ earning.order.uniqid }}</md-table-cell>
-        <md-table-cell>{{ formatter(earning.created_at) }}</md-table-cell>
-        <md-table-cell>{{ earning.order.movingtype_id }}</md-table-cell>
-        <md-table-cell>${{ earning.carrier_earning }}</md-table-cell>
-        <md-table-cell>{{ earning.status }}</md-table-cell>
-
-        <md-table-cell md-label="Actions">
-          <md-button class="md-icon-button md-primary" @click="details(earning.id)">
-            <md-icon>more_horiz</md-icon>
-          </md-button>
-        </md-table-cell>
-      </md-table-row>
-      <md-table-row>
-        <md-table-cell></md-table-cell>
-        <md-table-cell></md-table-cell>
-        <md-table-cell><b>Total</b></md-table-cell>
-        <md-table-cell
-          ><b>{{ total }}</b></md-table-cell
-        >
-        <md-table-cell></md-table-cell>
-        <md-table-cell></md-table-cell>
-      </md-table-row>
-    </md-table>
+        <td md-label="Actions">
+          <b-button variant="light" @click="details(earning.id)">
+            <b-icon icon="three-dots"></b-icon>
+          </b-button>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td><b>Total</b></td>
+        <td>
+          <b>{{ total }}</b>
+        </td>
+        <td></td>
+        <td></td>
+      </tr>
+    </table>
   </div>
 </template>
 
@@ -92,13 +80,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.md-card {
-  box-shadow: none !important;
-}
-.total {
-  text-align: right;
-}
-
 @media only screen and (max-width: 1150px) {
 }
 </style>

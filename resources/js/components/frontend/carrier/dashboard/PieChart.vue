@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div>
     <div v-if="isLoaded">
       <GChart class="graph" type="PieChart" :data="chartData" :options="chartOptions" />
       <div class="legend">
@@ -120,6 +120,7 @@ export default {
 .legend {
   margin: 30px 10px;
   display: flex;
+  justify-content: center;
   .md-caption {
     margin: 10px;
     display: flex;

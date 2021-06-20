@@ -1,13 +1,13 @@
 <template>
   <div class="origin">
-    <span class="md-display-1">What is your moving type?</span>
+    <h3>What is your moving type?</h3>
     <div class="break"></div>
     <form v-if="types">
       <div class="break"></div>
       <div class="break"></div>
       <div class="row">
         <div class="col" v-for="type in types" :key="type.id" @click="select(type)">
-          <md-card>
+          <b-card class="mini-card px-0 shadow-sm border-0">
             <div class="icon">
               <img
                 :src="'/images/uploads/checked.svg'"
@@ -18,50 +18,39 @@
               <img :src="'/images/uploads/unchecked.svg'" v-else width="22" alt="" />
             </div>
             <div class="text">
-              <div class="md-display-1">{{ type.title }}</div>
+              <h6>{{ type.title }}</h6>
             </div>
-          </md-card>
+          </b-card>
         </div>
       </div>
       <div class="break"></div>
       <div class="break"></div>
       <div class="actions">
-        <md-button
-          to="/home"
-          class="md-raised md-fab md-icon-button rounded-primary-button"
-        >
-          <md-icon>arrow_back</md-icon>
-        </md-button>
+        <b-button @click="$router.push('/')" variant="light">
+          <b-icon icon="arrow-left"></b-icon>
+        </b-button>
         <div class="tab"></div>
-        <md-button
-          @click="next()"
-          class="md-raised md-fab md-icon-button rounded-secondary-button"
-        >
-          <md-icon>arrow_forward</md-icon>
-        </md-button>
+        <b-button @click="next()" variant="primary">
+          <b-icon icon="arrow-right"></b-icon>
+        </b-button>
       </div>
     </form>
-    <Snackbar :data="snackbar" />
+    <Toaster ref="toaster" />
   </div>
 </template>
 
 <script>
 import localData from "../services/localData";
-import Snackbar from "../../shared/Snackbar";
+import Toaster from "../../shared/Toaster";
 export default {
   name: "Origin",
   components: {
-    Snackbar,
+    Toaster,
   },
   data: () => ({
     types: [],
     selected: null,
     selectedIndex: null,
-    snackbar: {
-      show: false,
-      message: null,
-      statusCode: null,
-    },
   }),
   created() {
     this.$emit("progress", 1);
@@ -107,9 +96,12 @@ export default {
             break;
         }
       } else {
-        this.snackbar.show = true;
-        this.snackbar.message = "Select an option to continue!";
-        this.snackbar.statusCode = "428";
+        this.$refs.toaster.show(
+          "danger",
+          "b-toaster-top-center",
+          "Error",
+          "Select an option to continue!"
+        );
       }
     },
     get() {

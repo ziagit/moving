@@ -1,53 +1,37 @@
 <template>
-  <div class="orders" v-if="orders">
-    <!-- delete dialog-->
-    <md-dialog-confirm
-      :md-active.sync="deleteTogal"
-      md-title="I assure what you doing"
-      md-content
-      md-confirm-text="OK"
-      md-cancel-text="Cancel"
-      @md-confirm="confirm()"
-      @md-cancel="cancel"
-    />
-
-    <md-table md-sort="name" md-sort-order="asc" md-card v-if="orders">
-      <md-table-toolbar>
-        <div class="md-toolbar-section-start">
-          <h1 class="md-title">Orders</h1>
-        </div>
-
-        <md-field md-clearable class="md-toolbar-section-end">
-          <md-input placeholder="Search by name..." v-model="keywords" />
-        </md-field>
-      </md-table-toolbar>
-
-      <md-table-empty-state
-        md-label="Not found"
-        :md-description="`Not added any order yet.`"
-      >
-      </md-table-empty-state>
-      <md-table-row>
-        <md-table-head md-numeric>ID</md-table-head>
-        <md-table-head>Date</md-table-head>
-        <md-table-head>Time</md-table-head>
-        <md-table-head>Type</md-table-head>
-        <md-table-head>Status</md-table-head>
-        <md-table-head>Details</md-table-head>
-      </md-table-row>
-      <md-table-row v-for="order in orders.data" :key="order.id">
-        <md-table-cell md-numeric>{{ order.uniqid }}</md-table-cell>
-        <md-table-cell>{{ order.pickup_date }} </md-table-cell>
-        <md-table-cell>{{ order.appointment_time }} </md-table-cell>
-        <md-table-cell>{{ order.movingtype.title }}</md-table-cell>
-        <md-table-cell>{{ order.status }}</md-table-cell>
-        <md-table-cell md-label="Details">
-          <md-button class="md-icon-button md-primary" @click="details(order.id)">
-            <md-icon>more_horiz</md-icon>
-          </md-button>
-        </md-table-cell>
-      </md-table-row>
-    </md-table>
+  <div class="container" v-if="orders">
+    <b-card header="Orders" class="border-0 shadow mt-5">
+      <b-input type="search" placeholder="Search by Id..." v-model="keywords" />
+      <table class="table" v-if="orders">
+        <thead>
+          <tr>
+            <th md-numeric>ID</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Type</th>
+            <th>Status</th>
+            <th>Details</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="order in orders.data" :key="order.id">
+            <td md-numeric>{{ order.uniqid }}</td>
+            <td>{{ order.pickup_date }}</td>
+            <td>{{ order.appointment_time }}</td>
+            <td>{{ order.movingtype.title }}</td>
+            <td>{{ order.status }}</td>
+            <td md-label="Details">
+              <b-button variant="light" @click="details(order.id)">
+                <b-icon variant="primary" icon="three-dots"></b-icon>
+              </b-button>
+              <b-button variant="light" @click="remove(order.id)">
+                <b-icon variant="danger" icon="trash"></b-icon>
+              </b-button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </b-card>
     <pagination :limit="4" :data="orders" @pagination-change-page="get"></pagination>
   </div>
 </template>
@@ -106,8 +90,16 @@ export default {
       this.$router.push("orders/details/" + id);
     },
     remove(id) {
-      this.deleteTogal = true;
-      this.selectedId = id;
+      this.$bvModal
+        .msgBoxConfirm("Are you sure?")
+        .then((value) => {
+          if (value) {
+            this.confirm(id);
+          }
+        })
+        .catch((err) => {
+          console.log("err", err);
+        });
     },
 
     confirm() {
@@ -121,7 +113,6 @@ export default {
           console.log("Error: ", err);
         });
     },
-    cancel() {},
   },
   created() {
     this.get();
@@ -129,12 +120,12 @@ export default {
 };
 </script>
 <style scoped lang="scss">
-.orders {
-  width: 100%;
+.container {
+  min-height: calc(100vh - 5px);
   .add-btn {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
+    position: absolute;
+    top: 0;
+    right: 0;
   }
 }
 </style>

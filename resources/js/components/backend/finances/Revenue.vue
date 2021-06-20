@@ -1,58 +1,61 @@
 <template>
-  <div class="earnings" v-if="earnings">
-    <md-table md-sort="name" md-sort-order="asc" md-card>
-      <md-table-toolbar>
-        <div class="md-toolbar-section-start">
-          <span class="md-title">Total Revenue: ${{ total }}</span>
-        </div>
-        <md-field md-clearable class="md-toolbar-section-end">
-          <md-input placeholder="Search by name..." v-model="keywords" />
-        </md-field>
-      </md-table-toolbar>
-
-      <md-table-row>
-        <md-table-head md-numeric>Order</md-table-head>
-        <md-table-head>Date</md-table-head>
-        <md-table-head>Price</md-table-head>
-        <md-table-head>Cost</md-table-head>
-        <md-table-head>GST Received</md-table-head>
-        <md-table-head>GST Paid</md-table-head>
-        <md-table-head>Owing GST</md-table-head>
-        <md-table-head>Gross Profit</md-table-head>
-      </md-table-row>
-      <md-table-row v-for="(earning, index) in earnings.data" :key="index">
-        <md-table-cell md-numeric>{{ earning.order.uniqid }}</md-table-cell>
-        <md-table-cell>{{ formatter(earning.order.created_at) }}</md-table-cell>
-        <md-table-cell>${{ earning.carrier_earning }}</md-table-cell>
-        <md-table-cell>${{ earning.order.cost }}</md-table-cell>
-        <md-table-cell>${{ earning.received_gst }}</md-table-cell>
-        <md-table-cell>${{ earning.paid_gst }}</md-table-cell>
-        <md-table-cell>${{ earning.unpaid_gst }}</md-table-cell>
-        <md-table-cell>${{ earning.tingsapp_earning }}</md-table-cell>
-      </md-table-row>
-      <md-table-row>
-        <md-table-cell></md-table-cell>
-        <md-table-cell><b>Total</b></md-table-cell>
-        <md-table-cell
-          ><b>${{ Math.round(totalCost).toFixed(2) }}</b></md-table-cell
+  <div class="container" v-if="earnings">
+    <b-card header="Revenues" class="border-0 shadow mt-5">
+      <div class="d-flex justify-content-between align-items-center">
+        <span class="w-25"
+          ><b>Total Revenue: ${{ total }}</b></span
         >
-        <md-table-cell
-          ><b>${{ Math.round(totalPrice).toFixed(2) }}</b></md-table-cell
-        >
-        <md-table-cell
-          ><b>${{ Math.round(totalReceived).toFixed(2) }}</b></md-table-cell
-        >
-        <md-table-cell
-          ><b>${{ Math.round(totalPaid).toFixed(2) }}</b></md-table-cell
-        >
-        <md-table-cell
-          ><b>${{ Math.round(totalOwing).toFixed(2) }}</b></md-table-cell
-        >
-        <md-table-cell
-          ><b>${{ Math.round(totalGross).toFixed(2) }}</b></md-table-cell
-        >
-      </md-table-row>
-    </md-table>
+        <b-form-input placeholder="Search by order..." v-model="keywords" />
+      </div>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Order</th>
+            <th>Date</th>
+            <th>Price</th>
+            <th>Cost</th>
+            <th>GST Received</th>
+            <th>GST Paid</th>
+            <th>Owing GST</th>
+            <th>Gross Profit</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(earning, index) in earnings.data" :key="index">
+            <td>{{ earning.order.uniqid }}</td>
+            <td>{{ formatter(earning.order.created_at) }}</td>
+            <td>${{ earning.carrier_earning }}</td>
+            <td>${{ earning.order.cost }}</td>
+            <td>${{ earning.received_gst }}</td>
+            <td>${{ earning.paid_gst }}</td>
+            <td>${{ earning.unpaid_gst }}</td>
+            <td>${{ earning.tingsapp_earning }}</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td><b>Total</b></td>
+            <td>
+              <b>${{ Math.round(totalCost).toFixed(2) }}</b>
+            </td>
+            <td>
+              <b>${{ Math.round(totalPrice).toFixed(2) }}</b>
+            </td>
+            <td>
+              <b>${{ Math.round(totalReceived).toFixed(2) }}</b>
+            </td>
+            <td>
+              <b>${{ Math.round(totalPaid).toFixed(2) }}</b>
+            </td>
+            <td>
+              <b>${{ Math.round(totalOwing).toFixed(2) }}</b>
+            </td>
+            <td>
+              <b>${{ Math.round(totalGross).toFixed(2) }}</b>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </b-card>
 
     <pagination :limit="4" :data="earnings" @pagination-change-page="get"></pagination>
   </div>
@@ -154,10 +157,7 @@ export default {
 };
 </script>
 <style scoped lang="scss">
-.earnings {
-  width: 100%;
-  th {
-    text-align: left;
-  }
+.container {
+  min-height: calc(100vh - 50px);
 }
 </style>

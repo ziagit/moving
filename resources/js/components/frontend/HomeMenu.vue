@@ -1,78 +1,86 @@
 <template>
   <div>
-    <md-toolbar class="md-transparent" md-elevation="0"><h3>TingsApp</h3></md-toolbar>
-    <md-divider></md-divider>
-    <md-list>
-      <md-list-item @click="navigate('/')">
+    <div class="pl-3 pt-3 pb-3"><h3 class="mb-0">TingsApp</h3></div>
+    <div class="line"></div>
+    <b-list-group>
+      <b-list-group-item button class="border-0" @click="navigate('/')">
         <span
-          class="md-list-item-text"
+          class="mb-0"
           v-bind:class="{
             active: $route.name == 'home',
           }"
-          >Home</span
         >
-      </md-list-item>
-      <md-list-item @click="navigate('/about')">
+          Home
+        </span>
+      </b-list-group-item>
+      <b-list-group-item button class="border-0" @click="navigate('/about')">
         <span
-          class="md-list-item-text"
+          class="mb-0"
           v-bind:class="{
             active: $route.name == 'about',
           }"
-          >What is TingsApp</span
         >
-      </md-list-item>
-      <md-list-item @click="navigate('/how-it-works')">
+          What is TingsApp
+        </span>
+      </b-list-group-item>
+      <b-list-group-item button class="border-0" @click="navigate('/how-it-works')">
         <span
-          class="md-list-item-text"
+          class="mb-0"
           v-bind:class="{
             active: $route.name == 'how-it-works',
           }"
-          >How it works</span
         >
-      </md-list-item>
-      <md-list-item @click="navigate('/help/shipper')">
+          How it works
+        </span>
+      </b-list-group-item>
+      <b-list-group-item button class="border-0" @click="navigate('/help')">
         <span
-          class="md-list-item-text"
+          class="mb-0"
           v-bind:class="{
             active: $route.name == 'help',
           }"
-          >Help center</span
         >
-      </md-list-item>
-      <md-list-item @click="navigate('/cities')">
+          Help center
+        </span>
+      </b-list-group-item>
+      <b-list-group-item button class="border-0" @click="navigate('/cities')">
         <span
-          class="md-list-item-text"
+          class="mb-0"
           v-bind:class="{
             active: $route.name == 'cities',
           }"
-          >Cities</span
         >
-      </md-list-item>
-      <md-divider></md-divider>
-      <md-list-item @click="navigate('/carriers')">
+          Cities
+        </span>
+      </b-list-group-item>
+      <div class="line"></div>
+      <b-list-group-item button class="border-0" @click="navigate('/carriers')">
         <span
-          class="md-list-item-text"
+          class="mb-0"
           v-bind:class="{
             active: $route.name == 'carriers',
           }"
-          >Become a Mover</span
         >
-      </md-list-item>
-      <md-list-item @click="navigate('/login')">
+          Become a Mover
+        </span>
+      </b-list-group-item>
+      <b-list-group-item button class="border-0" @click="navigate('/login')">
         <span
-          class="md-list-item-text"
+          class="mb-0"
           v-bind:class="{
             active: $route.name == 'login',
           }"
-          >My account</span
         >
-      </md-list-item>
-    </md-list>
+          My account
+        </span>
+      </b-list-group-item>
+    </b-list-group>
   </div>
 </template>
 <script>
 import { mapGetters, mapActions } from "vuex";
 export default {
+  data: () => ({}),
   methods: {
     navigate(path) {
       this.$router.push(path);

@@ -1,60 +1,53 @@
 <template>
-  <div class="shipper-payment-method">
+  <div>
     <md-dialog :md-active.sync="checkoutTogal">
       <md-dialog-content>
         <Card v-on:close-dialog="refresh" />
       </md-dialog-content>
     </md-dialog>
-    <md-table v-if="cards" md-sort="zip" md-sort-order="asc" md-card>
-      <md-table-row>
-        <md-table-head></md-table-head>
-        <md-table-head>Type</md-table-head>
-        <md-table-head>Details</md-table-head>
-        <md-table-head>Exp Date</md-table-head>
-        <md-table-head>Edit</md-table-head>
-      </md-table-row>
-      <md-table-row v-for="(card, index) in cards" :key="index">
-        <md-table-cell>
-          <md-radio v-model="selected" :value="true"></md-radio>
-        </md-table-cell>
-        <md-table-cell>{{ card.brand }}</md-table-cell>
-        <md-table-cell>************{{ card.last4 }}</md-table-cell>
-        <md-table-cell>{{ card.exp_month }}/{{ card.exp_year }}</md-table-cell>
-        <md-table-cell>
-          <md-button @click="checkoutTogal = true" class="md-icon-button md-primary"
-            ><md-icon>more_horiz</md-icon></md-button
-          >
-        </md-table-cell>
-      </md-table-row>
-    </md-table>
-    <md-empty-state
-      v-else
-      class="md-primary"
-      md-icon="sentiment_satisfied_alt"
-      md-label="Not available"
-      md-description="Click + icon to add anew payment method"
-    >
-      <md-button @click="checkoutTogal = true" class="md-icon-button md-raised">
-        <md-icon>add</md-icon>
-        <md-tooltip>Get a new payment method</md-tooltip>
-      </md-button>
-    </md-empty-state>
-    <Snackbar :data="snackbar" />
+    <table class="table" v-if="cards">
+      <thead>
+        <tr>
+          <th colspan="2">Type</th>
+          <th>Details</th>
+          <th>Exp Date</th>
+          <th>Edit</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(card, index) in cards" :key="index">
+          <td>
+            <md-radio v-model="selected" :value="true"></md-radio>
+          </td>
+          <td>{{ card.brand }}</td>
+          <td>************{{ card.last4 }}</td>
+          <td>{{ card.exp_month }}/{{ card.exp_year }}</td>
+          <td>
+            <b-button @click="checkoutTogal = true" variant="light"
+              ><b-icon icon="pencil"></b-icon
+            ></b-button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div v-else class="text-center px-6">
+      <p>No card added yet!</p>
+      <b-button @click="checkoutTogal = true" variant="primary"> Add </b-button>
+    </div>
+    <Toaster :data="Toaster" />
   </div>
 </template>
 
 <script>
 import axios from "axios";
-import Spinner from "../../../shared/Spinner";
-import Snackbar from "../../../shared/Snackbar";
 import Card from "../../card/Card";
+import Toaster from "../../../shared/Toaster";
 
 export default {
   name: "ShipperPaymentDetails",
   components: {
-    Spinner,
     Card,
-    Snackbar,
+    Toaster,
   },
   data: () => ({
     selected: true,
@@ -62,11 +55,6 @@ export default {
     dataLoading: true,
     order: null,
     checkoutTogal: false,
-    snackbar: {
-      show: false,
-      message: null,
-      statusCode: null,
-    },
   }),
   created() {
     this.getCard();
@@ -74,12 +62,9 @@ export default {
   methods: {
     refresh(data) {
       this.checkoutTogal = false;
-      this.snackbar.show = true;
-      this.snackbar.message = data.message;
-      this.snackbar.statusCode = 200;
+      this.$refs.toaster.show("success", "b-toaster-top-right", "Success", data.message);
       this.getCard();
     },
-
     getCard() {
       axios
         .get("shipper/card-details")
@@ -99,9 +84,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.md-card {
-  box-shadow: none !important;
-  text-align: left;
-}
-</style>
+<style lang="scss" scoped></style>

@@ -1,36 +1,21 @@
 <template>
-  <div class="shipper-account">
-    <md-card>
-      <form @submit.prevent="update">
-        <md-card-header>
-          <span class="md-title">Change Avatar</span>
-        </md-card-header>
-        <md-divider></md-divider>
-        <md-card-content>
-          <Spinner v-if="isSubmitting" />
-          <md-field v-else>
-            <label>Select file</label>
-            <md-file @change="onChange" />
-          </md-field>
-        </md-card-content>
-        <md-card-actions>
-          <md-button type="submit" class="md-primary">
-            Update
-            <md-tooltip>Update avatar</md-tooltip>
-          </md-button>
-        </md-card-actions>
-      </form>
-    </md-card>
-  </div>
+  <b-card header="Change Avatar" class="border-0 shadow text-left">
+    <form @submit.prevent="update">
+      <b-spinner variant="primary" v-if="isSubmitting" />
+      <b-form-group v-else>
+        <b-form-file @change="onChange" />
+      </b-form-group>
+      <div class="mt-3 text-right">
+        <b-button type="submit" variant="primary"> Update </b-button>
+      </div>
+    </form>
+  </b-card>
 </template>
 <script>
-import Spinner from "../../../shared/Spinner";
 import axios from "axios";
 export default {
   name: "EditShipperAccount",
-  components: {
-    Spinner,
-  },
+  components: {},
   data: () => ({
     isSubmitting: false,
     avatar: null,

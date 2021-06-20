@@ -1,7 +1,20 @@
 <template>
-  <div class="container">
-    <Header v-on:togal-menu="$emit('togal-menu')" class="no-print" />
-    <div class="admin">
+  <div class="admin">
+    <div>
+      <Header v-on:togal-menu="isSidebarOpen = true" class="no-print" />
+      <b-sidebar
+        v-model="isSidebarOpen"
+        id="sidebar-backdrop"
+        :backdrop-variant="variant"
+        backdrop
+        shadow
+      >
+        <div class="px-3 py-2">
+          <SideMenu />
+        </div>
+      </b-sidebar>
+    </div>
+    <div class="content">
       <router-view></router-view>
     </div>
     <Footer class="no-print" />
@@ -9,6 +22,7 @@
 </template>
 
 <script>
+import SideMenu from "./AdminSideMenu";
 import Footer from "../shared/Footer";
 import Header from "../shared/Header";
 export default {
@@ -16,17 +30,14 @@ export default {
   components: {
     Header,
     Footer,
+    SideMenu,
   },
+  data: () => ({
+    variant: "dark",
+    variants: ["white"],
+    isSidebarOpen: false,
+  }),
 };
 </script>
 
-<style lang="scss" scoped>
-.admin {
-  min-height: calc(100vh - 50px);
-}
-@media only screen and (min-width: 600px) {
-  .admin {
-    padding: 20px;
-  }
-}
-</style>
+<style lang="scss"></style>

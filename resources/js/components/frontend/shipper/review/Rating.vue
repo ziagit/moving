@@ -47,12 +47,12 @@
       </md-list>
     </div>
     <Footer />
-    <Snackbar :data="snackbar" />
+    <Toaster ref="toaster" />
   </div>
 </template>
 <script>
 import StarRating from "vue-star-rating";
-import Snackbar from "../../../shared/Snackbar";
+import Toaster from "../../../shared/Toaster";
 import CarrierInfo from "../../order/menu/CarrierInfo";
 import Rate from "./Rate";
 import Footer from "../../../shared/Footer";
@@ -61,7 +61,7 @@ import axios from "axios";
 export default {
   props: ["scrollValue"],
   components: {
-    Snackbar,
+    Toaster,
     StarRating,
     CarrierInfo,
     Rate,
@@ -72,11 +72,6 @@ export default {
     rating: 0,
     carriers: "",
     closeOnClick: true,
-    snackbar: {
-      show: false,
-      message: null,
-      statusCode: null,
-    },
   }),
   watch: {
     carriers(data) {
@@ -101,9 +96,7 @@ export default {
         });
     },
     rated(data) {
-      this.snackbar.show = true;
-      this.snackbar.message = data.message;
-      this.snackbar.statusCode = 200;
+      this.$refs.toaster.show("success", "b-toaster-top-center", "Success", data.message);
       if (!JSON.parse(localStorage.getItem("vtd")).includes(data.id)) {
         this.getCarriers();
       }

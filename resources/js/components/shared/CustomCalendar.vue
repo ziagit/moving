@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="calendar">
     <!-- edit dialog -->
     <div class="row1" v-if="daysTogal">
       <div class="days" v-for="(cl, index) in cal" :key="index" @click="select(cl)">
@@ -20,9 +20,9 @@
         </div>
       </div>
       <div class="days more" @click="daysTogal = !daysTogal">
-        <div style="display: flex; flex-direction: column; padding: 10px">
+        <div>
           <span style="font-size: 12px">More</span>
-          <md-icon>arrow_drop_down</md-icon>
+          <b-icon icon="chevron-down"></b-icon>
         </div>
       </div>
     </div>
@@ -49,28 +49,18 @@
           </div>
         </div>
       </div>
-
-      <div
-        class="days"
-        @click="moreTogal = !moreTogal"
-        style="
-          background: #fff;
-          border: solid 1px #ffa500;
-          display: flex;
-          justify-content: center;
-        "
-      >
+      <div class="days" @click="moreTogal = !moreTogal">
         <div class="custom-cal">
           <input type="date" v-model="selectNextMonth" :min="getMinDate()" />
         </div>
       </div>
       <div
-        class="days"
+        class="days less"
         @click="daysTogal = !daysTogal"
         style="background: #fff; border: solid 1px #ffa500"
       >
-        <div style="display: flex; flex-direction: column; padding: 10px">
-          <md-icon>arrow_drop_up</md-icon>
+        <div>
+          <b-icon icon="chevron-up"></b-icon>
           <span style="font-size: 12px">Less</span>
         </div>
       </div>
@@ -293,6 +283,7 @@ export default {
     min-width: 63px;
     height: 63px;
     margin: 10px;
+    margin-right: 15px;
     background: #ffa5001a;
     border-radius: 12px;
     cursor: pointer;
@@ -329,6 +320,13 @@ export default {
     right: -8px;
     background: #fff;
     border: 1px solid #ffa500;
+    div {
+      display: flex;
+      flex-direction: column;
+      padding: 10px;
+      align-items: center !important;
+      height: 100%;
+    }
   }
 }
 .row2 {
@@ -374,6 +372,17 @@ export default {
   }
   .days:hover {
     box-shadow: none;
+  }
+  .less {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    div {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
   }
 }
 .time-range {

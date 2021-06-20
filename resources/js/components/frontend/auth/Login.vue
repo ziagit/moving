@@ -1,67 +1,45 @@
 <template>
-  <div class="container">
+  <div class="login">
     <Header v-on:togal-menu="$emit('togal-menu')" />
     <div class="content">
-      <md-card mode="ios">
-        <md-card-header>
-          <span class="md-title">TingsApp</span>
-        </md-card-header>
-        <md-card-content>
-          <div class="break"></div>
-          <form @submit.prevent="submitPassword" v-if="inputTogal">
-            <div class="md-body-2">Almost there</div>
-            <div class="md-body-1">Please enter your password</div>
-            <md-field>
-              <label>Password</label>
-              <md-input type="password" v-model="form.password" required></md-input>
-            </md-field>
-            <div class="submit">
-              <Spinner v-if="isSubmitting" />
-              <md-button
-                v-else
-                type="submit"
-                class="md-raised md-fab md-icon-button rounded-secondary-button"
-              >
-                <md-icon>arrow_forward</md-icon>
-              </md-button>
-            </div>
-          </form>
-          <form @submit.prevent="submit" v-else>
-            <div class="md-body-2">Welcome back</div>
-            <div class="md-body-1">Enter your email or phone number</div>
-            <md-field>
-              <label>Email/phone</label>
-              <md-input type="text" v-model="form.email" required></md-input>
-            </md-field>
-            <div class="submit">
-              <Spinner v-if="isSubmitting" />
-              <md-button
-                v-else
-                type="submit"
-                class="md-raised md-fab md-icon-button rounded-secondary-button"
-              >
-                <md-icon>arrow_forward</md-icon>
-              </md-button>
-            </div>
-          </form>
-        </md-card-content>
-        <md-card-actions md-alignment="space-between">
-          <md-button to="/forgot-password" class="md-primary" v-show="inputTogal"
-            >Reset Password</md-button
+      <b-card
+        title="TingsApp"
+        sub-title="Almost there"
+        class="border-0 shadow w-50 mx-auto"
+      >
+        <form @submit.prevent="submit">
+          <b-form-group
+            id="fieldset-1"
+            description="Your phone/email number will not be shared!"
+            label=""
+            label-for="input-1"
+            valid-feedback="Thank you!"
           >
-          <md-button to="/register" class="md-secondary">New mover</md-button>
-        </md-card-actions>
-      </md-card>
+            <div class="break"></div>
+            <span>Enter your email or phone number</span>
+            <b-form-input id="input-1" v-model="form.email" required></b-form-input>
+          </b-form-group>
+          <div class="submit">
+            <b-spinner variant="primary" v-if="isSubmitting" />
+            <b-button v-else type="submit" variant="primary"> Signin </b-button>
+          </div>
+        </form>
+
+        <template #footer>
+          <small @click="$router.push('/register')" variant="ligth"
+            >Login using a social account</small
+          >
+        </template>
+      </b-card>
     </div>
     <Footer />
-    <Snackbar :data="snackbar" />
+    <Toaster ref="toaster" />
   </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-import Spinner from "../../shared/Spinner";
-import Snackbar from "../../shared/Snackbar";
+import Toaster from "../../shared/Toaster";
 import Header from "../../shared/Header";
 import Footer from "../../shared/Footer";
 import localData from "../services/localData";
@@ -69,17 +47,14 @@ import axios from "axios";
 export default {
   name: "Login",
   data: () => ({
-    snackbar: {
-      show: false,
-      message: null,
-      statusCode: null,
-    },
     form: {
       email: null,
     },
     inputTogal: false,
     isSubmitting: false,
   }),
+  computed: {},
+
   methods: {
     ...mapActions({
       signIn: "auth/signIn",
@@ -100,18 +75,20 @@ export default {
             }
           })
           .catch((err) => {
-            this.snackbar.message = err.response.data;
-            this.snackbar.statusCode = err.response.status;
-            this.snackbar.show = true;
             this.isSubmitting = false;
+            this.$refs.toaster.show(
+              "danger",
+              "b-toaster-top-center",
+              "Error",
+              err.response.data
+            );
           });
       }
     },
   },
 
   components: {
-    Spinner,
-    Snackbar,
+    Toaster,
     Header,
     Footer,
   },
@@ -119,48 +96,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.container {
+.login {
   width: 100%;
 
   .content {
     padding: 60px 20px;
     height: calc(100vh - 3px);
 
-    .md-card {
-      margin: auto;
-      text-align: left;
-      max-width: 500px;
-      padding: 20px;
-
-      .md-card-content {
-        .submit {
-          text-align: right;
-        }
-      }
-
-      .login-througth {
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-      }
+    .submit {
+      text-align: right;
     }
-  }
-}
-
-@media only screen and (max-width: 600px) {
-  .login {
-    padding-top: 3em;
-
-    .md-card {
-      .login-througth {
-        .md-button {
-          font-size: 11px;
-        }
-      }
-
-      .md-display-1 {
-        font-size: 30px;
-      }
+    small:hover {
+      cursor: pointer;
+      color: #007bff;
     }
   }
 }

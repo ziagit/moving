@@ -22,19 +22,18 @@
         </md-card-content>
 
         <md-card-actions>
-          <Spinner v-if="isSubmitting" />
+          <b-spinner variant="primary" v-if="isSubmitting" />
           <md-button v-else @click="submit" class="md-primary">Submit</md-button>
         </md-card-actions>
       </md-card>
     </div>
     <Footer />
-    <Snackbar :data="snackbar" />
+    <Toaster ref="toaster" />
   </div>
 </template>
 <script>
 import StarRating from "vue-star-rating";
-import Snackbar from "../../../shared/Snackbar";
-import Spinner from "../../../shared/Spinner";
+import Toaster from "../../../shared/Toaster";
 import Footer from "../../../shared/Footer";
 import Header from "../../../shared/Header";
 import axios from "axios";
@@ -46,11 +45,6 @@ export default {
     form: {
       ratting: 0,
       tips: null,
-    },
-    snackbar: {
-      show: false,
-      message: null,
-      statusCode: null,
     },
   }),
 
@@ -67,9 +61,12 @@ export default {
           .then((res) => {
             this.isSubmitting = false;
             console.log(res.data);
-            this.snackbar.message = res.data.message;
-            this.snackbar.statusCode = 200;
-            this.snackbar.show = true;
+            this.$refs.toaster.show(
+              "success",
+              "b-toaster-top-right",
+              "Success",
+              res.data.message
+            );
             setTimeout(() => {
               this.$router.push("/");
             }, 3000);
@@ -77,15 +74,18 @@ export default {
           .catch((err) => console.log(err));
       } else {
         this.isSubmitting = false;
-        this.snackbar.message = "Please give some stars";
-        this.snackbar.statusCode = 200;
-        this.snackbar.show = true;
+
+        this.$refs.toaster.show(
+          "warning",
+          "b-toaster-top-right",
+          "Warning",
+          "Please give some stars"
+        );
       }
     },
   },
   components: {
-    Snackbar,
-    Spinner,
+    Toaster,
     Header,
     Footer,
     StarRating,

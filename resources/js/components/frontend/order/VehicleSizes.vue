@@ -1,6 +1,6 @@
 <template>
   <div class="origin">
-    <span class="md-display-1">What size vehicle do you prefer?</span>
+    <h3>What size vehicle do you prefer?</h3>
     <div class="break"></div>
     <form v-if="vehicles">
       <div class="break"></div>
@@ -12,7 +12,7 @@
           :key="vehicle.id"
           @click="select(vehicle)"
         >
-          <md-card>
+          <b-card class="mini-card px-0 shadow-sm border-0">
             <div class="icon">
               <img
                 :src="'/images/uploads/checked.svg'"
@@ -22,51 +22,40 @@
               <img :src="'/images/uploads/unchecked.svg'" v-else width="22" />
             </div>
             <div class="text">
-              <div class="md-display-1">{{ vehicle.name }}</div>
-              <div class="md-body-1" v-if="vehicle.recommended">
+              <h6>{{ vehicle.name }}</h6>
+              <small class="text-muted" v-if="vehicle.recommended">
                 {{ vehicle.recommended }}
-              </div>
+              </small>
             </div>
-          </md-card>
+          </b-card>
         </div>
       </div>
       <div class="break"></div>
       <div class="break"></div>
-      <div class="actions">
-        <md-button
-          @click="back()"
-          class="md-raised md-fab md-icon-button rounded-primary-button"
-        >
-          <md-icon>arrow_back</md-icon>
-        </md-button>
-        <div class="tab"></div>
 
-        <md-button
-          @click="next()"
-          class="md-raised md-fab md-icon-button rounded-secondary-button"
-        >
-          <md-icon>arrow_forward</md-icon>
-        </md-button>
+      <div class="actions">
+        <b-button @click="back()" variant="light">
+          <b-icon icon="arrow-left"></b-icon>
+        </b-button>
+        <div class="tab"></div>
+        <b-button @click="next()" variant="primary">
+          <b-icon icon="arrow-right"></b-icon>
+        </b-button>
       </div>
     </form>
-    <Snackbar :data="snackbar" />
+    <Toaster ref="toaster" />
   </div>
 </template>
 <script>
 import localData from "../services/localData";
-import Snackbar from "../../shared/Snackbar";
+import Toaster from "../../shared/Toaster";
 export default {
   name: "Origin",
-  components: { Snackbar },
+  components: { Toaster },
   data: () => ({
     vehicles: null,
     selected: null,
     selectedIndex: null,
-    snackbar: {
-      show: false,
-      message: null,
-      statusCode: null,
-    },
   }),
   created() {
     this.$emit("progress", 2);
@@ -95,9 +84,12 @@ export default {
         localData.save("vehicle", this.selected);
         this.$router.push("number-of-movers");
       } else {
-        this.snackbar.show = true;
-        this.snackbar.message = "Select an option to continue!";
-        this.snackbar.statusCode = "428";
+        this.$refs.toaster.show(
+          "warning",
+          "b-toaster-top-center",
+          "Warning",
+          "Select an option to continue!"
+        );
       }
     },
     get() {
@@ -122,6 +114,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.text-muted {
+  margin: 0;
+  padding: 0;
+  line-height: 1;
+}
 @media only screen and (max-width: 600px) {
 }
 </style>

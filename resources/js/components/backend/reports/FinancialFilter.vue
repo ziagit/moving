@@ -1,33 +1,31 @@
 <template>
   <div>
-    <div class="md-body-2">Filter By</div>
-    <div class="row">
-      <md-field>
-        <md-select v-model="form.month" placeholder="Month">
-          <md-option value="1">January</md-option>
-          <md-option value="2">February</md-option>
-          <md-option value="3">March</md-option>
-          <md-option value="4">April</md-option>
-          <md-option value="5">May</md-option>
-          <md-option value="6">June</md-option>
-          <md-option value="7">July</md-option>
-          <md-option value="8">August</md-option>
-          <md-option value="9">September</md-option>
-          <md-option value="10">October</md-option>
-          <md-option value="11">November</md-option>
-          <md-option value="12">December</md-option>
-        </md-select>
-      </md-field>
-      <md-field>
-        <md-select v-model="form.status" placeholder="Payment status">
-          <md-option value="Paid">Paid</md-option>
-          <md-option value="Unpaid">Unpaid</md-option>
-          <md-option value="Refunded">Refunded</md-option>
-        </md-select>
-      </md-field>
-    </div>
-    <div class="action">
-      <md-button class="md-primary" @click="filter()">Filter</md-button>
+    <b-form-group>
+      <b-input-group>
+        <b-form-datepicker
+          v-model="form.from"
+          placeholder="Start date"
+          :max="new Date()"
+          data-date-format="yyyy-mm-dd"
+        ></b-form-datepicker>
+        <b-form-datepicker
+          v-model="form.to"
+          placeholder="End date"
+          :max="new Date()"
+        ></b-form-datepicker>
+      </b-input-group>
+    </b-form-group>
+    <b-form-group>
+      <label for="">Status</label>
+      <b-form-select v-model="form.status" placeholder="Status">
+        <b-form-select-option :value="null">All</b-form-select-option>
+        <b-form-select-option value="Paid">Paid</b-form-select-option>
+        <b-form-select-option value="Unpaid">Unpaid</b-form-select-option>
+        <b-form-select-option value="Refunded">Refunded</b-form-select-option>
+      </b-form-select>
+    </b-form-group>
+    <div class="text-right">
+      <b-button variant="primary" @click="filter()">Filter</b-button>
     </div>
   </div>
 </template>
@@ -35,7 +33,8 @@
 export default {
   data: () => ({
     form: {
-      month: null,
+      from: null,
+      to: null,
       status: null,
     },
   }),

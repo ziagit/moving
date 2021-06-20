@@ -1,43 +1,38 @@
 <template>
-  <div class="jobs" v-if="jobs">
-    <md-table md-sort="first_name" md-sort-order="asc" md-card>
-      <md-table-toolbar>
-        <div class="md-toolbar-section-start">
-          <span class="md-title">Jobs</span>
-        </div>
-
-        <md-field md-clearable class="md-toolbar-section-end">
-          <md-input placeholder="Search by name..." v-model="keywords" />
-        </md-field>
-      </md-table-toolbar>
-
-      <md-table-empty-state
-        md-label="No state found"
-        :md-description="`No state found for this query. Try a different search term or create a new state.`"
-      >
-      </md-table-empty-state>
-      <md-table-row>
-        <md-table-head>Order</md-table-head>
-        <md-table-head>Date</md-table-head>
-        <md-table-head>Time</md-table-head>
-        <md-table-head>Type</md-table-head>
-        <md-table-head>Price</md-table-head>
-        <md-table-head>Status</md-table-head>
-        <md-table-head>Details</md-table-head>
-      </md-table-row>
-      <md-table-row v-for="job in jobs.data" :key="job.id">
-        <md-table-cell>{{ job.order_detail.uniqid }}</md-table-cell>
-        <md-table-cell>{{ job.order_detail.pickup_date }}</md-table-cell>
-        <md-table-cell>{{ job.order_detail.appointment_time }}</md-table-cell>
-        <md-table-cell>{{ job.order_detail.movingtype.title }}</md-table-cell>
-        <md-table-cell>${{ job.order_detail.cost }}</md-table-cell>
-        <md-table-cell> {{ job.order_detail.status }}</md-table-cell>
-        <md-table-cell>
-          <md-button @click="details(job.id)"><md-icon>more_horiz</md-icon></md-button>
-        </md-table-cell>
-      </md-table-row>
-    </md-table>
-    <pagination :limit="4" :data="jobs" @pagination-change-page="get"></pagination>
+  <div class="jobs">
+    <b-card class="border-0 shadow text-left" header="Jobs">
+      <b-form-input placeholder="Search by Order" v-model="keywords"></b-form-input>
+      <div class="table-responsive-sm">
+        <table class="table table-light">
+          <thead>
+            <tr>
+              <th scope="col">Order</th>
+              <th scope="col">Date</th>
+              <th scope="col">Time</th>
+              <th scope="col">Type</th>
+              <th scope="col">Price</th>
+              <th scope="col">Status</th>
+              <th scope="col">Details</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(job, index) in jobs.data" :key="index">
+              <td>{{ job.order_detail.uniqid }}</td>
+              <td>{{ job.order_detail.pickup_date }}</td>
+              <td>{{ job.order_detail.appointment_time }}</td>
+              <td>{{ job.order_detail.movingtype.title }}</td>
+              <td>${{ job.order_detail.cost }}</td>
+              <td>{{ job.order_detail.status }}</td>
+              <td>
+                <b-button variant="light" @click="details(job.id)"
+                  ><b-icon variant="primary" icon="three-dots"></b-icon
+                ></b-button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </b-card>
   </div>
 </template>
 
@@ -47,7 +42,7 @@ export default {
   name: "shipper",
   data: () => ({
     keywords: null,
-    jobs: null,
+    jobs: [],
   }),
   watch: {
     keywords(after, before) {
@@ -91,17 +86,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.jobs {
-  width: 100%;
-
-  .add-btn {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-  }
-  .md-toolbar-section-start {
-    text-align: left;
-  }
-}
-</style>
+<style lang="scss" scoped></style>

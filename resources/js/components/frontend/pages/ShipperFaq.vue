@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="shipper">
     <div class="left">
       <div class="md-display-1">Customer</div>
       <div class="md-body-1 text-16">
@@ -59,7 +59,7 @@ export default {
 };
 </script>
 <style scoped lang="scss">
-.container {
+.shipper {
   display: flex;
   justify-content: space-around;
   flex-wrap: wrap;

@@ -1,39 +1,39 @@
 <template>
   <div>
-    <md-table md-sort="zip" md-sort-order="asc" md-card>
-      <md-table-row>
-        <md-table-head>Order</md-table-head>
-        <md-table-head>Date</md-table-head>
-        <md-table-head>Type</md-table-head>
-        <md-table-head>Price</md-table-head>
-        <md-table-head>Status</md-table-head>
-        <md-table-head>Details</md-table-head>
-      </md-table-row>
-      <md-table-row v-for="(earning, index) in earnings.data" :key="index">
-        <md-table-cell>{{ earning.order.uniqid }}</md-table-cell>
-        <md-table-cell>{{ formatter(earning.created_at) }}</md-table-cell>
-        <md-table-cell>{{ earning.order.movingtype_id }}</md-table-cell>
-        <md-table-cell>${{ earning.carrier_earning }}</md-table-cell>
-        <md-table-cell>{{ earning.status }}</md-table-cell>
+    <table class="table text-left">
+      <tr>
+        <th>Order</th>
+        <th>Date</th>
+        <th>Type</th>
+        <th>Price</th>
+        <th>Status</th>
+        <th>Details</th>
+      </tr>
+      <tr v-for="(earning, index) in earnings.data" :key="index">
+        <td>{{ earning.order.uniqid }}</td>
+        <td>{{ formatter(earning.created_at) }}</td>
+        <td>{{ earning.order.movingtype_id }}</td>
+        <td>${{ earning.carrier_earning }}</td>
+        <td>{{ earning.status }}</td>
 
-        <md-table-cell md-label="Actions">
-          <md-button class="md-icon-button md-primary" @click="details(earning.id)">
-            <md-icon>more_horiz</md-icon>
-          </md-button>
-        </md-table-cell>
-      </md-table-row>
+        <td md-label="Actions">
+          <b-button variant="light" @click="details(earning.id)">
+            <b-icon icon="three-dots"></b-icon>
+          </b-button>
+        </td>
+      </tr>
 
-      <md-table-row>
-        <md-table-cell> </md-table-cell>
-        <md-table-cell> </md-table-cell>
-        <md-table-cell> <b>Balance</b></md-table-cell>
-        <md-table-cell>
-          <b>${{ total }}</b></md-table-cell
-        >
-        <md-table-cell> </md-table-cell>
-        <md-table-cell> </md-table-cell>
-      </md-table-row>
-    </md-table>
+      <tr>
+        <td></td>
+        <td></td>
+        <td><b>Balance</b></td>
+        <td>
+          <b>${{ total }}</b>
+        </td>
+        <td></td>
+        <td></td>
+      </tr>
+    </table>
   </div>
 </template>
 

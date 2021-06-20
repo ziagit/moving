@@ -1,81 +1,73 @@
 <template>
   <div>
-    <form @submit.prevent="update" enctype="multipart/form-data">
-      <md-card class="main-card">
-        <md-card-header>
-          <span class="md-title">Edit Bank Information</span>
-          <md-button @click="$router.back()" class="md-icon-button add-btn">
-            <md-icon>close</md-icon>
-            <md-tooltip>Cancel</md-tooltip>
-          </md-button>
-        </md-card-header>
-        <md-divider></md-divider>
-        <md-card-content>
-          <md-field>
-            <md-select
+    <form @submit.prevent="submit" enctype="multipart/form-data">
+      <b-card header="Edit Bank Informations" class="border-0 shadow text-left">
+        <b-button @click="$router.back()" variant="light" class="add-btn">
+          <b-icon icon="x"></b-icon>
+        </b-button>
+        <div>
+          <b-form-group>
+            <b-form-select
               v-model="form.currency"
-              :value="form.currency"
-              name="country"
-              id="country"
-              placeholder="Country"
-            >
-              <md-option value="CAD">CAD - Canadian Dollar</md-option>
-              <md-option value="USD">USD - US Dollar</md-option>
-            </md-select>
-          </md-field>
-          <md-field>
-            <label for="">Transit number</label>
-            <md-input type="text" v-model="form.transit_number" required></md-input>
-          </md-field>
-          <md-field>
-            <label for="">Institution number</label>
-            <md-input
+              :options="currencies"
+              ref="focusable"
+            ></b-form-select>
+          </b-form-group>
+          <b-form-group>
+            <b-form-input
+              type="text"
+              v-model="form.transit_number"
+              required
+              placeholder="Transit number"
+            ></b-form-input>
+          </b-form-group>
+          <b-form-group>
+            <b-form-input
               type="number"
               v-model="form.institution_number"
               required
               :min="0"
-            ></md-input>
-          </md-field>
-          <md-field>
-            <label for="">Account number</label>
-            <md-input
+              placeholder="Institution number"
+            ></b-form-input>
+          </b-form-group>
+          <b-form-group>
+            <b-form-input
               type="number"
               v-model="form.account_number"
               required
               :min="0"
-            ></md-input>
-          </md-field>
-          <md-field>
-            <label for="">Confirm account number</label>
-            <md-input
+              placeholder="Account number"
+            ></b-form-input>
+          </b-form-group>
+          <b-form-group>
+            <b-form-input
               type="number"
               v-model="form.confirm_account_number"
               required
               :min="0"
-            ></md-input>
-          </md-field>
-        </md-card-content>
-        <md-card-actions>
-          <Spinner v-if="isSubmitting" />
-          <md-button v-if="!isSubmitting" type="submit" class="md-primary md-small-fab"
-            >Update</md-button
+              placeholder="Confirm account number"
+            ></b-form-input>
+          </b-form-group>
+        </div>
+        <div class="text-right">
+          <b-spinner variant="primary" v-if="isSubmitting" />
+          <b-button v-if="!isSubmitting" type="submit" class="" variant="primary"
+            >Save</b-button
           >
-        </md-card-actions>
-      </md-card>
+        </div>
+      </b-card>
     </form>
-    <Snackbar :data="snackbar" />
+    <Toaster ref="toaster" />
   </div>
 </template>
 
 <script>
 import axios from "axios";
-import Snackbar from "../../../shared/Snackbar";
-import Spinner from "../../../shared/Spinner";
+import Toaster from "../../../shared/Toaster";
 export default {
   name: "Edit",
   components: {
-    Snackbar,
-    Spinner,
+    Toaster,
   },
   data: () => ({
     initialData: null,
@@ -86,17 +78,16 @@ export default {
       account_number: null,
       confirm_account_number: null,
     },
-
+    currencies: [
+      { value: null, text: "Select Currency" },
+      { value: "CAD", text: "CAD - Canadian Dollar" },
+      { value: "USD", text: "USD - US Dollar" },
+    ],
     isSubmitting: false,
-    snackbar: {
-      show: false,
-      message: null,
-      statusCode: null,
-    },
   }),
 
   methods: {
-    update() {
+    submit() {
       this.isSubmitting = true;
       axios
         .put("carrier/payments/" + this.$route.params.id, this.form)
@@ -107,9 +98,12 @@ export default {
         .catch((error) => {
           console.log("eerrr: ", error);
           this.isSubmitting = false;
-          this.snackbar.message = error.response.data.errors;
-          this.snackbar.statusCode = error.response.status;
-          this.snackbar.show = true;
+          this.$refs.toaster.show(
+            "danger",
+            "b-toaster-top-center",
+            "Error",
+            error.response.data.errors
+          );
         });
     },
     init() {

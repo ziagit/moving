@@ -5,8 +5,14 @@
 </template>
 
 <script>
+import Admin from "./backend/Admin";
+import Home from "./frontend/Home";
 export default {
   name: "App",
+  components: {
+    Home,
+    Admin,
+  },
   mounted() {},
   beforeDestroy() {},
   methods: {},
@@ -14,12 +20,83 @@ export default {
 </script>
 
 <style lang="scss">
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  font-family: "Roboto";
+}
+.completion {
+  .card {
+    .card-body {
+      padding: 0 !important;
+    }
+  }
+}
+.progress {
+  min-height: 140px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: none;
+  p {
+    margin: 0 !important;
+  }
+}
+.order {
+  .right {
+    .card {
+      .card-body {
+        padding: 0 !important;
+      }
+    }
+  }
+}
+.login,
+.password,
+.register {
+  .card {
+    .card-body {
+      padding: 48px;
+    }
+  }
+}
+.b-sidebar {
+  width: 250px !important;
+  .b-sidebar-header {
+    display: none !important;
+  }
+  .b-sidebar-body {
+    background: #fff;
+  }
+}
+
+.inbox {
+  .card {
+    .card-body {
+      .jumbotron {
+        background: none;
+        border-radius: 0;
+      }
+    }
+  }
+}
+.select-carrier {
+  .price-container {
+    .card-body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+  }
+}
 @media print {
   .no-print {
     visibility: hidden;
-  }
-  .md-card {
-    box-shadow: none !important;
   }
 }
 .add-btn {
@@ -32,26 +109,12 @@ export default {
     font-family: "Roboto" !important;
   }
 }
-.input-tel__input {
-  border: none !important;
-  border-bottom: 1px solid #000 !important;
-}
-.input-tel__input:focus {
-  outline: none !important;
-  border: none !important;
-}
 
 .shipper-payment-method {
   .md-dialog-container {
     min-height: 614px !important;
     min-width: 485px !important;
     padding: 20px !important;
-  }
-  .md-checkbox {
-    margin: 0 !important;
-    .md-checkbox-4p0bbz4d8 {
-      font-size: 11px !important;
-    }
   }
 }
 .google-address2 {
@@ -67,12 +130,15 @@ export default {
   align-items: center;
   overflow: hidden;
   padding: 10px;
+
   input {
     text-align: center;
     widows: 90% !important;
     height: 90% !important;
     border: none;
-    margin-left: -116px;
+    margin-left: -141px;
+    margin-top: 7px;
+    background: #fff6e5;
   }
   input:focus {
     outline: none;
@@ -83,19 +149,21 @@ a {
 }
 .origin {
   text-align: center;
+  width: 100%;
   .row {
     display: flex;
     justify-content: space-around;
     flex-wrap: wrap;
-    .col {
-      flex: 50%;
-      .md-card {
-        min-height: 82px;
-        background: #fff;
-        margin: 8px;
-        line-height: 37px;
+    .mini-card {
+      min-height: 82px;
+      background: #fff;
+      margin: 8px;
+      width: 100%;
+      line-height: 37px;
+      cursor: pointer;
+      .card-body {
+        padding: 0 !important;
         display: flex;
-        cursor: pointer;
         .icon {
           align-items: center;
           display: flex;
@@ -124,16 +192,28 @@ a {
           }
         }
       }
-      .md-card:hover {
-        box-shadow: none;
+      .mini-card:hover {
+        box-shadow: #ffa500;
       }
     }
   }
   .actions {
     display: flex;
     justify-content: center;
+    .btn {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+      width: 58px;
+      height: 58px;
+      text-align: center;
+      box-shadow: 0 3px 1px -2px rgb(0 0 0 / 20%), 0 2px 2px 0 rgb(0 0 0 / 14%),
+        0 1px 5px 0 rgb(0 0 0 / 12%);
+    }
   }
 }
+
 .md-dialog-container {
   min-width: 408px !important;
 }
@@ -290,7 +370,7 @@ a {
 }
 
 .line {
-  height: 2px;
+  height: 1px;
   width: 100%;
   background: #ddd;
 }
@@ -499,7 +579,6 @@ a {
       display: flex;
       justify-content: space-around;
       flex-wrap: wrap;
-
       .col {
         flex: 100%;
         .md-card {

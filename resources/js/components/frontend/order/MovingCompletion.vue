@@ -1,17 +1,20 @@
 <template>
-  <div class="container">
+  <div class="container completion">
     <Header v-on:togal-menu="$emit('togal-menu')" />
-    <div class="break"></div>
-    <div class="break"></div>
-    <div class="break"></div>
-    <div class="break"></div>
-    <div class="content">
-      <md-card>
-        <p style="font-size: 20px">Thank you!</p>
-        <p>Your order is placed with us;</p>
-        <p>Your confirmation number : {{ $route.params.id }}</p>
-        <md-button to="/" class="md-primary">Back to home</md-button>
-      </md-card>
+    <div class="content mt-5">
+      <b-card class="border-0 shadow px-0">
+        <b-alert show variant="success" class="mb-0">
+          <h4 class="alert-heading">Well done!</h4>
+          <p>Your order is placed with us;</p>
+          <p>Your confirmation number is: {{ $route.params.id }}</p>
+          <hr />
+          <p class="mb-0">
+            <b-button variant="outline-success" @click="$router.push('/')"
+              >Back to home</b-button
+            >
+          </p>
+        </b-alert>
+      </b-card>
     </div>
     <Footer />
   </div>

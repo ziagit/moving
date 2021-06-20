@@ -162,7 +162,7 @@
         <div class="md-title">Please wait !</div>
         <div>Your order is processing...</div>
         <div class="break"></div>
-        <Spinner />
+        <b-spinner variant="primary" />
       </div>
     </div>
     <Footer />
@@ -171,8 +171,6 @@
 
 <script>
 import builder from "../services/builder";
-import Spinner from "../../shared/Spinner";
-import Snackbar from "../../shared/Snackbar";
 import TermsAndConditions from "../../shared/TermsAndConditions";
 import Header from "../../shared/Header";
 import Footer from "../../shared/Footer";
@@ -182,11 +180,6 @@ export default {
   data: () => ({
     shipment: null,
     paymentStatus: false,
-    snackbar: {
-      show: false,
-      message: null,
-      statusCode: null,
-    },
   }),
   methods: {
     confirm() {
@@ -198,9 +191,7 @@ export default {
           this.$router.push("completion/" + res.data.uniqid);
         })
         .catch((err) => {
-          this.snackbar.show = true;
-          this.snackbar.message = err.message;
-          this.snackbar.statusCode = err.status;
+          this.$refs.toaster.show("danger", "b-toaster-top-center", "Error", err.message);
           console.log("Error: ", err);
         });
     },
@@ -216,8 +207,6 @@ export default {
     this.init();
   },
   components: {
-    Spinner,
-    Snackbar,
     TermsAndConditions,
     Header,
     Footer,

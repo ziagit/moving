@@ -22,6 +22,7 @@ import Terms from "./components/frontend/pages/Terms";
 import OurCarriers from "./components/frontend/pages/OurCarriers";
 import OurShippers from "./components/frontend/pages/OurShippers";
 import HowItWorks from "./components/frontend/pages/HowItWorks";
+import Legals from "./components/frontend/pages/Legals";
 import CarrierReview from "./components/frontend/shipper/review/CarrierReview";
 
 import CarrierProfile from "./components/frontend/carrier/CarrierProfile";
@@ -78,9 +79,9 @@ import ShipperOrderContainer from "./components/frontend/shipper/orders/ShipperO
 import ShipperOrders from "./components/frontend/shipper/orders/ShipperOrders";
 import ShipperOrderDetails from "./components/frontend/shipper/orders/ShipperOrderDetails";
 import ShipperCard from "./components/frontend/shipper/card-details/ShipperCard";
-import Expences from "./components/frontend/shipper/expences/Expences";
 
 //backend
+import AdminَAccount from "./components/backend/account/Account";
 import Admin from "./components/backend/Admin";
 import Dashboard from "./components/backend/dashboard/Dashboard";
 import AdminReports from "./components/backend/reports/Container";
@@ -102,6 +103,7 @@ import Movingtype from "./components/backend/lookups/moving-type/Movingtype";
 import Officesize from "./components/backend/lookups/office-size/Officesize";
 import Supply from "./components/backend/lookups/supply/Supply";
 import Vehicle from "./components/backend/lookups/vehicle/Vehicle";
+import Tax from "./components/backend/lookups/tax/Tax";
 
 import AdminCarriers from "./components/backend/carrier/Carriers";
 import AdminCarrierDetails from "./components/backend/carrier/Details";
@@ -123,9 +125,8 @@ import About from "./components/backend/company/about/About";
 import Contact from "./components/backend/company/contact/Contact";
 import TermsAdmin from "./components/backend/company/terms/Terms";
 import PrivacyAdmin from "./components/backend/company/privacy/Privacy";
-import HelpCenterAdmin from "./components/backend/company/help/Help";
-import CarrierInfoAdmin from "./components/backend/company/carrier/Carrier";
-import ShipperInfoAdmin from "./components/backend/company/shipper/Shipper";
+import AdminHowItWorks from "./components/backend/company/how-it-works/HowItWorks";
+import AdminLegals from "./components/backend/company/legals/Legals";
 import CarrierFaqAdmin from "./components/backend/company/carrier-faq/FAQ";
 import ShipperFaqAdmin from "./components/backend/company/shipper-faq/FAQ";
 
@@ -160,13 +161,12 @@ export default new VueRouter({
                 { name: "home", path: "home", component: HomeContent },
                 { name: "about", path: "about", component: AboutUs },
                 { name: "contact", path: "contact", component: ContactUs },
-                { name: "help", path: "help/:id", component: Help },
+                { name: "help", path: "help", component: Help },
                 { name: "cities", path: "cities", component: CityList },
                 { name: "login", path: "login", component: Login },
                 { name: "register", path: "register", component: Register },
                 { name: "verify", path: "verify", component: VerifyContact },
                 { name: "password", path: "password", component: Password },
-
                 {
                     path: "/reset-password/:token",
                     component: ResetPassword
@@ -395,6 +395,11 @@ export default new VueRouter({
                             name: "payments",
                             path: "payments",
                             component: CarrierPayments
+                        },
+                        {
+                            name: "legals",
+                            path: "legals",
+                            component: Legals
                         }
                     ],
                     beforeEnter: webGuard
@@ -466,221 +471,223 @@ export default new VueRouter({
                             component: ShipperCard
                         },
                         {
-                            name: "expences",
-                            path: "expences",
-                            component: Expences
-                        },
-                        {
                             name: "reviews",
                             path: "reviews",
                             component: CarrierReview
                         }
                     ],
                     beforeEnter: webGuard
-                },
-                {
-                    path: "admin",
-                    component: Admin,
-                    children: [
-                        { path: "", redirect: "dashboard" },
-                        {
-                            name: "dashboard",
-                            path: "dashboard",
-                            component: Dashboard
-                        },
-                        {
-                            name: "inbox",
-                            path: "inbox",
-                            component: Inbox
-                        },
-                        {
-                            name: "company",
-                            path: "company",
-                            component: Comapany
-                        },
-                        {
-                            name: "counteries",
-                            path: "countries",
-                            component: Countries
-                        },
-                        { name: "cities", path: "cities", component: Cities },
-                        { name: "states", path: "states", component: States },
-                        {
-                            name: "location-types",
-                            path: "location-types",
-                            component: Locationtype
-                        },
-                        {
-                            name: "number-of-movers",
-                            path: "number-of-movers",
-                            component: Movernumber
-                        },
-                        {
-                            name: "moving-sizes",
-                            path: "moving-sizes",
-                            component: Movingsize
-                        },
-                        {
-                            name: "moving-few-items",
-                            path: "moving-few-items",
-                            component: MovingFewItems
-                        },
-                        {
-                            name: "office-sizes",
-                            path: "office-sizes",
-                            component: Officesize
-                        },
-                        {
-                            name: "moving-types",
-                            path: "moving-types",
-                            component: Movingtype
-                        },
-                        {
-                            name: "supplies",
-                            path: "supplies",
-                            component: Supply
-                        },
-                        {
-                            name: "vehicles",
-                            path: "vehicles",
-                            component: Vehicle
-                        },
-                        {
-                            name: "carriers",
-                            path: "carriers",
-                            component: AdminCarriers
-                        },
-                        {
-                            name: "carrier-details",
-                            path: "carrier-details/:id",
-                            component: AdminCarrierDetails
-                        },
-                        {
-                            name: "shippers-account",
-                            path: "shippers-account",
-                            component: ShippersAccount
-                        },
-                        {
-                            name: "shippers",
-                            path: "shippers",
-                            component: Shippers
-                        },
-                        {
-                            name:'admin-orders',
-                            path: "orders",
-                            component: AdminOrders,
-                        },
-                        {
-                            name: "admin-order-details",
-                            path: "orders/details/:id",
-                            component: AdminOrderDetails
-                        },
-                        { name: "users", path: "users", component: Users },
-                        { name: "about", path: "about", component: About },
-                        {
-                            name: "admin-contact",
-                            path: "contact",
-                            component: Contact
-                        },
-                        { name: "terms", path: "terms", component: TermsAdmin },
-                        {
-                            name: "privacy",
-                            path: "privacy",
-                            component: PrivacyAdmin
-                        },
-                        {
-                            name: "carrier-help",
-                            path: "carrier-help",
-                            component: CarrierInfoAdmin
-                        },
-                        {
-                            name: "shipper-help",
-                            path: "shipper-help",
-                            component: ShipperInfoAdmin
-                        },
-                        {
-                            name: "carrier-faq",
-                            path: "carrier-faq",
-                            component: CarrierFaqAdmin
-                        },
-                        {
-                            name: "shipper-faq",
-                            path: "shipper-faq",
-                            component: ShipperFaqAdmin
-                        },
-                        {
-                            name: "help",
-                            path: "help",
-                            component: HelpCenterAdmin
-                        },
-                        {
-                            name: "revenue",
-                            path: "revenue",
-                            component: AdminRevenue
-                        },
-                        {
-                            name: "unpaid-jobs",
-                            path: "unpaid-jobs",
-                            component: UnpaidJobs
-                        },
-                        {
-                            name: "paid-jobs",
-                            path: "paid-jobs",
-                            component: PaidJobs
-                        },
-                        {
-                            name: "payouts",
-                            path: "payouts",
-                            component: Payouts
-                        },
-                        {
-                            name: "refunds",
-                            path: "refunds",
-                            component: Refunds
-                        },
-                        {
-                            name: "earning-details",
-                            path: "earning-details/:id",
-                            component: AdminEarningDetails
-                        },
-                        {
-                            path:'reports',
-                            component:AdminReports,
-                            children:[
-                                {
-                                    path:'',
-                                    redirect:'sales-reports'
-                                },
-                                {
-                                    name:'admin-sales-reports',
-                                    path:'sales-reports',
-                                    component: AdminSalesReports
-                                },
-                                {
-                                    name:'admin-sales-report',
-                                    path:'sales-report/:id',
-                                    component: AdminSalesReport
-                                },
-                                {
-                                    name:'admin-financial-reports',
-                                    path:'financial-reports',
-                                    component: AdminFinancialReports
-                                },
-                                {
-                                    name:'admin-financial-report',
-                                    path:'financial-report/:id',
-                                    component: AdminFinancialReport
-                                }
-                            ]
-                        }
-                    ],
-
-                    beforeEnter: adminGuard
                 }
             ]
         },
-        { name: "terms", path: "/terms-and-conditions", component: Terms },
-        { path: "*", redirect: "/" }
+        {
+            path: "/admin",
+            component: Admin,
+            children: [
+                { path: "", redirect: "dashboard" },
+                {
+                    name: "dashboard",
+                    path: "dashboard",
+                    component: Dashboard
+                },
+                {
+                    name:"admin-account",
+                    path:"account",
+                    component:AdminَAccount,
+                },
+                {
+                    name: "inbox",
+                    path: "inbox",
+                    component: Inbox
+                },
+                {
+                    name: "company",
+                    path: "company",
+                    component: Comapany
+                },
+                {
+                    name: "counteries",
+                    path: "countries",
+                    component: Countries
+                },
+                { name: "cities", path: "cities", component: Cities },
+                { name: "states", path: "states", component: States },
+                {
+                    name: "location-types",
+                    path: "location-types",
+                    component: Locationtype
+                },
+                {
+                    name: "number-of-movers",
+                    path: "number-of-movers",
+                    component: Movernumber
+                },
+                {
+                    name: "moving-sizes",
+                    path: "moving-sizes",
+                    component: Movingsize
+                },
+                {
+                    name: "moving-few-items",
+                    path: "moving-few-items",
+                    component: MovingFewItems
+                },
+                {
+                    name: "office-sizes",
+                    path: "office-sizes",
+                    component: Officesize
+                },
+                {
+                    name: "moving-types",
+                    path: "moving-types",
+                    component: Movingtype
+                },
+                {
+                    name: "supplies",
+                    path: "supplies",
+                    component: Supply
+                },
+                {
+                    name: "vehicles",
+                    path: "vehicles",
+                    component: Vehicle
+                },
+                {
+                    name: "tax",
+                    path: "tax",
+                    component: Tax
+                },
+                {
+                    name: "carriers",
+                    path: "carriers",
+                    component: AdminCarriers
+                },
+                {
+                    name: "carrier-details",
+                    path: "carrier-details/:id",
+                    component: AdminCarrierDetails
+                },
+                {
+                    name: "shippers-account",
+                    path: "shippers-account",
+                    component: ShippersAccount
+                },
+                {
+                    name: "shippers",
+                    path: "shippers",
+                    component: Shippers
+                },
+                {
+                    name: "admin-orders",
+                    path: "orders",
+                    component: AdminOrders
+                },
+                {
+                    name: "admin-order-details",
+                    path: "orders/details/:id",
+                    component: AdminOrderDetails
+                },
+                { name: "users", path: "users", component: Users },
+                { name: "about", path: "about", component: About },
+                {
+                    name: "admin-contact",
+                    path: "contact",
+                    component: Contact
+                },
+                { name: "terms", path: "terms", component: TermsAdmin },
+                {
+                    name: "privacy",
+                    path: "privacy",
+                    component: PrivacyAdmin
+                },
+                {
+                    name: "admin-how-it-works",
+                    path: "how-it-works",
+                    component: AdminHowItWorks
+                },
+               
+                {
+                    name: "carrier-faq",
+                    path: "carrier-faq",
+                    component: CarrierFaqAdmin
+                },
+                {
+                    name: "shipper-faq",
+                    path: "shipper-faq",
+                    component: ShipperFaqAdmin
+                },
+                {
+                    name: "admin-legals",
+                    path: "legals",
+                    component: AdminLegals
+                },
+               
+                {
+                    name: "revenue",
+                    path: "revenue",
+                    component: AdminRevenue
+                },
+                {
+                    name: "unpaid-jobs",
+                    path: "unpaid-jobs",
+                    component: UnpaidJobs
+                },
+                {
+                    name: "paid-jobs",
+                    path: "paid-jobs",
+                    component: PaidJobs
+                },
+                {
+                    name: "payouts",
+                    path: "payouts",
+                    component: Payouts
+                },
+                {
+                    name: "refunds",
+                    path: "refunds",
+                    component: Refunds
+                },
+                {
+                    name: "earning-details",
+                    path: "earning-details/:id",
+                    component: AdminEarningDetails
+                },
+                {
+                    path: "reports",
+                    component: AdminReports,
+                    children: [
+                        {
+                            path: "",
+                            redirect: "sales-reports"
+                        },
+                        {
+                            name: "admin-sales-reports",
+                            path: "sales-reports",
+                            component: AdminSalesReports
+                        },
+                        {
+                            name: "admin-sales-report",
+                            path: "sales-report/:id",
+                            component: AdminSalesReport
+                        },
+                        {
+                            name: "admin-financial-reports",
+                            path: "financial-reports",
+                            component: AdminFinancialReports
+                        },
+                        {
+                            name: "admin-financial-report",
+                            path: "financial-report/:id",
+                            component: AdminFinancialReport
+                        }
+                    ]
+                }
+            ]
+
+            //  beforeEnter: adminGuard
+        },
+        /* { name: "terms", path: "/terms-and-conditions", component: Terms },
+        { path: "*", redirect: "/" } */
     ],
     scrollBehavior() {
         window.scrollTo(0, 0);

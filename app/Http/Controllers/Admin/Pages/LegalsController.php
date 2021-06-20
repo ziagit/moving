@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Admin\Pages;
 
-use App\CarrierPage;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Legal;
 
-class CarrierController extends Controller
+class LegalsController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,8 +15,8 @@ class CarrierController extends Controller
      */
     public function index()
     {
-        $carrierPage = carrierPage::all();
-        return response()->json($carrierPage);
+        $faq =Legal::first();
+        return response()->json($faq);
     }
 
     /**
@@ -37,13 +37,13 @@ class CarrierController extends Controller
      */
     public function store(Request $request)
     {
-   
-        $carrierPage = new CarrierPage();
+           
+        $faq = new Legal();
 
-        $carrierPage->title = $request->title;
-        $carrierPage->body = $request->body;
+        $faq->title = $request->title;
+        $faq->body = $request->body;
 
-        $carrierPage->save();
+        $faq->save();
         return response()->json(["message" => "Saved Successfully."], 200);
     }
 
@@ -55,8 +55,9 @@ class CarrierController extends Controller
      */
     public function show($id)
     {
-        $carrierPage = CarrierPage::find($id);
-        return response()->json($carrierPage);
+        //
+        $faq = Legal::find($id);
+        return response()->json($faq);
     }
 
     /**
@@ -67,7 +68,7 @@ class CarrierController extends Controller
      */
     public function edit($id)
     {
-        //
+       //
     }
 
     /**
@@ -79,10 +80,11 @@ class CarrierController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $carrierPage = CarrierPage::find($id);
-        $carrierPage->title = $request->title;
-        $carrierPage->body = $request->body;
-        $carrierPage->update();
+        //
+        $faq =Legal::find($id);
+        $faq->title = $request->title;
+        $faq->body = $request->body;
+        $faq->update();
         return response()->json(["message" => "Updated Successfully."], 200);
     }
 
@@ -94,12 +96,10 @@ class CarrierController extends Controller
      */
     public function destroy($id)
     {
-        if ($carrierPage = CarrierPage::find($id)) {
-            $carrierPage->delete();
+        if ($faq =Legal::find($id)) {
+            $faq->delete();
             return response()->json(["message" => "Deleted Successfully."]);
         }
         return response()->json(["message" => "Data Not Found!"]);
     }
-
-
 }

@@ -1,7 +1,7 @@
 <template>
-  <div class="container">
+  <div class="origin">
     <div v-if="checkingCard">
-      <Spinner />
+      <b-spinner variant="primary" />
       <div>Checking billing info...</div>
     </div>
     <div v-else>
@@ -9,26 +9,21 @@
         <span class="md-display-1">Billing Information</span>
         <div class="break"></div>
         <div class="break"></div>
-        <md-card>
-          <md-card-content>
-            <div
-              v-if="
-                authenticated && user.role[0].name === 'customer' && user.phone != null
-              "
+        <b-card class="border-0 shadow">
+          <div
+            v-if="authenticated && user.role[0].name === 'customer' && user.phone != null"
+          >
+            <p>Your billing information is already added</p>
+            <b-button variant="light" @click="isCardAdded = false"
+              >Do you want to use another card?</b-button
             >
-              <p>Your billing information is already added</p>
-              <md-button class="md-primary" @click="isCardAdded = false"
-                >Do you want to use a new card?</md-button
-              >
-            </div>
-          </md-card-content>
-        </md-card>
-
-        <div class="break"></div>
-        <div class="break"></div>
-        <div class="action">
-          <md-button @click="next()" class="custom-button">Continue</md-button>
-        </div>
+          </div>
+          <div class="break"></div>
+          <div class="break"></div>
+          <div class="action">
+            <b-button @click="next()" variant="primary"> Continue </b-button>
+          </div>
+        </b-card>
       </div>
       <Card v-else />
     </div>
@@ -37,13 +32,10 @@
 
 <script>
 import { mapGetters } from "vuex";
-import Spinner from "../../shared/Spinner";
-import localData from "../services/localData";
 import Card from "../card/Card";
 export default {
   name: "MovingPayment",
   components: {
-    Spinner,
     Card,
   },
   data: () => ({
@@ -53,7 +45,6 @@ export default {
   created() {
     this.getCard();
   },
-
   computed: {
     ...mapGetters({
       authenticated: "auth/authenticated",
@@ -88,7 +79,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.container {
+.origin {
   margin: auto;
   text-align: center;
   .md-card {

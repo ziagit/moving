@@ -7,7 +7,7 @@
       <div class="break"></div>
       <div class="row">
         <div class="col" v-for="size in sizes" :key="size.id" @click="select(size)">
-          <md-card>
+          <b-card class="mini-card px-0 shadow-sm border-0">
             <div class="icon">
               <img
                 :src="'/images/uploads/checked.svg'"
@@ -21,7 +21,7 @@
               <div class="md-display-1">{{ size.title }}</div>
               <div class="md-body-1">{{ size.employees }}</div>
             </div>
-          </md-card>
+          </b-card>
         </div>
       </div>
       <div class="break"></div>
@@ -42,27 +42,22 @@
         </md-button>
       </div>
     </form>
-    <Snackbar :data="snackbar" />
+    <Toaster ref="toaster" />
   </div>
 </template>
 
 <script>
 import localData from "../services/localData";
-import Snackbar from "../../shared/Snackbar";
+import Toaster from "../../shared/Toaster";
 export default {
   name: "Origin",
   components: {
-    Snackbar,
+    Toaster,
   },
   data: () => ({
     sizes: [],
     selected: null,
     selectedIndex: null,
-    snackbar: {
-      show: false,
-      message: null,
-      statusCode: null,
-    },
   }),
   created() {
     this.$emit("progress", 1);
@@ -91,9 +86,12 @@ export default {
           this.$router.push("vehicle-sizes");
         }
       } else {
-        this.snackbar.show = true;
-        this.snackbar.message = "Select an option to continue!";
-        this.snackbar.statusCode = "428";
+        this.$refs.toaster.show(
+          "danger",
+          "b-toaster-top-center",
+          "Error",
+          "Select an option to continue!"
+        );
       }
     },
     get() {

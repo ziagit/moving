@@ -1,75 +1,77 @@
 <template>
   <div class="origin">
-    <span class="md-display-1">Do movers need to use stairs?</span>
+    <h3>Do movers need to use stairs?</h3>
     <div class="break"></div>
     <div class="break"></div>
-    <form @submit.prevent="next()">
-      <div class="row">
-        <div class="checkbox-container">
-          <md-checkbox type="checkbox" v-model="isPickup" @change="pickupTogal($event)">
-            At pickup site</md-checkbox
-          >
-        </div>
-        <md-field v-if="isPickup">
-          <label>Number of floors</label>
-          <md-input
-            type="number"
-            v-model="form.pickup"
-            :required="isPickup"
-            :min="2"
-          ></md-input>
-        </md-field>
-      </div>
-      <div class="row" v-if="type.code != 'junk_removal'">
-        <div class="checkbox-container">
-          <md-checkbox
-            type="checkbox"
+    <form @submit.prevent="next()" class="ml-5 text-left">
+      <b-form-group>
+        <b-form-checkbox
+          variant="warning"
+          v-model="isPickup"
+          name="check-button"
+          @change="pickupTogal($event)"
+        >
+          At pickup site
+        </b-form-checkbox>
+      </b-form-group>
+      <b-form-group>
+        <b-form-input
+          v-if="isPickup"
+          id="input-1"
+          type="number"
+          v-model="form.pickup"
+          :required="isPickup"
+          :min="2"
+          placeholder="Number of floors"
+        ></b-form-input>
+      </b-form-group>
+      <div v-if="type.code != 'junk_removal'">
+        <b-form-group>
+          <b-form-checkbox
             v-model="isDestination"
+            name="check-button"
             @change="destinationTogal($event)"
-            >At destination</md-checkbox
           >
-        </div>
-        <md-field v-if="isDestination">
-          <label>Number of floors</label>
-          <md-input
+            At destination
+          </b-form-checkbox>
+        </b-form-group>
+        <b-form-group>
+          <b-form-input
+            v-if="isDestination"
+            id="input-1"
             type="number"
             v-model="form.destination"
             :required="isDestination"
             :min="2"
-          ></md-input>
-        </md-field>
+            placeholder="Number of floors"
+          ></b-form-input>
+        </b-form-group>
       </div>
 
       <div class="break"></div>
       <div class="break"></div>
-      <div class="actions">
-        <md-button
-          @click="back()"
-          class="md-raised md-fab md-icon-button rounded-primary-button"
-        >
-          <md-icon>arrow_back</md-icon>
-        </md-button>
-        <div class="tab"></div>
 
-        <md-button
-          type="submit"
-          class="md-raised md-fab md-icon-button rounded-secondary-button"
-        >
-          <md-icon>arrow_forward</md-icon>
-        </md-button>
+      <div class="actions">
+        <b-button @click="back()" variant="light">
+          <b-icon icon="arrow-left"></b-icon>
+        </b-button>
+        <div class="tab"></div>
+        <b-button type="submit" variant="primary">
+          <b-icon icon="arrow-right"></b-icon>
+        </b-button>
       </div>
     </form>
-    <Snackbar :data="snackbar" />
+    <Toaster ref="toaster" />
   </div>
 </template>
 
 <script>
-import Snackbar from "../../shared/Snackbar";
+import Toaster from "../../shared/Toaster";
 import localData from "../services/localData";
 export default {
   name: "floor",
   components: {
-    Snackbar,
+    Toaster,
   },
   data() {
     return {
@@ -80,11 +82,6 @@ export default {
       isPickup: false,
       isDestination: false,
       type: null,
-      snackbar: {
-        show: false,
-        message: null,
-        statusCode: null,
-      },
     };
   },
   created() {
@@ -137,12 +134,13 @@ export default {
 
 <style lang="scss" scoped>
 .origin {
-  .row {
-    .checkbox-container {
-      display: flex;
-      align-items: center;
-      width: 100%;
-    }
+  text-align: center;
+  width: 100%;
+  .checkbox-container {
+    display: flex;
+    align-items: center;
+    width: 70%;
+    text-align: left;
   }
 }
 

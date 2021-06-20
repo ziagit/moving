@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Carrier;
 
 use App\Address;
 use App\Bank;
+use App\Carrier;
 use App\Contact;
 use App\Http\Controllers\Controller;
+use App\Payout;
 use App\User;
 use Exception;
 use Illuminate\Http\Request;
@@ -23,10 +25,16 @@ class BankController extends Controller
     public function index()
     {
         $carrierId = User::with('carrier')->find(Auth::id())->carrier->id;
-        $bank = Bank::where('carrier_id',$carrierId)->first();
+        $bank = Bank::where('carrier_id', $carrierId)->first();
         return $bank;
     }
-
+    public function payments()
+    {
+        $user = Auth::id();
+        $carrier = Carrier::where('user_id',$user)->first();
+        $payouts = Payout::where('carrier_id',$carrier->id)->get();
+        return response()->json($payouts);
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -51,7 +59,7 @@ class BankController extends Controller
             'institution_number' => 'required',
             'account_number' => 'required',
             'confirm_account_number' => 'required|same:account_number',
-           
+
         ]);
         $carrierId = User::with('carrier')->find(Auth::id())->carrier->id;
         $bank = new Bank();
@@ -62,7 +70,7 @@ class BankController extends Controller
         $bank->account_number = $request->account_number;
 
         $bank->save();
-        
+
         return response()->json(["message" => "Saved successfully!"], 200);
     }
 
@@ -103,7 +111,7 @@ class BankController extends Controller
             'institution_number' => 'required',
             'account_number' => 'required',
             'confirm_account_number' => 'required|same:account_number',
-           
+
         ]);
         $carrierId = User::with('carrier')->find(Auth::id())->carrier->id;
         $bank =  Bank::find($id);
@@ -114,7 +122,7 @@ class BankController extends Controller
         $bank->account_number = $request->account_number;
 
         $bank->update();
-        
+
         return response()->json(["message" => "Updated successfully!"], 200);
     }
 
@@ -130,5 +138,4 @@ class BankController extends Controller
         $bank->delete();
         return response()->json(["message" => "Deleted successfully!"]);
     }
-
 }

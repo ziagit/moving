@@ -1,36 +1,34 @@
 <template>
-  <div class="payouts" v-if="payouts">
-    <md-dialog :md-active.sync="addTogal">
-      <md-dialog-title>Create New Payout</md-dialog-title>
-      <md-dialog-content>
-        <NewPayout v-on:close-dialog="refresh" />
-      </md-dialog-content>
-    </md-dialog>
-    <md-table md-sort="name" md-sort-order="asc" md-card>
-      <md-table-toolbar>
-        <div class="md-toolbar-section-start">
-          <md-button class="md-primary" @click="addTogal = true">New payout</md-button>
-        </div>
-        <md-field md-clearable class="md-toolbar-section-end">
-          <md-input placeholder="Search by mover name..." v-model="keywords" />
-        </md-field>
-      </md-table-toolbar>
-
-      <md-table-row>
-        <md-table-head md-numeric>Mover</md-table-head>
-        <md-table-head>Date</md-table-head>
-        <md-table-head>From</md-table-head>
-        <md-table-head>To</md-table-head>
-        <md-table-head>Amount</md-table-head>
-      </md-table-row>
-      <md-table-row v-for="(payout, index) in payouts.data" :key="index">
-        <md-table-cell md-numeric>{{ payout.carrier.first_name }}</md-table-cell>
-        <md-table-cell>{{ formatter(payout.created_at) }}</md-table-cell>
-        <md-table-cell>{{ formatter(payout.from) }}</md-table-cell>
-        <md-table-cell>{{ formatter(payout.to) }}</md-table-cell>
-        <md-table-cell>${{ payout.amount }}</md-table-cell>
-      </md-table-row>
-    </md-table>
+  <div class="container" v-if="payouts">
+    <b-modal id="modal-add" size="md" title="New Payout" :hide-footer="true">
+      <NewPayout v-on:close-dialog="refresh" />
+    </b-modal>
+    <b-card class="border-0 shadow" header="Payouts">
+      <b-form-input placeholder="Search by mover name..." v-model="keywords" />
+      <table class="table">
+        <thead>
+          <tr>
+            <th md-numeric>Mover</th>
+            <th>Date</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(payout, index) in payouts.data" :key="index">
+            <td md-numeric>{{ payout.carrier.first_name }}</td>
+            <td>{{ formatter(payout.created_at) }}</td>
+            <td>{{ formatter(payout.from) }}</td>
+            <td>{{ formatter(payout.to) }}</td>
+            <td>${{ payout.amount }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="text-right">
+        <b-button variant="primary" class="add-btn" v-b-modal.modal-add>New</b-button>
+      </div>
+    </b-card>
     <pagination :limit="4" :data="payouts" @pagination-change-page="get"></pagination>
   </div>
 </template>
@@ -50,7 +48,6 @@ export default {
     totalPaid: 0,
     totalOwing: 0,
     totalGross: 0,
-    addTogal: false,
   }),
   watch: {
     keywords(after, before) {
@@ -103,11 +100,12 @@ export default {
 };
 </script>
 <style scoped lang="scss">
-.payouts {
-  width: 100%;
-  th,
-  td {
-    text-align: left;
+.container {
+  min-height: calc(100vh - 50px);
+  .add-btn {
+    position: absolute;
+    top: 1px;
+    right: 1px;
   }
 }
 </style>

@@ -1,10 +1,28 @@
 <template>
   <div class="google-address2">
-    <md-dialog-alert
-      :md-active.sync="popupTogal"
-      md-title="Invalid Address"
-      :md-content="popupData"
-    />
+    <!-- current location popover -->
+    <b-popover target="popover-target-info" triggers="hover" placement="top">
+      <template #title>Current Location</template>
+      <div>
+        - Please select pickup location and <br />
+        destination in the same city or metro <br />
+        area, within our
+        <a href="https://tingsapp.com/cities" target="_blank">coverage</a>.
+        <div class="break"></div>
+        - For junk removal, please search a <br />
+        <a
+          href="https://www.google.com/search?q=disposal+area+near+me&sxsrf=ALeKk01Dmb-Q2xWE4XdTkgQnGnW3j98yog%3A1621308734570&source=hp&ei=PjWjYO6nIOWmrgT_n4zICg&iflsig=AINFCbYAAAAAYKNDTiFu5JE7M2WPkrz60o6SYW8uj_dB&oq=disposal+area+near&gs_lcp=Cgdnd3Mtd2l6EAMYADIFCAAQyQMyBggAEBYQHjIGCAAQFhAeOgQIIxAnOgIIADoCCC46BAgAEEM6CQgjECcQRhD5AToKCC4QxwEQrwEQQzoKCAAQyQMQQxCLAzoHCAAQQxCLAzoECAAQClDqlhRYis0UYPTcFGgAcAB4AYABlwSIAdQnkgELMC41LjguMi4xLjKYAQCgAQGqAQdnd3Mtd2l6uAEC&sclient=gws-wiz&dlnr=1&sei=kzajYJRHg-CSBc6Aj7gO"
+          target="_blank"
+          >disposal site near you</a
+        >. Paste their <br />
+        address in destination
+      </div>
+    </b-popover>
+
+    <!-- Invalid address -->
+    <b-modal id="modal-address" title="Invalid Address" ok-only>
+      <p v-html="popupData"></p>
+    </b-modal>
     <form @submit.prevent="getQuote()" method="post" name="theform" id="theform">
       <img :src="'/images/uploads/a-b.svg'" width="12" alt="" />
       <div>
@@ -15,9 +33,13 @@
           id="autocomplete1"
           placeholder="Enter pickup location"
         />
-        <span class="near-me" id="currentLocation" @click="getLocation()"
-          ><md-icon>near_me</md-icon></span
-        >
+        <b-icon
+          id="popover-target-location"
+          font-scale="1.3"
+          class="near-me"
+          icon="cursor"
+          @click="getLocation()"
+        ></b-icon>
       </div>
 
       <div>
@@ -29,38 +51,33 @@
           id="autocomplete2"
           required
         />
-        <md-menu md-direction="top-start" :md-active.sync="infoTogal">
-          <md-icon md-menu-trigger>info_outline</md-icon>
-          <md-menu-content>
-            <div style="padding: 10px">
-              - Please select pickup location and <br />
-              destination in the same city or metro <br />
-              area, within our
-              <a href="https://tingsapp.com/cities" target="_blank">coverage</a>.
-              <div class="break"></div>
-              - For junk removal, please search a <br />
-              <a
-                href="https://www.google.com/search?q=disposal+area+near+me&sxsrf=ALeKk01Dmb-Q2xWE4XdTkgQnGnW3j98yog%3A1621308734570&source=hp&ei=PjWjYO6nIOWmrgT_n4zICg&iflsig=AINFCbYAAAAAYKNDTiFu5JE7M2WPkrz60o6SYW8uj_dB&oq=disposal+area+near&gs_lcp=Cgdnd3Mtd2l6EAMYADIFCAAQyQMyBggAEBYQHjIGCAAQFhAeOgQIIxAnOgIIADoCCC46BAgAEEM6CQgjECcQRhD5AToKCC4QxwEQrwEQQzoKCAAQyQMQQxCLAzoHCAAQQxCLAzoECAAQClDqlhRYis0UYPTcFGgAcAB4AYABlwSIAdQnkgELMC41LjguMi4xLjKYAQCgAQGqAQdnd3Mtd2l6uAEC&sclient=gws-wiz&dlnr=1&sei=kzajYJRHg-CSBc6Aj7gO"
-                target="_blank"
-                >disposal site near you</a
-              >. Paste their <br />
-              address in destination
-            </div>
-          </md-menu-content>
-        </md-menu>
+        <b-icon
+          id="popover-target-info"
+          font-scale="1.3"
+          class="near-me"
+          icon="exclamation-circle"
+        ></b-icon>
       </div>
       <div class="break"></div>
       <div class="break"></div>
       <div>
-        <md-button class="custom-button" type="submit">Get a Price</md-button>
+        <b-button
+          variant="primary"
+          text-variant="light"
+          class="shadow get-price"
+          size="lg"
+          pill
+          type="submit"
+          >Get a Price</b-button
+        >
       </div>
     </form>
-    <Snackbar :data="snackbar" />
+    <Toaster ref="toaster" />
   </div>
 </template>
 <script>
 import Popup from "./AddressValidatePopup";
-import Snackbar from "./Snackbar";
+import Toaster from "./Toaster";
 import localData from "../frontend/services/localData";
 export default {
   props: ["initialData"],
@@ -94,14 +111,9 @@ export default {
         latlng: "",
       },
     },
-    snackbar: {
-      show: false,
-      message: null,
-      statusCode: null,
-    },
   }),
   components: {
-    Snackbar,
+    Toaster,
     Popup,
   },
   created() {
@@ -231,8 +243,7 @@ export default {
 
     getQuote() {
       if (this.form.from.formatted_address == this.form.to.formatted_address) {
-        this.popupTogal = true;
-        this.popupData = "Pickup and destination addresses shouldn't be the same!";
+        this.showMsgBox("Pickup and destination addresses shouldn't be the same!");
       } else if (
         this.form.from.country == "" ||
         this.form.from.state == "" ||
@@ -243,8 +254,7 @@ export default {
         this.form.to.city == "" ||
         this.form.to.zip == ""
       ) {
-        this.popupTogal = true;
-        this.popupData = "Please provide a valid address!";
+        this.showMsgBox("Please provide a valid address!");
       } else {
         if (
           this.checkState(this.form.from.state) &&
@@ -253,16 +263,19 @@ export default {
           if (this.checkState(this.form.to.state) && this.checkCity(this.form.to.city)) {
             this.$router.push("/order/moving-types");
           } else {
-            this.popupTogal = true;
-            this.popupData = `The destination is out of our current service area. We are working on expanding our <a href="https://tingsapp.com/cities">coverage</a>`;
+            this.showMsgBox(
+              `The destination is out of our current service area. We are working on expanding our <a href="https://tingsapp.com/cities">coverage</a>`
+            );
           }
         } else {
-          this.popupTogal = true;
-          this.popupData = `The pickup location is out of our current service area. We are working on expanding our  <a href="https://tingsapp.com/cities">coverage</a>`;
+          this.showMsgBox(
+            `The pickup location is out of our current service area. We are working on expanding our  <a href="https://tingsapp.com/cities">coverage</a>`
+          );
         }
         //
       }
     },
+
     init() {
       let from = localData.read("from");
       if (from) {
@@ -296,7 +309,6 @@ export default {
         })
         .catch((err) => console.log(err));
     },
-
     getLocation() {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(this.getReverseGeocodingData);
@@ -306,6 +318,8 @@ export default {
     },
 
     getReverseGeocodingData(position) {
+      console.log("support ", position);
+
       var lat = position.coords.latitude;
       var lng = position.coords.longitude;
       this.form.from.latlng = {
@@ -353,6 +367,10 @@ export default {
       localData.save("from", this.form);
       console.log("exit: ", this.form);
     },
+    showMsgBox(data) {
+      this.popupData = data;
+      this.$bvModal.show("modal-address");
+    },
   },
 };
 </script>
@@ -378,16 +396,20 @@ export default {
     }
     img {
       position: absolute;
-      margin: 28px 25px;
+      margin: 32px 25px;
     }
     .near-me {
-      margin: -42px;
+      margin-left: -36px;
     }
-    .md-menu {
-      margin: -42px;
-      color: #000 !important;
+    .near-me:hover {
+      cursor: pointer;
+      color: #ffa500;
     }
   }
+}
+.get-price {
+  padding-left: 26px !important;
+  padding-right: 26px !important;
 }
 @media only screen and (max-width: 600px) {
   form {

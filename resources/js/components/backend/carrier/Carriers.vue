@@ -1,53 +1,31 @@
 <template>
-  <div class="carriers" v-if="carriers">
-    <!-- delete dialog-->
-    <md-dialog-confirm
-      :md-active.sync="deleteTogal"
-      md-title="Are you sure, want to delete?"
-      md-content
-      md-confirm-text="OK"
-      md-cancel-text="Cancel"
-      @md-confirm="confirm()"
-      @md-cancel="cancel"
-    />
-
-    <md-table md-sort="name" md-sort-order="asc" md-card>
-      <md-table-toolbar>
-        <div class="md-toolbar-section-start">
-          <h1 class="md-title">Carriers</h1>
-        </div>
-        <md-field md-clearable class="md-toolbar-section-end">
-          <md-input placeholder="Search by company name..." v-model="keywords" />
-        </md-field>
-      </md-table-toolbar>
-
-      <md-table-empty-state
-        md-label="No state found"
-        :md-description="`No state found for this query. Try a different search term or create a new state.`"
-      >
-        <md-button class="md-primary md-raised" @click="add()"
-          >Create new carrier</md-button
-        >
-      </md-table-empty-state>
-      <md-table-row>
-        <md-table-head md-numeric>ID</md-table-head>
-        <md-table-head>Company name</md-table-head>
-        <md-table-head>Email</md-table-head>
-        <md-table-head>Phone</md-table-head>
-        <md-table-head>Details</md-table-head>
-      </md-table-row>
-      <md-table-row v-for="(carrier, index) in carriers.data" :key="index">
-        <md-table-cell md-numeric>{{ index + 1 }}</md-table-cell>
-        <md-table-cell>{{ carrier.company }}</md-table-cell>
-        <md-table-cell>{{ carrier.user.email }}</md-table-cell>
-        <md-table-cell>{{ carrier.user.phone }}</md-table-cell>
-        <md-table-cell md-label="Actions">
-          <md-button class="md-icon-button md-primary" @click="edit(carrier)">
-            <md-icon>more_horiz</md-icon>
-          </md-button>
-        </md-table-cell>
-      </md-table-row>
-    </md-table>
+  <div class="container" v-if="carriers">
+    <b-card header="Movers" class="border-0 shadow text-left mt-5">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Company name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Details</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(carrier, index) in carriers.data" :key="index">
+            <td>{{ index + 1 }}</td>
+            <td>{{ carrier.company }}</td>
+            <td>{{ carrier.user.email }}</td>
+            <td>{{ carrier.user.phone }}</td>
+            <td>
+              <b-button variant="light" @click="edit(carrier)">
+                <b-icon icon="pencil"></b-icon>
+              </b-button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </b-card>
     <pagination :limit="4" :data="carriers" @pagination-change-page="get"></pagination>
   </div>
 </template>
@@ -133,13 +111,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.carriers {
-  width: 100%;
+.container {
+  height: calc(100vh - 50px);
 
   .add-btn {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
+    position: absolute;
+    top: 0;
+    right: 0;
   }
 }
 </style>

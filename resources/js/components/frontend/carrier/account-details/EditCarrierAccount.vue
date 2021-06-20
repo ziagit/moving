@@ -1,37 +1,34 @@
 <template>
   <div class="account">
-    <md-card>
-      <md-card-header>
-        <div class="md-title">Change Logo</div>
-        <md-button @click="$router.back()" class="md-icon-button close-btn">
-          <md-icon>close</md-icon>
-          <md-tooltip>Cancel</md-tooltip>
-        </md-button>
-      </md-card-header>
-      <md-divider></md-divider>
-      <md-card-content>
-        <form @submit.prevent="update">
-          <Spinner v-if="isSubmitting" />
-          <md-field v-else>
-            <label>Select file</label>
-            <md-file @change="onChange" />
-          </md-field>
-          <md-button type="submit" class="md-primary">Update</md-button>
-        </form>
-      </md-card-content>
-    </md-card>
+    <b-card header="Change Logo" class="border-0 shadow">
+      <b-button @click="$router.back()" variant="light" class="close-btn">
+        <b-icon icon="x"></b-icon>
+      </b-button>
+      <form @submit.prevent="update">
+        <b-spinner variant="primary" v-if="isSubmitting" />
+        <b-form-file
+          v-else
+          @change="onChange"
+          v-model="avatar"
+          :state="Boolean(avatar)"
+          placeholder="Choose a file or drop it here..."
+          drop-placeholder="Drop file here..."
+        ></b-form-file>
+
+        <div class="text-right mt-3">
+          <b-button type="submit" variant="primary">Update</b-button>
+        </div>
+      </form>
+    </b-card>
   </div>
 </template>
 <script>
-import Spinner from "../../../shared/Spinner";
 export default {
   name: "EditCarrierAccount",
-  components: {
-    Spinner,
-  },
+  components: {},
   data: () => ({
     isSubmitting: false,
-    avatar: "",
+    avatar: null,
   }),
   methods: {
     onChange(e) {
@@ -55,16 +52,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .account {
-  .md-card {
-    text-align: left;
-    .md-card-content {
-      padding: 20px;
-    }
-    .md-card-actions {
-      display: flex;
-      justify-content: flex-start;
-    }
-  }
+  text-align: left;
 }
 
 .close-btn {

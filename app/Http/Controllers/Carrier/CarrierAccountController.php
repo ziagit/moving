@@ -94,19 +94,21 @@ class CarrierAccountController extends Controller
     }
     public function update(Request $data, $id)
     {
-        if($data->password){
+        if ($data->password) {
             $validator = Validator::make($data->all(), [
                 'password_confirmation' => 'required|same:password',
             ]);
-    
             if ($validator->fails()) {
                 return response()->json(['error' => $validator->errors()], 400);
             }
+            $user = User::find($id);
+            $user->email = $data->email;
+            $user->password = Hash::make($data->password);
+            $user->update();
+            return response()->json(['message' => 'Updated successfully!'], 200);
         }
-     
         $user = User::find($id);
         $user->email = $data->email;
-        $user->password = Hash::make($data->password);
         $user->update();
         return response()->json(['message' => 'Updated successfully!'], 200);
     }

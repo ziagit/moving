@@ -1,78 +1,69 @@
 <template>
-  <div class="shippers" v-if="shippers">
-    <!-- delete dialog-->
-    <md-dialog-confirm
-      :md-active.sync="confirmTogal"
-      md-title="Confirmation"
-      :md-content="confirmation_text"
-      md-confirm-text="OK"
-      md-cancel-text="Cancel"
-      @md-confirm="confirm()"
-      @md-cancel="cancel"
-    />
+  <div class="container" v-if="shippers">
     <EditShipper :shipper="shipper" v-on:close-it="editTogal = false" v-if="editTogal" />
-    <md-table md-sort="first_name" md-sort-order="asc" md-card v-else>
-      <md-table-toolbar>
-        <div class="md-toolbar-section-start">
-          <h1 class="md-title">Customers</h1>
-        </div>
+    <b-card v-else class="shadow border-0 mt-5" header="Customers">
+      <b-form-input placeholder="Search by name..." v-model="keywords" />
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Address</th>
+            <th>Payment method</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(shipper, index) in shippers.data" :key="index">
+            <td>{{ index + 1 }}</td>
+            <td>{{ shipper.first_name }}</td>
+            <td>{{ shipper.user ? shipper.user.email : "" }}</td>
+            <td>{{ shipper.user ? shipper.user.phone : "" }}</td>
+            <td>{{ shipper.address.formatted_address }}</td>
+            <td>{{ shipper.stripe_customer_id ? "Added" : "Not added" }}</td>
 
-        <md-field md-clearable class="md-toolbar-section-end">
-          <md-input placeholder="Search by name..." v-model="keywords" />
-        </md-field>
-      </md-table-toolbar>
-
-      <md-table-empty-state
-        md-label="No state found"
-        :md-description="`No state found for this query. Try a different search term or create a new state.`"
-      >
-      </md-table-empty-state>
-      <md-table-row>
-        <md-table-head md-numeric>ID</md-table-head>
-        <md-table-head>Name</md-table-head>
-        <md-table-head>Email</md-table-head>
-        <md-table-head>Phone</md-table-head>
-        <md-table-head>Address</md-table-head>
-        <md-table-head>Payment method</md-table-head>
-        <md-table-head>Actions</md-table-head>
-      </md-table-row>
-      <md-table-row v-for="(shipper, index) in shippers.data" :key="index">
-        <md-table-cell md-numeric>{{ index + 1 }}</md-table-cell>
-        <md-table-cell>{{ shipper.first_name }}</md-table-cell>
-        <md-table-cell>{{ shipper.user ? shipper.user.email : "" }}</md-table-cell>
-        <md-table-cell>{{ shipper.user ? shipper.user.phone : "" }}</md-table-cell>
-        <md-table-cell>{{ shipper.address.formatted_address }}</md-table-cell>
-        <md-table-cell>{{
-          shipper.stripe_customer_id ? "Added" : "Not added"
-        }}</md-table-cell>
-
-        <md-table-cell md-label="Actions">
-          <md-button class="md-icon-button md-primary" @click="edit(shipper)">
-            <md-icon>edit</md-icon>
-          </md-button>
-          <md-button
-            class="md-icon-button md-accent"
-            @click="changeAccount(shipper.user.id, 'Deleted')"
-          >
-            <md-icon>delete</md-icon>
-          </md-button>
-          <md-button
-            v-if="shipper.user.status == 'Active'"
-            class="md-icon-button md-accent"
-            @click="changeAccount(shipper.user.id, 'Locked')"
-          >
-            <md-icon>lock</md-icon>
-          </md-button>
-          <md-button
-            v-else
-            class="md-icon-button md-accent"
-            @click="changeAccount(shipper.user.id, 'Active')"
-          >
-            <md-icon>lock_open</md-icon>
-          </md-button>
-        </md-table-cell>
-      </md-table-row>
-    </md-table>
+            <td>
+              <b-button
+                variant="light"
+                @click="edit(shipper)"
+                v-b-tooltip.hover
+                title="Edit"
+              >
+                <b-icon variant="primary" icon="pencil"></b-icon>
+              </b-button>
+              <b-button
+                variant="light"
+                v-b-tooltip.hover
+                title="Delete"
+                @click="changeAccount(shipper.user.id, 'Deleted')"
+              >
+                <b-icon variant="danger" icon="trash"></b-icon>
+              </b-button>
+              <b-button
+                variant="light"
+                v-b-tooltip.hover
+                title="Lock"
+                v-if="shipper.user.status == 'Active'"
+                @click="changeAccount(shipper.user.id, 'Locked')"
+              >
+                <b-icon icon="lock" variant="success"></b-icon>
+              </b-button>
+              <b-button
+                variant="light"
+                v-else
+                v-b-tooltip.hover
+                title="Unlock"
+                @click="changeAccount(shipper.user.id, 'Active')"
+              >
+                <b-icon variant="success" icon="unlock"></b-icon>
+              </b-button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </b-card>
     <pagination :limit="4" :data="shippers" @pagination-change-page="get"></pagination>
   </div>
 </template>
@@ -122,28 +113,34 @@ export default {
           console.log("Error: ", err);
         });
     },
-
+    changeAccount(id, status) {
+      this.$bvModal
+        .msgBoxConfirm("Do you want this account to be " + status + "?")
+        .then((value) => {
+          if (value) {
+            this.confirm(id, status);
+          }
+        })
+        .catch((err) => {
+          console.log("err", err);
+        });
+    },
     refresh() {
       this.addTogal = false;
       this.editTogal = false;
       this.get();
     },
 
-    changeAccount(id, status) {
-      this.confirmTogal = true;
-      this.selectedId = id;
-      this.status = status;
-      this.confirmation_text = "Do you want to this account to be " + status + " ?";
-    },
     edit(data) {
       this.editTogal = true;
       this.shipper = data;
     },
 
-    confirm() {
-      if (this.status == "Deleted") {
+    confirm(id, status) {
+      console.log("id:", id, "status:", status);
+      if (status == "Deleted") {
         axios
-          .delete("admin/shippers" + this.selectedId)
+          .delete("admin/shippers" + id)
           .then((res) => {
             this.router.push("/admin/carriers");
           })
@@ -152,7 +149,7 @@ export default {
           });
       } else {
         axios
-          .put("admin/users/lock/" + this.selectedId, { status: this.status })
+          .put("admin/users/lock/" + id, { status: status })
           .then((res) => {
             console.log("ress", res.data);
             this.get();
@@ -162,7 +159,6 @@ export default {
           });
       }
     },
-    cancel() {},
   },
   created() {
     this.get();
@@ -174,9 +170,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.shippers {
-  width: 100%;
-
+.container {
+  min-height: calc(100vh - 50px);
   .add-btn {
     position: fixed;
     bottom: 20px;

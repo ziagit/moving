@@ -1,68 +1,42 @@
 <template>
-  <div class="main-container">
-    <!-- delete dialog-->
-    <md-dialog-confirm
-      :md-active.sync="deleteTogal"
-      md-title="I assure what you doing"
-      md-content
-      md-confirm-text="OK"
-      md-cancel-text="Cancel"
-      @md-confirm="confirm()"
-      @md-cancel="cancel"
-    />
-    <!-- edit dialog -->
-    <md-dialog :md-active.sync="editTogal">
-      <md-dialog-title>Update faq</md-dialog-title>
-      <md-dialog-content>
-        <Edit v-on:close-dialog="refresh" :faq="faq" />
-      </md-dialog-content>
-    </md-dialog>
+  <div class="container">
+    <b-modal id="modal-update" title="Update  Data" :hide-footer="true">
+      <Edit v-on:close-dialog="refresh" :faq="faq" />
+    </b-modal>
     <!-- add dialog -->
-    <md-dialog :md-active.sync="addTogal">
-      <md-dialog-title>Add new </md-dialog-title>
-      <md-dialog-content>
-        <Add v-on:close-dialog="refresh" />
-      </md-dialog-content>
-    </md-dialog>
-
-    <md-table md-card>
-      <md-table-toolbar>
-        <div class="md-toolbar-section-start">
-          <h1 class="md-title">faq</h1>
-        </div>
-      </md-table-toolbar>
-
-      <md-table-empty-state
-        md-label="No state found"
-        :md-description="`No state found for this query. Try a different search term or create a new state.`"
-      >
-        <md-button class="md-primary md-raised" @click="add()">Create new</md-button>
-      </md-table-empty-state>
-      <md-table-row>
-        <md-table-head md-numeric>ID</md-table-head>
-        <md-table-head>Titel</md-table-head>
-        <md-table-head>Body</md-table-head>
-        <md-table-head>Actions</md-table-head>
-      </md-table-row>
-      <md-table-row v-for="faq in faqs" :key="faq.id">
-        <md-table-cell md-numeric>{{ faq.id }}</md-table-cell>
-        <md-table-cell>{{ faq.title }}</md-table-cell>
-        <md-table-cell>{{ faq.body }}</md-table-cell>
-
-        <md-table-cell md-label="Actions">
-          <md-button class="md-icon-button md-primary" @click="edit(faq)">
-            <md-icon>edit</md-icon>
-          </md-button>
-          <md-button class="md-icon-button md-accent" @click="remove(faq.id)">
-            <md-icon>delete</md-icon>
-          </md-button>
-        </md-table-cell>
-      </md-table-row>
-    </md-table>
-    <md-button class="md-fab md-primary add-btn" @click="add()">
-      <md-icon>add</md-icon>
-      <md-tooltip>Add new faq</md-tooltip>
-    </md-button>
+    <b-modal id="modal-add" size="md" title="Add new " :hide-footer="true">
+      <Add v-on:close-dialog="refresh" />
+    </b-modal>
+    <b-card class="border-0 shadow mt-5 mb-5" header="Mover FAQ Page">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Titel</th>
+            <th>Body</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="faq in faqs" :key="faq.id">
+            <td>{{ faq.id }}</td>
+            <td>{{ faq.title }}</td>
+            <td><div v-html="faq.body"></div></td>
+            <td>
+              <b-button variant="light" @click="edit(faq)">
+                <b-icon icon="pencil" variant="primary"></b-icon>
+              </b-button>
+              <b-button variant="light" @click="remove(faq.id)">
+                <b-icon variant="danger" icon="trash"></b-icon>
+              </b-button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <b-button v-b-modal.modal-add variant="primary" class="add-btn">
+        <b-icon icon="plus"></b-icon>
+      </b-button>
+    </b-card>
   </div>
 </template>
 
@@ -77,8 +51,6 @@ export default {
     keywords: null,
     faqs: null,
     faq: null,
-    addTogal: false,
-    editTogal: false,
     deleteTogal: false,
   }),
 
@@ -94,27 +66,34 @@ export default {
         });
     },
 
-    add() {
-      this.addTogal = true;
-      this.stateData = this.states;
-    },
     refresh() {
-      this.addTogal = false;
-      this.editTogal = false;
+      this.$bvModal.hide("modal-add");
+      this.$bvModal.hide("modal-update");
       this.get();
     },
     edit(data) {
-      this.editTogal = true;
       this.faq = data;
+      this.$bvModal.show("modal-update");
     },
     remove(id) {
       this.deleteTogal = true;
       this.selectedId = id;
     },
-
-    confirm() {
+    remove(id) {
+      this.$bvModal
+        .msgBoxConfirm("Are you sure?")
+        .then((value) => {
+          if (value) {
+            this.confirm(id);
+          }
+        })
+        .catch((err) => {
+          console.log("err", err);
+        });
+    },
+    confirm(id) {
       axios
-        .delete("admin/faq/" + this.selectedId)
+        .delete("admin/carrier-faq/" + id)
         .then((res) => {
           console.log("deleted", res.data);
           this.get();
@@ -136,12 +115,18 @@ export default {
 };
 </script>
 <style scoped lang="scss">
-.main-container {
-  width: 100%;
+.container {
+  min-height: calc(100vh - 50px);
   .add-btn {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+  .body {
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 </style>

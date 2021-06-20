@@ -1,43 +1,42 @@
 <template>
-  <md-card>
-    <form @submit.prevent="submitAccount">
-      <md-card-header>
-        <span class="md-title">Edit Account</span>
-        <md-button @click="$emit('close-child')" class="md-icon-button add-btn">
-          <md-icon>close</md-icon>
-          <md-tooltip>Cancel</md-tooltip>
-        </md-button>
-      </md-card-header>
-      <md-card-content>
-        <md-field>
-          <label for="">Email</label>
-          <md-input type="text" v-model="form.email" required ref="focusable"></md-input>
-        </md-field>
-        <md-switch v-model="passwordTogal">Change my password</md-switch>
-        <md-field v-if="passwordTogal">
-          <label for="">New Password</label>
-          <md-input
-            type="password"
-            v-model="form.password"
-            :required="passwordTogal"
-            ref="focusable"
-          ></md-input>
-        </md-field>
-        <md-field v-if="passwordTogal">
-          <label for="">Confirm password</label>
-          <md-input
-            type="password"
-            v-model="form.password_confirmation"
-            :required="passwordTogal"
-            ref="focusable"
-          ></md-input>
-        </md-field>
-      </md-card-content>
-      <md-card-actions>
-        <md-button type="submit" class="md-primary"> Update </md-button>
-      </md-card-actions>
+  <b-card header="Edit Account" class="text-left mb-4 border-0 shadow">
+    <form @submit.prevent="submitAccount" header="Edit Account">
+      <b-button @click="$emit('close-child')" class="add-btn" variant="ligth">
+        <b-icon icon="backspace"></b-icon>
+      </b-button>
+      <b-form-input
+        type="text"
+        v-model="form.email"
+        required
+        ref="focusable"
+      ></b-form-input>
+      <b-form-checkbox class="mt-3 mb-3" v-model="passwordTogal" switch
+        >Change my password</b-form-checkbox
+      >
+      <b-form-input
+        v-if="passwordTogal"
+        type="password"
+        v-model="form.password"
+        :required="passwordTogal"
+        ref="focusable"
+        placeholder="Password"
+        class="mb-3"
+      >
+      </b-form-input>
+      <b-form-input
+        v-if="passwordTogal"
+        placeholder="Confirm password"
+        type="password"
+        v-model="form.password_confirmation"
+        :required="passwordTogal"
+        class="mb-3"
+      >
+      </b-form-input>
+      <div class="text-right">
+        <b-button type="submit" variant="primary"> Update </b-button>
+      </div>
     </form>
-  </md-card>
+  </b-card>
 </template>
 
 <script>

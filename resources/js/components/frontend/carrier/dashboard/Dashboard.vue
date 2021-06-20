@@ -1,27 +1,23 @@
 <template>
   <div class="dashboard">
     <div class="break"></div>
-    <div class="row">
-      <PieChart />
-    </div>
+    <PieChart />
     <div class="break"></div>
     <div class="break"></div>
     <div class="break"></div>
     <div class="break"></div>
-    <div class="row">
-      <md-card>
-        <md-card-content>MONTHLY RECEIVED JOBS </md-card-content>
-        <md-card-actions>
+    <b-card-group>
+      <div class="p-2 w-50">
+        <b-card header="MONTHLY RECEIVED JOBS" class="shadow border-0">
           <ColumnChart />
-        </md-card-actions>
-      </md-card>
-      <md-card>
-        <md-card-content> MONTHLY REVENUE </md-card-content>
-        <md-card-actions>
+        </b-card>
+      </div>
+      <div class="p-2 w-50">
+        <b-card header="MONTHLY REVENUE " class="shadow border-0">
           <LineChart />
-        </md-card-actions>
-      </md-card>
-    </div>
+        </b-card>
+      </div>
+    </b-card-group>
   </div>
 </template>
 
@@ -42,13 +38,7 @@ export default {
 .dashboard {
   margin-bottom: 30px;
 }
-.row {
-  display: flex;
-  justify-content: space-evenly;
-  .md-card {
-    width: 100%;
-  }
-}
+
 @media only screen and (max-width: 600px) {
   .row {
     flex-direction: column;

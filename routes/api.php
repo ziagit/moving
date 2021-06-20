@@ -19,12 +19,10 @@ use Spatie\GoogleCalendar\Event;
 //Auth::routes(['verify' => true]);
 
 Route::group(['prefix' => 'moving'], function () {
-
   Route::post('forgot-password', 'Auth\ResetPasswordController@forgot');
   Route::post('reset-password', 'Auth\ResetPasswordController@reset');
-
   Route::group(['prefix' => 'auth', 'namespace' => 'Auth'], function () {
-    Route::post('verify', 'VerifyPhoneController');
+  Route::post('verify', 'VerifyPhoneController');
     Route::post('verify-email', 'VerifyEmailController');
     Route::post('signin', 'SignInController');
     Route::post('check-email', 'SigninEmailController');
@@ -40,8 +38,8 @@ Route::group(['prefix' => 'moving'], function () {
       Route::resource('rate', 'CarrierRateController');
       Route::resource('account', 'CarrierAccountController');
       Route::post('change-avatar/{id}', 'CarrierAccountController@changeAvatar');
-      Route::resource('payments', 'BankController');
-
+      Route::resource('bank-info', 'BankController');
+      Route::get('payments', 'BankController@payments');
       Route::resource('jobs', 'JobController');
       Route::get('search-job', 'JobController@search');
       Route::get('unpaid', 'EarningController@unpaid');
@@ -54,7 +52,6 @@ Route::group(['prefix' => 'moving'], function () {
       Route::get('dashboard/line-chart', 'DashboardController@lineChart');
       Route::get('dashboard/column-chart', 'DashboardController@columnChart');
       Route::get('notifications', 'DashboardController@columnChart');
-
     });
     Route::group(['namespace' => 'Shipper', 'prefix' => 'shipper'], function () {
       Route::resource('details', 'ShipperDetailsController');
@@ -68,13 +65,18 @@ Route::group(['prefix' => 'moving'], function () {
       Route::resource('rating', 'RatingController');
       Route::post('change-avatar/{id}', 'ShipperAccountController@changeAvatar');
     });
+    Route::group(['namespace' => 'Admin', 'prefix' => 'admin'], function () {
+
+    });
     Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'role'], function () {
-      Route::get('dashboard/daily-projections','DashboardController@dailyProjections');
-      Route::get('dashboard/sales','DashboardController@sales');
-      Route::get('dashboard/customers','DashboardController@customers');
-      Route::get('dashboard/movers','DashboardController@movers');
-      Route::get('dashboard/performance','DashboardController@performance');
-      Route::resource('notifications','NotificationController');
+      Route::resource('accounts','Supports\AccountController');
+      Route::post('accounts/avatar','Supports\AccountController@avatar');
+      Route::get('dashboard/daily-projections', 'DashboardController@dailyProjections');
+      Route::get('dashboard/sales', 'DashboardController@sales');
+      Route::get('dashboard/customers', 'DashboardController@customers');
+      Route::get('dashboard/movers', 'DashboardController@movers');
+      Route::get('dashboard/performance', 'DashboardController@performance');
+      Route::resource('notifications', 'NotificationController');
       Route::resource('earnings', 'Finance\EarningController');
       Route::get('revenue', 'Finance\EarningController@revenue');
       Route::get('paid-jobs', 'Finance\EarningController@paidJobs');
@@ -86,7 +88,6 @@ Route::group(['prefix' => 'moving'], function () {
       Route::get('carrier-earnings/{id}', 'Finance\PayoutController@earnings');
       Route::resource('refunds', 'Finance\RefundController');
       Route::get('search-refund', 'Finance\RefundController@search');
-
       Route::resource('users', 'UserController');
       Route::get('roles', 'UserController@roles');
       Route::put('users/lock/{id}', 'UserController@lock');
@@ -100,7 +101,6 @@ Route::group(['prefix' => 'moving'], function () {
       Route::get('search-rate', 'Carriers\RateController@search');
       Route::resource('jobs', 'Carriers\JobController');
       Route::get('search-job', 'Carriers\JobController@search');
-
       Route::resource('shippers', 'Shippers\ShipperController');
       Route::resource('shippers-account', 'Shippers\AccountController');
       Route::put('shippers-account/lock/{id}', 'Shippers\AccountController@lock');
@@ -109,7 +109,6 @@ Route::group(['prefix' => 'moving'], function () {
       Route::resource('orders', 'OrderController');
       Route::get('search-order', 'OrderController@search');
       Route::resource('card-details', 'Shippers\PaymentController');
-
       Route::resource('countries', 'Lookups\CountryController');
       Route::get('search-country', 'Lookups\CountryController@search');
       Route::resource('states', 'Lookups\StateController');
@@ -128,21 +127,17 @@ Route::group(['prefix' => 'moving'], function () {
       Route::resource('constans', 'Lookups\ConstantController');
       Route::resource('times', 'TimeController');
       Route::get('search-time', 'TimeController@search');
-
-      Route::resource('financial-reports','Reports\FinancialReportsController');
-      Route::post('filter-financial-report','Reports\FinancialReportsController@filter');
-      Route::resource('sales-reports','Reports\SalesReportsController');
-      Route::post('filter-sales-report','Reports\SalesReportsController@filter');
-   
+      Route::resource('financial-reports', 'Reports\FinancialReportsController');
+      Route::post('filter-financial-report', 'Reports\FinancialReportsController@filter');
+      Route::resource('sales-reports', 'Reports\SalesReportsController');
+      Route::post('filter-sales-report', 'Reports\SalesReportsController@filter');
       Route::resource('about', 'Pages\AboutController');
       Route::resource('terms', 'Pages\TermsController');
       Route::resource('privacy', 'Pages\PrivacyController');
-      Route::resource('carrier-page', 'Pages\CarrierController');
-      Route::resource('shipper-page', 'Pages\ShipperController');
-      Route::resource('help', 'Pages\FAQController');
+      Route::resource('how-it-works', 'Pages\FAQController');
       Route::resource('carrier-faq', 'Pages\CarrierFAQController');
       Route::resource('shipper-faq', 'Pages\ShipperFAQController');
-
+      Route::resource('shipper-faq', 'Pages\ShipperFAQController');
     });
     Route::group(['namespace' => 'Order'], function () {
       Route::post('charge-customer', 'CheckoutController@chargeCustomer');

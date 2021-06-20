@@ -1,23 +1,12 @@
 <template>
-  <div class="shipper-account">
-    <md-card v-if="account">
-      <md-card-header>
-        <span class="md-title">Logo</span>
-      </md-card-header>
-      <md-divider></md-divider>
-      <md-card-content>
-        <div>
-          <img :src="'/images/pub/' + account.avatar" width="80" alt="" />
-        </div>
-      </md-card-content>
-      <md-card-actions>
-        <md-button :to="{ path: 'edit/' + account.id }" class="md-primary">
-          Change
-          <md-tooltip>Change logo</md-tooltip>
-        </md-button>
-      </md-card-actions>
-    </md-card>
-  </div>
+  <b-card v-if="account" header="Avatar" class="border-0 shadow text-left">
+    <div>
+      <img :src="'/images/pub/' + account.avatar" width="80" alt="" />
+    </div>
+    <div class="mt-3">
+      <b-button @click="change()" variant="primary"> Change </b-button>
+    </div>
+  </b-card>
 </template>
 <script>
 import axios from "axios";
@@ -36,6 +25,9 @@ export default {
           console.log("shipper acoutn: ", res.data);
         })
         .catch((err) => console.log(err));
+    },
+    change() {
+      this.$router.push("edit/" + this.account.id);
     },
   },
   created() {

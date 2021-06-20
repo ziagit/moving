@@ -9,26 +9,26 @@
       name="datepicker"
       @selected="dateSelected()"
     />
-    <div class="submit">
+    <div class="submit mt-3">
       <div class="sign">
         <div></div>
         <span class="md-caption">Disabled (Customers can't book)</span>
       </div>
-      <md-button class="md-primary" @click="submit()">Submit</md-button>
+      <b-button variant="primary" @click="submit()">Submit</b-button>
     </div>
-    <Snackbar :data="snackbar" />
+    <Toaster ref="toaster" />
   </div>
 </template>
 
 <script>
-import Snackbar from "../../../shared/Snackbar";
+import Toaster from "../../../shared/Toaster";
 import Datepicker from "vuejs-datepicker";
 export default {
   name: "Callendar",
   props: ["initDate"],
   components: {
     Datepicker,
-    Snackbar,
+    Toaster,
   },
   data: () => ({
     state: {
@@ -49,11 +49,6 @@ export default {
       month: null,
       day: null,
     },
-    snackbar: {
-      show: false,
-      message: null,
-      statusCode: null,
-    },
   }),
   methods: {
     dateSelected(e) {
@@ -65,9 +60,12 @@ export default {
     },
     submit() {
       if (this.form.month == null && this.form.year == null && this.form.day == null) {
-        this.snackbar.show = true;
-        this.snackbar.message = "Please select a date to submit!";
-        this.snackbar.statusCode = 400;
+        this.$refs.toaster.show(
+          "warning",
+          "b-toaster-top-center",
+          "Error",
+          "Please select a date to submit!"
+        );
       } else {
         axios
           .post("carrier/calendar", this.form)

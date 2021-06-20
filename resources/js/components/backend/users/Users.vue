@@ -1,27 +1,5 @@
 <template>
-  <div class="users" v-if="users">
-    <!-- delete dialog-->
-    <md-dialog-confirm
-      :md-active.sync="deleteTogal"
-      md-title="I assure what you doing"
-      md-content
-      md-confirm-text="OK"
-      md-cancel-text="Cancel"
-      @md-confirm="confirm()"
-      @md-cancel="cancel"
-    />
-    <!-- block dialog-->
-    <md-dialog-confirm
-      :md-active.sync="lockTogal"
-      md-title="Confirm to change account status"
-      md-content
-      md-confirm-text="OK"
-      md-cancel-text="Cancel"
-      @md-confirm="confirmLock()"
-      @md-cancel="cancel"
-    />
-    <!-- edit dialog -->
-
+  <div class="container" v-if="users">
     <Edit
       v-if="editTogal"
       v-on:cancel="editTogal = false"
@@ -29,86 +7,67 @@
       :user="user"
     />
     <Add v-if="addTogal" v-on:cancel="addTogal = false" v-on:refresh="refresh" />
+    <b-card v-if="!editTogal && !addTogal" header="Users" class="shadow border-0 mt-5">
+      <b-form-input placeholder="Search by name..." v-model="keywords" />
+      <table class="table">
+        <thead>
+          <tr>
+            <th md-numeric>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Access</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(user, index) in users.data" :key="index">
+            <td md-numeric>{{ index + 1 }}</td>
+            <td>{{ user.name }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.phone }}</td>
+            <td>
+              <span v-for="role in user.roles" :key="role.id">{{ role.name }}</span>
+            </td>
+            <td>
+              <span :class="[user.status == 'active' ? 'unlocked' : 'locked']">{{
+                user.status
+              }}</span>
+            </td>
 
-    <md-table v-if="!editTogal && !addTogal" md-sort="name" md-sort-order="asc" md-card>
-      <md-table-toolbar>
-        <div class="md-toolbar-section-start">
-          <h1 class="md-title">Users</h1>
-        </div>
-
-        <md-field md-clearable class="md-toolbar-section-end">
-          <md-input placeholder="Search by name..." v-model="keywords" />
-        </md-field>
-      </md-table-toolbar>
-
-      <md-table-empty-state
-        md-label="No state found"
-        :md-description="`No state found for this query. Try a different search term or create a new state.`"
-      >
-      </md-table-empty-state>
-      <md-table-row>
-        <md-table-head md-numeric>ID</md-table-head>
-        <md-table-head>Name</md-table-head>
-        <md-table-head>Email</md-table-head>
-        <md-table-head>Phone</md-table-head>
-        <md-table-head>Access</md-table-head>
-        <md-table-head>Status</md-table-head>
-        <md-table-head>Actions</md-table-head>
-      </md-table-row>
-      <md-table-row v-for="(user, index) in users.data" :key="index">
-        <md-table-cell md-numeric>{{ index + 1 }}</md-table-cell>
-        <md-table-cell>{{ user.name }}</md-table-cell>
-        <md-table-cell>{{ user.email }}</md-table-cell>
-        <md-table-cell>{{ user.phone }}</md-table-cell>
-        <md-table-cell>
-          <span v-for="role in user.roles" :key="role.id">{{ role.name }}</span>
-        </md-table-cell>
-        <md-table-cell>
-          <span :class="[user.status == 'active' ? 'unlocked' : 'locked']">{{
-            user.status
-          }}</span>
-        </md-table-cell>
-
-        <md-table-cell md-label="Actions">
-          <md-button
-            class="md-icon-button md-primary"
-            @click="edit(user)"
-            :disabled="user.status != 'active'"
-          >
-            <md-icon>edit</md-icon>
-          </md-button>
-          <md-button
-            v-if="user.roles[0].name != 'admin'"
-            class="md-icon-button md-accent"
-            @click="remove(user.id)"
-            :disabled="user.status != 'active'"
-          >
-            <md-icon>delete</md-icon>
-          </md-button>
-          <md-button
-            v-if="user.status == 'active'"
-            class="md-icon-button"
-            :class="[user.status == 'active' ? 'unlocked' : 'locked']"
-            :disabled="user.roles[0].name == 'admin'"
-            @click="lock(user.id, 'locked')"
-          >
-            <md-icon>lock_open</md-icon>
-          </md-button>
-          <md-button
-            v-else
-            class="md-icon-button md-accent"
-            @click="lock(user.id, 'active')"
-          >
-            <md-icon>lock</md-icon>
-          </md-button>
-        </md-table-cell>
-      </md-table-row>
-    </md-table>
+            <td md-label="Actions">
+              <b-button variant="light" @click="edit(user)">
+                <b-icon variant="primary" icon="pencil"></b-icon>
+              </b-button>
+              <b-button
+                variant="light"
+                v-if="user.roles[0].name != 'admin'"
+                @click="change(user.id, 'Deleted')"
+              >
+                <b-icon variant="danger" icon="trash"></b-icon>
+              </b-button>
+              <div v-if="user.roles[0].name != 'admin'">
+                <b-button
+                  variant="light"
+                  v-if="user.status == 'Active'"
+                  @click="change(user.id, 'Locked')"
+                >
+                  <b-icon icon="lock" variant="danger"></b-icon>
+                </b-button>
+                <b-button v-else variant="light" @click="change(user.id, 'Active')">
+                  <b-icon variant="success" icon="unlock"></b-icon>
+                </b-button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <b-button variant="light" class="add-btn" @click="addTogal = true">
+        <b-icon icon="plus"></b-icon>
+      </b-button>
+    </b-card>
     <pagination :limit="4" :data="users" @pagination-change-page="get"></pagination>
-    <md-button class="md-fab md-primary add-btn" @click="addTogal = true">
-      <md-icon>add</md-icon>
-      <md-tooltip>Add new user</md-tooltip>
-    </md-button>
   </div>
 </template>
 
@@ -172,19 +131,30 @@ export default {
       this.editTogal = true;
       this.user = data;
     },
-    remove(id) {
-      this.deleteTogal = true;
-      this.selectedId = id;
-    },
-    lock(id, state) {
-      this.lockTogal = true;
-      this.selectedId = id;
-      this.status = state;
-    },
 
-    confirm() {
+    change(id, status) {
+      this.$bvModal
+        .msgBoxConfirm("Do you want this account to be " + status + "?")
+        .then((value) => {
+          if (value) {
+            this.confirm(id, status);
+          }
+        })
+        .catch((err) => {
+          console.log("err", err);
+        });
+    },
+    confirm(id, status) {
+      if (status == "Deleted") {
+        this.remove(id);
+      } else {
+        this.lock(id, status);
+      }
+    },
+    remove(id) {
+      console.log("id", id);
       axios
-        .delete("admin/users/" + this.selectedId)
+        .delete("admin/users/" + id)
         .then((res) => {
           console.log("deleted", res.data);
           this.get();
@@ -193,9 +163,9 @@ export default {
           console.log("Error: ", err);
         });
     },
-    confirmLock() {
+    lock(id, status) {
       axios
-        .put("admin/users/lock/" + this.selectedId, { status: this.status })
+        .put("admin/users/lock/" + id, { status: status })
         .then((res) => {
           console.log("blocked", res.data);
           this.get();
@@ -212,18 +182,12 @@ export default {
 };
 </script>
 <style scoped lang="scss">
-.users {
-  width: 100%;
+.container {
+  min-height: calc(100vh - 50px);
   .add-btn {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-  }
-  .unlocked {
-    color: #25c925;
-  }
-  .locked {
-    color: red;
+    position: absolute;
+    top: 0;
+    right: 0;
   }
 }
 </style>

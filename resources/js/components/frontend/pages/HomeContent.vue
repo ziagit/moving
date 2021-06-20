@@ -4,23 +4,20 @@
       class="section0"
       v-bind:style="{ 'background-image': 'url(/images/uploads/' + bgImage + '.svg)' }"
     >
-      <Header v-on:togal-menu="$emit('togal-menu')" :scrollValue="scrollValue" />
+      <Header v-on:togal-menu="$emit('togal-menu')" />
       <div class="content">
         <div>
-          <div class="md-title" style="font-size: 26px">Hey there,</div>
+          <div class="h6">Hey there,</div>
           <div class="break"></div>
-          <div class="md-display-1">Let's get you moved.</div>
+          <h1 class="main-title">Let's get you moved.</h1>
           <!-- <div class="md-subheading">The way you book your moving tickets.</div> -->
           <div class="break"></div>
           <div class="break"></div>
           <div class="break"></div>
-
-          <div class="md-title">
-            Whether you’re moving your sofa or bed, your apartment or office.
-          </div>
-          <div class="md-title">
+          <p>Whether you’re moving your sofa or bed, your apartment or office.</p>
+          <h6>
             <b>Book your Movers just like you book your ride.</b>
-          </div>
+          </h6>
           <div class="break"></div>
           <div class="break"></div>
           <div class="actions">
@@ -32,39 +29,39 @@
     <div class="wrapper">
       <div class="section2">
         <div class="heading">
-          <div class="md-display-1">Safe and hassle-free Moving</div>
+          <h1>Safe and hassle-free Moving</h1>
           <div class="break"></div>
-          <div class="md-body-1">Get your things moved with peace of mind.</div>
+          <p>Get your things moved with peace of mind.</p>
         </div>
         <div class="rows">
           <div class="row">
             <img :src="'/images/uploads/transparent.svg'" width="35" alt="" />
             <div>
-              <div class="md-title">Transparent</div>
-              <div class="md-body-1">
+              <h6>Transparent</h6>
+              <p>
                 Upfront pricing with no moving day surprise or hidden fees. know your
                 moving cost before you book.
-              </div>
+              </p>
             </div>
           </div>
           <div class="row with-shadow">
             <img :src="'/images/uploads/nosignup.svg'" width="35" alt="" />
             <div>
-              <div class="md-title">No Sign up</div>
-              <div class="md-body-1">
+              <h6>No Sign up</h6>
+              <p>
                 Get free quotes and book your moving in a few taps. No sign up or
                 membership required.
-              </div>
+              </p>
             </div>
           </div>
           <div class="row">
             <img :src="'/images/uploads/inssured.svg'" width="35" alt="" />
             <div>
-              <div class="md-title">Insured</div>
-              <div class="md-body-1">
+              <h6>Insured</h6>
+              <p>
                 From the moment your stuffs are in our hands they are protected by our
                 insurance policy.
-              </div>
+              </p>
             </div>
           </div>
         </div>
@@ -76,15 +73,15 @@
         }"
       >
         <div class="text">
-          <div class="md-display-1">How it works</div>
+          <h1>How it works</h1>
           <div class="break"></div>
           <div><b>TingsApp works just the way ride-hailing apps work.</b></div>
           <div class="break"></div>
-          <div class="md-body-1">
+          <p>
             Your guaranteed price is based on the size of moving, number of movers, size
             of vehicle and the distance from source to destination. All of our movers are
             verified, professional and licensed.
-          </div>
+          </p>
         </div>
         <div class="steps">
           <div class="head"></div>
@@ -94,33 +91,33 @@
                 <img :src="'/images/uploads/track-order.svg'" alt="People" />
               </div>
               <div class="text">
-                <div class="md-title">Request in the app</div>
+                <h6>Request in the app</h6>
                 <div class="details">
                   Let us know your moving needs and get an upfront price.
                 </div>
               </div>
             </li>
-
-            <md-divider></md-divider>
+            <hr />
             <li>
               <div class="avatar">
                 <img :src="'/images/uploads/select-carrier.svg'" alt="People" />
               </div>
               <div class="text">
-                <div class="md-title">Get matched with movers</div>
+                <h6>Get matched with movers</h6>
                 <div class="details">
                   Get connected with your movers in minutes. You can message them in app
                   and track your stuff as moving happens.
                 </div>
               </div>
+              <hr />
             </li>
-            <md-divider></md-divider>
+
             <li>
               <div class="avatar">
                 <img :src="'/images/uploads/item-list.svg'" alt="People" />
               </div>
               <div class="text">
-                <div class="md-title">Rate & tip</div>
+                <h6>Rate & tip</h6>
                 <div class="details">
                   We place your stuff right where you want them. Tell us about your
                   experience and tip your movers for a job well done in app.
@@ -135,21 +132,21 @@
           <img :src="'/images/uploads/callendar.svg'" alt="" />
         </div>
         <div class="row txt">
-          <div class="md-display-1">In advance or on-demand</div>
+          <h1>In advance or on-demand</h1>
           <div class="break"></div>
-          <div class="md-body-1">
+          <p>
             We know moving is stressful. To make sure the availability and on-time
             service, schedule your moving day ahead of time. Relax, we will notify you
             when its time. Or request ondemand for last minute moving.
-          </div>
-          <md-button class="custom-button" to="/order">Get Quote</md-button>
+          </p>
+          <b-button @click="$router.push('/')">Get Quote</b-button>
         </div>
       </div>
       <div class="section5">
         <div class="row txt">
-          <div class="md-display-1">Here is what our customers say.</div>
+          <h1>Here is what our customers say.</h1>
           <div class="break"></div>
-          <div class="md-body-1">
+          <div>
             <div class="customer-comment">
               "This was my first time using TingsApp, simple and impressive. The way
               everything worked from booking to up-front pricing and professional movers I
@@ -159,40 +156,36 @@
               <div class="customer"><span>Tim F. Vancouver</span></div>
             </div>
           </div>
-          <md-button class="custom-button" to="/rating">Leave a Review</md-button>
+          <b-button @click="$router.push('/')">Leave a Review</b-button>
         </div>
         <div class="row img">
           <img :src="'/images/uploads/home-graph.svg'" alt="" />
         </div>
       </div>
-      <div class="section1">
-        <div class="row">
-          <div class="md-display-1">500+</div>
-          <div class="md-subheading">App Download In 2021</div>
+      <div class="section1 row">
+        <div class="col-3">
+          <h2>500+</h2>
+          <p>App Download In 2021</p>
           <div>
             <router-link to="#"
-              >Download Now<md-icon>keyboard_arrow_right</md-icon>
+              >Download Now <b-icon icon="arrow-right"></b-icon>
             </router-link>
           </div>
         </div>
-        <div class="row row2">
-          <div class="md-display-1">1200+</div>
-          <div class="md-subheading">Moving booked In 2021</div>
+        <div class="col-3">
+          <h2>1200+</h2>
+          <p>Moving booked In 2021</p>
           <div>
             <router-link to="#"
-              >Book Now <md-icon>keyboard_arrow_right</md-icon>
+              >Book Now <b-icon icon="arrow-right"></b-icon>
             </router-link>
           </div>
         </div>
-        <div class="row row3">
-          <div class="md-display-1">
-            Trusted by over 125k+ customers in the US and Canada
-          </div>
+        <div class="col-6">
+          <h2>Trusted by over 125k+ customers in the US and Canada</h2>
         </div>
-        <div class="row"></div>
       </div>
     </div>
-
     <Footer />
   </div>
 </template>
@@ -203,11 +196,8 @@ import GoogleAddress2 from "../../shared/GoogleAddress2.vue";
 import Header from "../../shared/Header";
 import MovingFrom from "../order/MovingFrom.vue";
 import MovingTo from "../order/MovingTo.vue";
-import localData from "../services/localData";
-
 export default {
   name: "HomeContent",
-  props: ["scrollValue"],
   data: () => ({
     bgImage: "moving",
   }),
@@ -236,7 +226,6 @@ export default {
   background: #fff;
   .section0 {
     text-align: left;
-    height: calc(100vh - 48px);
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center center;
@@ -246,8 +235,7 @@ export default {
       text-align: left;
       margin: 100px 0 12px 106px;
       max-width: 667px;
-
-      .md-display-1 {
+      .main-title {
         line-height: 61px;
         font-size: 64px;
         font-weight: 900;
@@ -259,11 +247,7 @@ export default {
         color: #848484;
         font-size: 18px;
       }
-      .md-title {
-        font-size: 17px;
-        font-weight: 400;
-        line-height: 1.5;
-      }
+
       .actions {
         width: 100%;
       }
@@ -277,9 +261,6 @@ export default {
     padding-bottom: 126px;
 
     .section1 {
-      display: flex;
-      justify-content: space-around;
-      flex-wrap: wrap;
       padding: 46px 100px;
 
       .row {

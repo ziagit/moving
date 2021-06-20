@@ -1,25 +1,32 @@
 <template>
-  <div>
-    <form @submit.prevent="update">
-      <md-field class="">
-        <label>Name</label>
-        <md-input v-model="form.name" required></md-input>
-      </md-field>
-      <md-field class="">
-        <label>Code</label>
-        <md-input v-model="form.code" required></md-input>
-      </md-field>
-      <md-field class="">
-        <label>Time to move (minute)</label>
-        <md-input type="number" :min="1" v-model="form.hours_to_move" required></md-input>
-      </md-field>
-      <md-field class="">
-        <label>Disposal fee ($)</label>
-        <md-input type="number" :min="1" v-model="form.disposal_fee" required></md-input>
-      </md-field>
-      <md-button type="submit" class="custom-button">Update</md-button>
-    </form>
-  </div>
+  <form @submit.prevent="update">
+    <b-form-group>
+      <b-form-input v-model="form.name" required placeholder="Name"></b-form-input>
+    </b-form-group>
+    <b-form-group>
+      <b-form-input v-model="form.code" required placeholder="Code"></b-form-input>
+    </b-form-group>
+    <b-form-group>
+      <label></label>
+      <b-form-input
+        type="number"
+        :min="1"
+        v-model="form.hours_to_move"
+        required
+        placeholder="Time to move (minute)"
+      ></b-form-input>
+    </b-form-group>
+    <b-form-group>
+      <b-form-input
+        type="number"
+        :min="1"
+        v-model="form.disposal_fee"
+        required
+        placeholder="Disposal fee ($)"
+      ></b-form-input>
+    </b-form-group>
+    <b-button type="submit" variant="primary">Update</b-button>
+  </form>
 </template>
 <script>
 import axios from "axios";

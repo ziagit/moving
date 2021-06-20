@@ -6,16 +6,27 @@
 window.Vue = require("vue");
 import router from "./routes.js";
 
-import VueMaterial from "vue-material";
+import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
+
+// Import Bootstrap an BootstrapVue CSS files (order is important)
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
+
+// Make BootstrapVue available throughout your project
+Vue.use(BootstrapVue)
+// Optionally install the BootstrapVue icon components plugin
+Vue.use(IconsPlugin)
+
+/* import VueMaterial from "vue-material";
 import "vue-material/dist/vue-material.min.css";
-import "vue-material/dist/theme/default.css";
+import "vue-material/dist/theme/default.css"; */
 
 /* import 'vue-material-design-icons/styles.css'; */
 
 require("./bootstrap");
 require("./store/subscriber");
 
-Vue.use(VueMaterial);
+//Vue.use(VueMaterial);
 /* 
 import Vue2TouchEvents from 'vue2-touch-events'
  
@@ -36,10 +47,9 @@ Vue.component("pagination", require("laravel-vue-pagination"));
 import store from "./store";
 Vue.component("app", require("./components/App.vue").default);
 
-Vue.material.locale.dateFormat = "dd/MM/yyyy";
+//Vue.material.locale.dateFormat = "dd/MM/yyyy";
 
-import Admin from "./components/backend/Admin";
-import Home from "./components/frontend/Home";
+
 import axios from "axios";
 
 //axios.defaults.baseURL = "http://localhost:8000/api/moving";
@@ -57,10 +67,7 @@ store.dispatch("auth/attempt", localStorage.getItem("token")).then(() => {
         el: "#app",
         router,
         store,
-        components: {
-            Home,
-            Admin
-        },
+      
         mounted() {
             /*   window.onbeforeunload = function (e) {
                 e = e || window.event;

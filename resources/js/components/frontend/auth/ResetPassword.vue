@@ -2,54 +2,43 @@
   <div class="container">
     <Header v-on:togal-menu="$emit('togal-menu')" />
     <div class="content">
-      <md-card mode="ios">
-        <md-card-header>
-          <div class="md-title">Reset Password</div>
-          <md-button @click="$router.back()" class="md-icon-button close"
-            ><md-icon>close</md-icon></md-button
-          >
-        </md-card-header>
-        <md-card-content>
-          <form @submit.prevent="submit">
-            <md-field>
-              <label>New password</label>
-              <md-input type="password" v-model="form.password" required></md-input>
-            </md-field>
-            <md-field>
-              <label>Confirm password</label>
-              <md-input
-                type="password"
-                v-model="form.password_confirmation"
-                required
-              ></md-input>
-            </md-field>
-            <Spinner v-if="loading" />
-
-            <md-button v-else type="submit" class="md-primary">Reset</md-button>
-          </form>
-        </md-card-content>
-      </md-card>
+      <b-card title="Reset Password">
+        <div class="md-title"></div>
+        <md-button @click="$router.back()" class="md-icon-button close"
+          ><md-icon>close</md-icon></md-button
+        >
+        <form @submit.prevent="submit">
+          <md-field>
+            <label>New password</label>
+            <md-input type="password" v-model="form.password" required></md-input>
+          </md-field>
+          <md-field>
+            <label>Confirm password</label>
+            <md-input
+              type="password"
+              v-model="form.password_confirmation"
+              required
+            ></md-input>
+          </md-field>
+          <b-spinner variant="primary" v-if="loading"></b-spinner>
+          <md-button v-else type="submit" class="md-primary">Reset</md-button>
+        </form>
+      </b-card>
     </div>
     <Footer />
-    <Snackbar :data="snackbar" />
+    <Toaster ref="toaster" />
   </div>
 </template>
 
 <script>
 import axio from "axios";
 import { mapActions, mapGetters } from "vuex";
-import Spinner from "../../shared/Spinner";
-import Snackbar from "../../shared/Snackbar";
+import Toaster from "../../shared/Toaster";
 import Header from "../../shared/Header";
 import Footer from "../../shared/Footer";
 export default {
   name: "Login",
   data: () => ({
-    snackbar: {
-      show: false,
-      message: null,
-      statusCode: null,
-    },
     form: {
       password: null,
       password_confirmation: null,
@@ -70,9 +59,12 @@ export default {
         .catch((err) => {
           this.errMessage = err.response.data.message;
           this.loading = false;
-          this.snackbar.show = true;
-          this.snackbar.message = err.response.data.error.password_confirmation;
-          this.snackbar.statusCode = err.response.status;
+          this.$refs.toaster.show(
+            "danger",
+            "b-toaster-top-center",
+            "Faild",
+            err.response.data.error.password_confirmation
+          );
           console.log(err.response);
         });
     },
@@ -87,8 +79,7 @@ export default {
     this.form.token = this.$route.params.token;
   },
   components: {
-    Spinner,
-    Snackbar,
+    Toaster,
     Header,
     Footer,
   },

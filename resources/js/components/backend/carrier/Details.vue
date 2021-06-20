@@ -1,14 +1,5 @@
 <template>
-  <div class="account">
-    <md-dialog-confirm
-      :md-active.sync="lockTogal"
-      md-title="Confirmation"
-      :md-content="confirmation_text"
-      md-confirm-text="OK"
-      md-cancel-text="Cancel"
-      @md-confirm="confirm()"
-      @md-cancel="cancel"
-    />
+  <div class="container">
     <Account v-if="carrier" :user="carrier.user.id" />
     <div class="break"></div>
     <Edit
@@ -17,90 +8,81 @@
       v-on:close-it="detailsTogal = false"
       v-if="detailsTogal"
     />
-    <md-card v-else>
-      <md-card-header>
-        <span class="md-title">Profile </span>
-        <md-button to="/admin/carriers" class="md-icon-button add-btn">
-          <md-icon>close</md-icon>
-          <md-tooltip>Cancel</md-tooltip>
-        </md-button>
-      </md-card-header>
-      <md-divider></md-divider>
-      <md-card-content v-if="carrier">
-        <div>
-          <div>
-            <div class="row">
-              <span>First name:</span>
-              <span>{{ carrier.first_name }}</span>
-            </div>
-            <div class="row">
-              <span>Last name:</span>
-              <span>{{ carrier.last_name }}</span>
-            </div>
-            <div class="row">
-              <span>Phone:</span>
-              <span>{{ carrier.user.phone }}</span>
-            </div>
-            <div class="row">
-              <span>Website:</span>
-              <span>{{ carrier.website }}</span>
-            </div>
-            <div class="row">
-              <span>Address:</span>
-              <span>{{ carrier.address.formatted_address }}</span>
-            </div>
-            <div class="row">
-              <span>Number of employees:</span>
-              <span>{{ carrier.employees }}</span>
-            </div>
-            <div class="row">
-              <span>Number of vehicles:</span>
-              <span>{{ carrier.vehicles }}</span>
-            </div>
-            <div class="row">
-              <span>Rate per hour for two movers and a vehicle:</span>
-              <span>${{ carrier.hourly_rate }}</span>
-            </div>
-            <div class="row">
-              <span>Company name:</span>
-              <span>{{ carrier.company }}</span>
-            </div>
-            <div class="row">
-              <span>Established year:</span>
-              <span>{{ carrier.year_established }}</span>
-            </div>
-            <div class="row">
-              <span>More details:</span>
-              <span>{{ carrier.detail }}</span>
-            </div>
-            <div class="row">
-              <span>Insurance paper:</span>
-              <span>Not attached</span>
-            </div>
-            <div class="row">
-              <span>Business license:</span>
-              <span>Not attached</span>
-            </div>
-          </div>
+    <b-card v-else header="Profile Details" class="shadow border-0">
+      <b-button variant="light" @click="$router.push('/admin/carriers')" class="add-btn">
+        <b-icon icon="x">close</b-icon>
+      </b-button>
+      <div v-if="carrier">
+        <div class="row">
+          <span class="col-3">First name:</span>
+          <span class="col-6">{{ carrier.first_name }}</span>
         </div>
-      </md-card-content>
-      <md-card-actions>
-        <md-button @click="detailsTogal = true" class="md-primary"> Edit </md-button>
-      </md-card-actions>
-    </md-card>
-    <div class="delete">
-      <md-button
+        <div class="row">
+          <span class="col-3">Last name:</span>
+          <span class="col-6">{{ carrier.last_name }}</span>
+        </div>
+        <div class="row">
+          <span class="col-3">Phone:</span>
+          <span class="col-6">{{ carrier.user.phone }}</span>
+        </div>
+        <div class="row">
+          <span class="col-3">Website:</span>
+          <span class="col-6">{{ carrier.website }}</span>
+        </div>
+        <div class="row">
+          <span class="col-3">Address:</span>
+          <span class="col-6">{{ carrier.address.formatted_address }}</span>
+        </div>
+        <div class="row">
+          <span class="col-3">Number of employees:</span>
+          <span class="col-6">{{ carrier.employees }}</span>
+        </div>
+        <div class="row">
+          <span class="col-3">Number of vehicles:</span>
+          <span class="col-6">{{ carrier.vehicles }}</span>
+        </div>
+        <div class="row">
+          <span class="col-3">Rate per hour for two movers and a vehicle:</span>
+          <span class="col-6">${{ carrier.hourly_rate }}</span>
+        </div>
+        <div class="row">
+          <span class="col-3">Company name:</span>
+          <span class="col-6">{{ carrier.company }}</span>
+        </div>
+        <div class="row">
+          <span class="col-3">Established year:</span>
+          <span class="col-6">{{ carrier.year_established }}</span>
+        </div>
+        <div class="row">
+          <span class="col-3">More details:</span>
+          <span class="col-6">{{ carrier.detail }}</span>
+        </div>
+        <div class="row">
+          <span class="col-3">Insurance paper:</span>
+          <span class="col-6">Not attached</span>
+        </div>
+        <div class="row">
+          <span class="col-3">Business license:</span>
+          <span class="col-6">Not attached</span>
+        </div>
+      </div>
+      <div class="text-right mt-3">
+        <b-button @click="detailsTogal = true" variant="primary"> Edit </b-button>
+      </div>
+    </b-card>
+    <div v-if="carrier" class="text-right mt-3 mb-3">
+      <b-button
+        variant="success"
         v-if="carrier.user.status == 'Active'"
-        class="md-primary md-fab md-raised"
         @click="edit('Locked')"
-        ><md-icon>lock</md-icon></md-button
-      >
-      <md-button v-else class="md-primary md-fab md-raised" @click="edit('Active')"
-        ><md-icon>lock_open</md-icon></md-button
-      >
-      <md-button class="md-primary md-fab md-raised" @click="edit('Deleted')"
-        ><md-icon>delete</md-icon></md-button
-      >
+        ><b-icon icon="lock"></b-icon
+      ></b-button>
+      <b-button v-else variant="success" @click="edit('Active')"
+        ><b-icon icon="unlock"></b-icon
+      ></b-button>
+      <b-button variant="danger" @click="edit('Deleted')"
+        ><b-icon icon="trash"></b-icon
+      ></b-button>
     </div>
   </div>
 </template>
@@ -119,7 +101,6 @@ export default {
     carrier: null,
     detailsTogal: false,
     lockTogal: false,
-    confirmation_text: null,
   }),
 
   methods: {
@@ -135,16 +116,24 @@ export default {
         });
     },
     edit(status) {
-      this.confirmation_text = "Do you want this account to be " + status + "?";
-      this.status = status;
-      this.lockTogal = true;
+      this.$bvModal
+        .msgBoxConfirm("Do you want this account to be " + status + "?")
+        .then((value) => {
+          if (value) {
+            this.confirm(status);
+          }
+        })
+        .catch((err) => {
+          console.log("err", err);
+        });
     },
     refresh() {
       this.detailsTogal = false;
       this.get();
     },
-    confirm() {
-      if (this.status == "Deleted") {
+    confirm(status) {
+      console.log("xxxxxxx", this.carrier.user.id);
+      if (status == "Deleted") {
         axios
           .delete("admin/users/" + this.user)
           .then((res) => {
@@ -155,7 +144,7 @@ export default {
           });
       } else {
         axios
-          .put("admin/users/lock/" + this.user, { status: this.status })
+          .put("admin/users/lock/" + this.carrier.user.id, { status: status })
           .then((res) => {
             this.get();
           })
@@ -164,7 +153,6 @@ export default {
           });
       }
     },
-    cancel() {},
   },
 
   created() {
@@ -174,28 +162,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.account {
-  padding-bottom: 30px;
-  .md-card {
-    text-align: left;
-    .md-card-content {
-      padding: 20px;
-      .row {
-        display: flex;
-        > :first-child {
-          width: 200px;
-        }
-      }
-    }
-    .add-btn {
-      position: absolute;
-      top: 1px;
-      right: 1px;
-    }
-  }
-  .delete {
-    margin: 30px;
-    text-align: right;
+.container {
+  min-height: calc(100vh - 50px);
+
+  .add-btn {
+    position: absolute;
+    top: 1px;
+    right: 1px;
   }
 }
 </style>

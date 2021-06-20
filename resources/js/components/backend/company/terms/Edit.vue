@@ -1,16 +1,16 @@
 <template>
-  <div>
-    <form @submit.prevent="update">
-      <md-field class="">
-        <label>Title</label>
-        <md-input v-model="form.title"></md-input>
-      </md-field>
-      <tinymce id="d1" v-model="form.body" :init-value="initialValue" ref="tm"></tinymce>
-      <br />
-      <div class="submit">
-        <md-button type="submit" class="custom-button">Update</md-button>
-      </div>
-    </form>
+  <div class="container">
+    <b-card class="shadow border-0 mt-5 mb-5">
+      <form @submit.prevent="update">
+        <b-form-group class="">
+          <b-form-input v-model="form.title" placeholder="Title"></b-form-input>
+        </b-form-group>
+        <tinymce id="d1" v-model="form.body"></tinymce>
+        <div class="text-right">
+          <b-button type="submit" variant="primary mt-3">Update</b-button>
+        </div>
+      </form>
+    </b-card>
   </div>
 </template>
 <script>
@@ -24,7 +24,7 @@ export default {
     return {
       form: {
         title: this.term.title,
-        body: "",
+        body: this.term.body,
       },
       initialValue: "",
     };

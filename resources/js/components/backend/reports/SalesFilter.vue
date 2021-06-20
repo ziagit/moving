@@ -1,75 +1,61 @@
 <template>
   <div>
-    <div class="md-body-2">Filter By</div>
-    <div class="row">
-      <md-field>
-        <md-select v-model="form.month" placeholder="Month">
-          <md-option value="1">January</md-option>
-          <md-option value="2">February</md-option>
-          <md-option value="3">March</md-option>
-          <md-option value="4">April</md-option>
-          <md-option value="5">May</md-option>
-          <md-option value="6">June</md-option>
-          <md-option value="7">July</md-option>
-          <md-option value="8">August</md-option>
-          <md-option value="9">September</md-option>
-          <md-option value="10">October</md-option>
-          <md-option value="11">November</md-option>
-          <md-option value="12">December</md-option>
-        </md-select>
-      </md-field>
-      <md-field>
-        <md-select v-model="form.order_status" placeholder="Order status">
-          <md-option value="Completed">Completed</md-option>
-          <md-option value="New">New</md-option>
-          <md-option value="Accepted">Accepted</md-option>
-          <md-option value="Declined">Declined</md-option>
-          <md-option value="Canceled">Canceled</md-option>
-        </md-select>
-      </md-field>
-      <md-field>
-        <md-select v-model="form.type" placeholder="Type">
-          <md-option value="office">Office</md-option>
-          <md-option value="apartment">Apartment</md-option>
-          <md-option value="few_items">A few items</md-option>
-          <md-option value="junk_removal">Junk removal</md-option>
-        </md-select>
-      </md-field>
-    </div>
-    <div class="row">
-      <md-field>
-        <md-select v-model="form.pickup" placeholder="Pickup">
-          <md-option value="Vancouver">Vancouver</md-option>
-          <md-option value="Victoria">Victoria</md-option>
-        </md-select>
-      </md-field>
-      <md-field>
-        <md-select v-model="form.destination" placeholder="Destination">
-          <md-option value="Vancouver">Vancouver</md-option>
-          <md-option value="Victoria">Victoria</md-option>
-        </md-select>
-      </md-field>
-      <md-field>
-        <md-select v-model="form.mover" placeholder="Mover">
-          <md-option value="Amu">Amu cloud </md-option>
-          <md-option value="TingsApp">TingsApp</md-option>
-        </md-select>
-      </md-field>
-    </div>
+    <b-form-group>
+      <b-input-group>
+        <b-form-datepicker
+          v-model="form.from"
+          placeholder="Start date"
+          :max="new Date()"
+          data-date-format="yyyy-mm-dd"
+        ></b-form-datepicker>
+        <b-form-datepicker
+          v-model="form.to"
+          placeholder="End date"
+          :max="new Date()"
+        ></b-form-datepicker>
+      </b-input-group>
+    </b-form-group>
+    <b-form-group>
+      <b-input-group>
+        <b-form-select v-model="form.order_status" placeholder="Order status">
+          <b-form-select-option :value="null">Status</b-form-select-option>
+          <b-form-select-option value="">َAll</b-form-select-option>
+          <b-form-select-option value="New">New</b-form-select-option>
+          <b-form-select-option value="Accepted">Accepted</b-form-select-option>
+          <b-form-select-option value="Declined">Declined</b-form-select-option>
+          <b-form-select-option value="Canceled">Canceled</b-form-select-option>
+          <b-form-select-option value="Completed">Completed</b-form-select-option>
+        </b-form-select>
+        <b-form-select v-model="form.type" placeholder="Type">
+          <b-form-select-option :value="null">Type</b-form-select-option>
+          <b-form-select-option value="">All</b-form-select-option>
+          <b-form-select-option value="office">Office</b-form-select-option>
+          <b-form-select-option value="apartment">Apartment</b-form-select-option>
+          <b-form-select-option value="few_items">A few items</b-form-select-option>
+          <b-form-select-option value="junk_removal">Junk removal</b-form-select-option>
+        </b-form-select>
+      </b-input-group>
+    </b-form-group>
+    <b-form-group>
+      <b-form-select v-model="form.mover" placeholder="Mover">
+        <b-form-select-option :value="null">Mover</b-form-select-option>
+        <b-form-select-option value="">All</b-form-select-option>
+        <b-form-select-option value="Amu">Amu cloud</b-form-select-option>
+        <b-form-select-option value="TingsApp">TingsApp</b-form-select-option>
+      </b-form-select>
+    </b-form-group>
     <div class="action">
-      <md-button class="md-primary" @click="filter()">Filter</md-button>
+      <b-button variant="primary" @click="filter()">Filter</b-button>
     </div>
   </div>
 </template>
 <script>
-import axios from "axios";
 export default {
   data: () => ({
     form: {
-      month: null,
+      from: null,
+      to: null,
       order_status: null,
-      pickup: null,
-      destination: null,
       mover: null,
       type: null,
     },

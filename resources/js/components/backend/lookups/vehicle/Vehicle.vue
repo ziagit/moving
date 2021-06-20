@@ -1,71 +1,45 @@
 <template>
-  <div class="main-container">
-    <!-- delete dialog-->
-    <md-dialog-confirm
-      :md-active.sync="deleteTogal"
-      md-title="I assure what you doing"
-      md-content
-      md-confirm-text="OK"
-      md-cancel-text="Cancel"
-      @md-confirm="confirm()"
-      @md-cancel="cancel"
-    />
-    <!-- edit dialog -->
-    <md-dialog :md-active.sync="editTogal">
-      <md-dialog-title>Update data</md-dialog-title>
-      <md-dialog-content>
-        <Edit v-on:close-dialog="refresh" :vehicle="vehicle" />
-      </md-dialog-content>
-    </md-dialog>
+  <div class="container">
+    <b-modal id="modal-update" title="Update Data" :hide-footer="true">
+      <Edit v-on:close-dialog="refresh" :vehicle="vehicle" />
+    </b-modal>
     <!-- add dialog -->
-    <md-dialog :md-active.sync="addTogal">
-      <md-dialog-title>Add new </md-dialog-title>
-      <md-dialog-content>
-        <Add v-on:close-dialog="refresh" />
-      </md-dialog-content>
-    </md-dialog>
-
-    <md-table md-card>
-      <md-table-toolbar>
-        <div class="md-toolbar-section-start">
-          <h1 class="md-title">Vehicles</h1>
-        </div>
-      </md-table-toolbar>
-
-      <md-table-empty-state
-        md-label="No state found"
-        :md-description="`No state found for this query. Try a different search term or create a new state.`"
-      >
-        <md-button class="md-primary md-raised" @click="add()">Create new</md-button>
-      </md-table-empty-state>
-      <md-table-row>
-        <md-table-head md-numeric>ID</md-table-head>
-        <md-table-head>Name</md-table-head>
-        <md-table-head>Code</md-table-head>
-        <md-table-head>Recommended for</md-table-head>
-        <md-table-head>Base fare</md-table-head>
-      </md-table-row>
-      <md-table-row v-for="vehicle in vehicles" :key="vehicle.id">
-        <md-table-cell md-numeric>{{ vehicle.id }}</md-table-cell>
-        <md-table-cell>{{ vehicle.name }}</md-table-cell>
-        <md-table-cell>{{ vehicle.code }}</md-table-cell>
-        <md-table-cell>{{ vehicle.recommended }}</md-table-cell>
-        <md-table-cell>${{ vehicle.base_fare }}</md-table-cell>
-
-        <md-table-cell md-label="Actions">
-          <md-button class="md-icon-button md-primary" @click="edit(vehicle)">
-            <md-icon>edit</md-icon>
-          </md-button>
-          <md-button class="md-icon-button md-accent" @click="remove(vehicle.id)">
-            <md-icon>delete</md-icon>
-          </md-button>
-        </md-table-cell>
-      </md-table-row>
-    </md-table>
-    <md-button class="md-fab md-primary add-btn" @click="add()">
-      <md-icon>add</md-icon>
-      <md-tooltip>Add new </md-tooltip>
-    </md-button>
+    <b-modal id="modal-add" size="md" title="Add New Type" :hide-footer="true">
+      <Add v-on:close-dialog="refresh" />
+    </b-modal>
+    <b-card header="Vehicles" class="border-0 shadow text-left mt-5">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Code</th>
+            <th>Recommended for</th>
+            <th>Base fare</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="vehicle in vehicles" :key="vehicle.id">
+            <td>{{ vehicle.id }}</td>
+            <td>{{ vehicle.name }}</td>
+            <td>{{ vehicle.code }}</td>
+            <td>{{ vehicle.recommended }}</td>
+            <td>${{ vehicle.base_fare }}</td>
+            <td>
+              <b-button variant="light" @click="edit(vehicle)">
+                <b-icon variant="primary" icon="pencil"></b-icon>
+              </b-button>
+              <b-button variant="light" @click="remove(vehicle.id)">
+                <b-icon icon="trash" variant="danger"></b-icon>
+              </b-button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <b-button variant="primary" class="add-btn" v-b-modal.modal-add>
+        <b-icon icon="plus"></b-icon>
+      </b-button>
+    </b-card>
   </div>
 </template>
 
@@ -80,9 +54,6 @@ export default {
     keywords: null,
     vehicles: null,
     vehicle: null,
-    addTogal: false,
-    editTogal: false,
-    deleteTogal: false,
   }),
 
   methods: {
@@ -98,27 +69,30 @@ export default {
         });
     },
 
-    add() {
-      this.addTogal = true;
-      this.stateData = this.states;
-    },
     refresh() {
-      this.addTogal = false;
-      this.editTogal = false;
+      this.$bvModal.hide("modal-update");
+      this.$bvModal.hide("modal-add");
       this.get();
     },
     edit(data) {
-      this.editTogal = true;
       this.vehicle = data;
+      this.$bvModal.show("modal-update");
     },
     remove(id) {
-      this.deleteTogal = true;
-      this.selectedId = id;
+      this.$bvModal
+        .msgBoxConfirm("Are you sure?")
+        .then((value) => {
+          if (value) {
+            this.confirm(id);
+          }
+        })
+        .catch((err) => {
+          console.log("err", err);
+        });
     },
-
-    confirm() {
+    confirm(id) {
       axios
-        .delete("admin/vehicle/" + this.selectedId)
+        .delete("admin/vehicle/" + id)
         .then((res) => {
           console.log("deleted", res.data);
           this.get();
@@ -127,7 +101,6 @@ export default {
           console.log("Error: ", err);
         });
     },
-    cancel() {},
   },
   created() {
     this.get();
@@ -140,12 +113,12 @@ export default {
 };
 </script>
 <style scoped lang="scss">
-.main-container {
-  width: 100%;
+.container {
+  height: calc(100vh - 50px);
   .add-btn {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
+    position: absolute;
+    top: 0;
+    right: 0;
   }
 }
 </style>

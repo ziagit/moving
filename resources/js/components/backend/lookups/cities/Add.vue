@@ -1,51 +1,25 @@
 <template>
   <div>
-    <md-switch v-model="uploadTogal" @change="isUpload($event)">Upload file</md-switch>
-    <form @submit.prevent="upload()" v-if="uploadTogal">
-      <md-card>
-        <md-card-content>
-          <md-field>
-            <label>Select file</label>
-            <md-file v-on:change="onFileSelect($event)" />
-          </md-field>
-        </md-card-content>
-        <md-card-actions>
-          <md-button v-if="!uploading" type="submit" class="md-icon-button md-raised">
-            <md-icon>cloud_upload</md-icon>
-          </md-button>
-          <Spinner v-if="uploading" />
-        </md-card-actions>
-      </md-card>
+    <form @submit.prevent="save()">
+      <b-form-group>
+        <b-form-input v-model="form.name" name="name" placeholder="Name"></b-form-input>
+      </b-form-group>
+      <b-form-group>
+        <b-form-select v-model="form.state" id="state" placeholder="State">
+          <option v-for="state in states" :key="state.id" :value="state.id">
+            {{ state.name }}
+          </option>
+        </b-form-select>
+      </b-form-group>
+
+      <b-button type="submit" variant="primary"> Submit </b-button>
     </form>
-    <form @submit.prevent="save()" v-else>
-      <md-card>
-        <md-card-content>
-          <md-field>
-            <label>Name</label>
-            <md-input v-model="form.name" name="name"></md-input>
-          </md-field>
-          <md-field>
-            <md-select v-model="form.state" id="state" placeholder="State">
-              <md-option v-for="state in states" :key="state.id" :value="state.id">{{
-                state.name
-              }}</md-option>
-            </md-select>
-          </md-field>
-        </md-card-content>
-        <md-card-actions>
-          <md-button type="submit" class="md-icon-button md-raised">
-            <md-icon>save</md-icon>
-          </md-button>
-        </md-card-actions>
-      </md-card>
-    </form>
-    <Snackbar :data="snackbar" />
+    <Toaster ref="toaster" />
   </div>
 </template>
 
 <script>
-import Snackbar from "../../../shared/Snackbar";
-import Spinner from "../../../shared/Spinner";
+import Toaster from "../../../shared/Toaster";
 import Vue from "vue";
 import axios from "axios";
 
@@ -60,11 +34,6 @@ export default {
       file: null,
       uploadTogal: false,
       uploading: false,
-      snackbar: {
-        show: false,
-        message: null,
-        statusCode: null,
-      },
     };
   },
   methods: {
@@ -83,17 +52,23 @@ export default {
         .post("admin/upload-cities", fd)
         .then((res) => {
           console.log("imported: ", res.data, res.status);
-          this.snackbar.show = true;
-          this.snackbar.message = res.data.message;
-          this.snackbar.statusCode = res.status;
+          this.$refs.toaster.show(
+            "success",
+            "b-toaster-top-center",
+            "Success",
+            res.data.message
+          );
           this.uploading = false;
           this.$emit("close-dialog");
         })
         .catch((err) => {
           this.uploading = false;
-          this.snackbar.show = true;
-          this.snackbar.message = err.response.data.message;
-          this.snackbar.statusCode = err.response.status;
+          this.$refs.toaster.show(
+            "danger",
+            "b-toaster-top-center",
+            "Error",
+            err.response.data.message
+          );
           console.log(err.response.data.message);
         });
     },
@@ -105,9 +80,12 @@ export default {
           this.$emit("close-dialog");
         })
         .catch((err) => {
-          this.snackbar.show = true;
-          this.snackbar.message = err.response.data.message;
-          this.snackbar.statusCode = err.response.status;
+          this.$refs.toaster.show(
+            "danger",
+            "b-toaster-top-center",
+            "Error",
+            err.response.data.message
+          );
           console.log("Error: ", err.response);
         });
     },
@@ -127,8 +105,7 @@ export default {
     this.get();
   },
   components: {
-    Spinner,
-    Snackbar,
+    Toaster,
   },
 };
 </script>

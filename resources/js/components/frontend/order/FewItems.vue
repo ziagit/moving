@@ -1,11 +1,11 @@
 <template>
-  <div class="few-items">
+  <div class="origin">
     <span class="md-display-1">Add your items</span>
     <div class="break"></div>
     <div class="break"></div>
     <div class="break"></div>
     <div v-if="items.length > 0">
-      <md-card>
+      <b-card class="item-card px-0 shadow border-0">
         <ul>
           <li v-for="(item, index) in items" :key="index">
             <div>
@@ -14,36 +14,61 @@
               <span>{{ item.number }}</span>
             </div>
             <div>
-              <md-button class="md-icon-button md-primary" @click="edit(item.code)"
-                ><md-icon>edit</md-icon> <md-tooltip>Edit it</md-tooltip></md-button
-              >
-              <md-button class="md-icon-button remove" @click="remove(index)"
-                ><md-icon>remove</md-icon> <md-tooltip>Remove it</md-tooltip></md-button
-              >
+              <b-icon
+                @click="edit(item.code)"
+                icon="pencil"
+                variant="primary"
+                class="icon"
+              ></b-icon>
+              <b-icon
+                @click="remove(index)"
+                icon="trash"
+                variant="danger"
+                class="icon"
+              ></b-icon>
             </div>
           </li>
         </ul>
-      </md-card>
+      </b-card>
       <div class="break"></div>
       <div class="break"></div>
       <div class="break"></div>
     </div>
     <form>
-      <md-button
+      <b-button
         v-if="addTogal"
         @click="addTogal = false"
-        class="md-raised md-icon-button rounded-secondary-button"
+        variant="primary"
+        v-b-tooltip.hover
+        title="Add an item"
       >
-        <md-icon>add</md-icon>
-        <md-tooltip>add an item</md-tooltip>
-      </md-button>
+        <b-icon icon="plus-circle"></b-icon>
+      </b-button>
 
       <div class="item-row" v-else>
         <div class="search-box">
-          <md-field class="name">
-            <label>Item name</label>
-            <md-input v-model="keywords" type="text" required></md-input>
-          </md-field>
+          <b-input-group>
+            <b-form-input
+              v-model="keywords"
+              type="text"
+              required
+              placeholder="Search item name"
+            ></b-form-input>
+            <b-form-input
+              v-model="number"
+              required
+              placeholder="How many"
+              type="number"
+              :min="1"
+            ></b-form-input>
+            <input type="hidden" :value="code" />
+            <b-input-group-append>
+              <b-button variant="primary" v-if="!number" @click="cancel()">-</b-button>
+              <b-button variant="primary" v-else @click="add(name, number, code)"
+                >+</b-button
+              >
+            </b-input-group-append>
+          </b-input-group>
           <ul v-if="searchTogal">
             <li v-for="list in list" :key="list.id" @click="select(list)">
               {{ list.name }}
@@ -53,57 +78,34 @@
             <li>Not found</li>
           </ul>
         </div>
-        <div class="number">
-          <md-field>
-            <label>How many</label>
-            <md-input v-model="number" type="number" :min="1" required></md-input>
-          </md-field>
-          <input type="hidden" :value="code" />
-        </div>
-        <div class="add">
-          <span v-if="!number" class="md-body-2 md-icon-button" @click="cancel()">
-            <md-icon>remove</md-icon>
-            <md-tooltip>Click to remove</md-tooltip>
-          </span>
-          <span v-else class="md-body-2 md-icon-button" @click="add(name, number, code)"
-            >add
-            <md-tooltip>Click to add</md-tooltip>
-          </span>
-        </div>
       </div>
 
       <div class="break"></div>
       <div class="break"></div>
       <div class="break"></div>
-      <div class="actions">
-        <md-button
-          to="/order/moving-types"
-          class="md-raised md-fab md-icon-button rounded-primary-button"
-        >
-          <md-icon>arrow_back</md-icon>
-        </md-button>
-        <div class="tab"></div>
 
-        <md-button
-          @click="next()"
-          class="md-raised md-fab md-icon-button rounded-secondary-button"
-        >
-          <md-icon>arrow_forward</md-icon>
-        </md-button>
+      <div class="actions">
+        <b-button @click="back()" variant="light">
+          <b-icon icon="arrow-left"></b-icon>
+        </b-button>
+        <div class="tab"></div>
+        <b-button @click="next()" variant="primary">
+          <b-icon icon="arrow-right"></b-icon>
+        </b-button>
       </div>
     </form>
-    <Snackbar :data="snackbar" />
+    <Toaster ref="toaster" />
   </div>
 </template>
 
 <script>
-import Snackbar from "../../shared/Snackbar";
+import Toaster from "../../shared/Toaster";
 import axios from "axios";
 import localData from "../services/localData";
 export default {
   name: "App",
   components: {
-    Snackbar,
+    Toaster,
   },
   data: () => ({
     items: [],
@@ -117,11 +119,6 @@ export default {
     searchTogal: false,
     notFoundTogal: false,
     exist: false,
-    snackbar: {
-      show: false,
-      message: null,
-      statusCode: null,
-    },
   }),
   watch: {
     keywords(after, before) {
@@ -168,9 +165,12 @@ export default {
     },
     add(name, number, code) {
       if (name == null || number == null || number < 1 || code == null) {
-        this.snackbar.show = true;
-        this.snackbar.message = "Search your items and add";
-        this.snackbar.statusCode = "404";
+        this.$refs.toaster.show(
+          "warning",
+          "b-toaster-top-center",
+          "Warning",
+          "Search your items and add"
+        );
       } else {
         for (let i = 0; i < this.items.length; i++) {
           if (this.items[i].code === code) {
@@ -211,16 +211,24 @@ export default {
     remove(index) {
       this.items.splice(index, 1);
     },
-
+    back() {
+      this.$router.push("/order/moving-types");
+    },
     next() {
       if (this.items.length == 0) {
-        this.snackbar.show = true;
-        this.snackbar.message = "Add an item";
-        this.snackbar.statusCode = "428";
+        this.$refs.toaster.show(
+          "warning",
+          "b-toaster-top-center",
+          "Warning",
+          "Add an item"
+        );
       } else if (!this.addTogal) {
-        this.snackbar.show = true;
-        this.snackbar.message = "Click + sign to add your item in the list";
-        this.snackbar.statusCode = "428";
+        this.$refs.toaster.show(
+          "warning",
+          "b-toaster-top-center",
+          "Warning",
+          "Click + sign to add your item in the list"
+        );
       } else {
         localData.save("moving-items", this.items);
         this.$router.push("floors");
@@ -237,9 +245,8 @@ export default {
 </script>
 
 <style lang="scss">
-.few-items {
-  text-align: center;
-  .md-card {
+.origin {
+  .item-card {
     margin: 0;
     ul {
       margin: 0 0 0 10px;
@@ -251,8 +258,9 @@ export default {
         list-style-type: none;
         margin: 0;
         padding: 0;
-        .md-icon {
-          color: red;
+        .icon {
+          cursor: pointer;
+          margin: 5px;
         }
       }
     }
@@ -264,8 +272,7 @@ export default {
   align-items: center;
   .search-box {
     position: relative;
-    width: 75%;
-
+    width: 100%;
     ul {
       border-bottom-right-radius: 5px;
       border-bottom-left-radius: 5px;
@@ -306,23 +313,8 @@ export default {
     cursor: pointer;
   }
 }
-
-.md-menu-content-bottom-start .md-menu-content-small .md-menu-content .md-theme-default {
-  top: 327px !important;
-}
 .actions {
   display: flex;
   justify-content: center;
-}
-/* Chrome, Safari, Edge, Opera */
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-/* Firefox */
-input[type="number"] {
-  -moz-appearance: textfield;
 }
 </style>

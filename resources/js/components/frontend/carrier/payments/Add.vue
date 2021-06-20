@@ -1,82 +1,74 @@
 <template>
   <div>
     <form @submit.prevent="submit" enctype="multipart/form-data">
-      <md-card>
-        <md-card-header>
-          <span class="md-title">Add Banck Information</span>
-          <md-button @click="$router.back()" class="md-icon-button add-btn">
-            <md-icon>close</md-icon>
-            <md-tooltip>Cancel</md-tooltip>
-          </md-button>
-        </md-card-header>
-        <md-divider></md-divider>
-        <md-card-content>
-          <md-field>
-            <md-select
+      <b-card header="Add Bank Informations" class="border-0 shadow text-left">
+        <b-button @click="$router.back()" variant="light" class="add-btn">
+          <b-icon icon="x"></b-icon>
+        </b-button>
+        <div>
+          <b-form-group>
+            <b-form-select
               v-model="form.currency"
-              :value="form.currency"
-              name="country"
-              id="country"
-              placeholder="Country"
-            >
-              <md-option value="CAD">CAD - Canadian Dollar</md-option>
-              <md-option value="USD">USD - US Dollar</md-option>
-            </md-select>
-          </md-field>
-          <md-field>
-            <label for="">Transit number</label>
-            <md-input type="text" v-model="form.transit_number" required></md-input>
-          </md-field>
-          <md-field>
-            <label for="">Institution number</label>
-            <md-input
+              :options="currencies"
+              ref="focusable"
+            ></b-form-select>
+          </b-form-group>
+          <b-form-group>
+            <b-form-input
+              type="text"
+              v-model="form.transit_number"
+              required
+              placeholder="Transit number"
+            ></b-form-input>
+          </b-form-group>
+          <b-form-group>
+            <b-form-input
               type="number"
               v-model="form.institution_number"
               required
               :min="0"
-            ></md-input>
-          </md-field>
-          <md-field>
-            <label for="">Account number</label>
-            <md-input
+              placeholder="Institution number"
+            ></b-form-input>
+          </b-form-group>
+          <b-form-group>
+            <b-form-input
               type="number"
               v-model="form.account_number"
               required
               :min="0"
-            ></md-input>
-          </md-field>
-          <md-field>
-            <label for="">Confirm account number</label>
-            <md-input
+              placeholder="Account number"
+            ></b-form-input>
+          </b-form-group>
+          <b-form-group>
+            <b-form-input
               type="number"
               v-model="form.confirm_account_number"
               required
               :min="0"
-            ></md-input>
-          </md-field>
-        </md-card-content>
-        <md-card-actions>
-          <Spinner v-if="isSubmitting" />
-          <md-button v-if="!isSubmitting" type="submit" class="md-primary md-small-fab"
-            >Save</md-button
+              placeholder="Confirm account number"
+            ></b-form-input>
+          </b-form-group>
+        </div>
+        <div class="text-right">
+          <b-spinner variant="primary" v-if="isSubmitting" />
+          <b-button v-if="!isSubmitting" type="submit" class="" variant="primary"
+            >Save</b-button
           >
-        </md-card-actions>
-      </md-card>
+        </div>
+      </b-card>
     </form>
-    <Snackbar :data="snackbar" />
+    <Toaster :data="Toaster" />
   </div>
 </template>
 
 <script>
 import GoogleAddress3 from "../../../shared/GoogleAddress3";
 import axios from "axios";
-import Snackbar from "../../../shared/Snackbar";
-import Spinner from "../../../shared/Spinner";
+import Toaster from "../../../shared/Toaster";
 export default {
   name: "AddGeneralInfo",
   components: {
-    Snackbar,
-    Spinner,
+    Toaster,
     GoogleAddress3,
   },
   data: () => ({
@@ -87,16 +79,20 @@ export default {
       account_number: null,
       confirm_account_number: null,
     },
-
+    currencies: [
+      { value: null, text: "Select Currency" },
+      { value: "CAD", text: "CAD - Canadian Dollar" },
+      { value: "USD", text: "USD - US Dollar" },
+    ],
     isSubmitting: false,
-    snackbar: {
+    Toaster: {
       show: false,
       message: null,
       statusCode: null,
     },
   }),
   mounted() {
-    this.$refs.focusable.$el.focus();
+    this.$refs.focusable.focus();
   },
   methods: {
     submit() {
@@ -111,9 +107,13 @@ export default {
         .catch((error) => {
           this.isSubmitting = false;
           console.log("eerrr: ", error.response);
-          this.snackbar.message = error.response.data.errors;
-          this.snackbar.statusCode = error.response.status;
-          this.snackbar.show = true;
+
+          this.$refs.toaster.show(
+            "danger",
+            "b-toaster-top-center",
+            "Error",
+            error.response.data.errors
+          );
         });
     },
   },
@@ -121,15 +121,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.md-card {
-  text-align: left;
-  .md-card-content {
-    padding: 20px;
-  }
-  .add-btn {
-    position: absolute;
-    top: 0;
-    right: 0;
-  }
+.add-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 </style>

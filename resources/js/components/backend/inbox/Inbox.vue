@@ -1,12 +1,8 @@
 <template>
-  <div>
-    <md-card>
-      <md-card-header>
-        <span class="md-title">Inbox</span>
-      </md-card-header>
-      <md-divider></md-divider>
-      <md-card-content>
-        <div class="menu">
+  <div class="container inbox">
+    <b-card header="Notifications" class="border-0 shadow mt-3 mb-3">
+      <div class="wrapper row">
+        <div class="menu col-3">
           <md-list class="md-triple-line md-dense">
             <div v-for="(not, index) in notifications" :key="index">
               <md-list-item
@@ -28,24 +24,28 @@
             </div>
           </md-list>
         </div>
-        <div class="content">
+        <b-jumbotron
+          class="col-6 mb-0"
+          header="Notification"
+          lead="I'm pleased to notify you"
+        >
           <div v-if="details">
             <div v-if="details.type == 'App\\Notifications\\JobCreated'">
               <p>This Order is created at: {{ details.created_at }}</p>
-              <md-button class="md-primary">View in order page</md-button>
+              <b-button variant="primary">View in order page</b-button>
             </div>
             <div v-else-if="details.type == 'App\\Notifications\\JobUpdated'">
               <p>An Order is updated at: {{ details.created_at }}</p>
-              <md-button class="md-primary">View in order page</md-button>
+              <b-button variant="primary">View in order page</b-button>
             </div>
             <div v-else-if="details.type == 'App\\Notifications\\CarrierPaid'">
               <p>A mover paid at: {{ details.created_at }}</p>
-              <md-button class="md-primary">View in payment page</md-button>
+              <b-button variant="primary">View in payment page</b-button>
             </div>
           </div>
-        </div>
-      </md-card-content>
-    </md-card>
+        </b-jumbotron>
+      </div>
+    </b-card>
   </div>
 </template>
 <script>
@@ -75,26 +75,15 @@ export default {
   },
 };
 </script>
-<style lang="scss" scoped>
-.md-card {
-  height: calc(100vh - 100px);
-  .md-card-content {
-    height: calc(100vh - 180px);
-    display: flex;
-    justify-content: space-between;
-    .menu {
-      flex: 1;
-      max-width: 300px;
-      border-right: solid 1px #ddd;
-      padding-right: 10px;
-      .md-list-item:hover {
-        cursor: pointer;
-      }
-    }
-    .content {
-      padding: 20px;
-      flex: 9;
-    }
+<style lang="scss">
+.wrapper {
+  height: calc(100vh - 162px);
+
+  .menu {
+    flex: 1;
+    max-width: 300px;
+    border-right: solid 1px #ddd;
+    padding-right: 10px;
   }
 }
 .selected {

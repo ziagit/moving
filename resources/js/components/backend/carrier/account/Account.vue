@@ -4,37 +4,38 @@
       v-if="editTogal"
       v-on:close-it="refresh"
       :user="details"
-      v-on:refresh="refresh"
+      v-on:close-dialog="refresh"
     />
-    <md-card v-else>
-      <md-card-header>
-        <span class="md-title">Account Details</span>
-        <md-button to="/admin/carriers" class="md-icon-button add-btn">
-          <md-icon>close</md-icon>
-          <md-tooltip>Cancel</md-tooltip>
-        </md-button>
-      </md-card-header>
-      <md-divider></md-divider>
-      <md-card-content v-if="details">
+    <b-card v-else header="Account Details" class="shadow text-left border-0">
+      <b-button variant="light" @click="$router.push('/admin/carriers')" class="add-btn">
+        <b-icon icon="x"></b-icon>
+      </b-button>
+      <div v-if="details">
         <div class="row">
-          <span>Email: </span>
-          <span>{{ details.email }}</span>
+          <span class="col-3">Name: </span>
+          <span class="col-6">{{ details.name }}</span>
         </div>
         <div class="row">
-          <span>Password: </span>
-          <span>********</span>
+          <span class="col-3">Email: </span>
+          <span class="col-6">{{ details.email }}</span>
         </div>
         <div class="row">
-          <span>Status: </span>
-          <span :class="[details.status == 'Active' ? 'unlocked' : 'locked']">{{
-            details.status
-          }}</span>
+          <span class="col-3">Password: </span>
+          <span class="col-6">********</span>
         </div>
-      </md-card-content>
-      <md-card-actions>
-        <md-button class="md-primary" @click="editTogal = true">Edit</md-button>
-      </md-card-actions>
-    </md-card>
+        <div class="row">
+          <span class="col-3">Status: </span>
+          <span
+            class="col-6"
+            :class="[details.status == 'Active' ? 'unlocked' : 'locked']"
+            >{{ details.status }}</span
+          >
+        </div>
+      </div>
+      <div class="text-right mt-3">
+        <b-button variant="primary" @click="editTogal = true">Edit</b-button>
+      </div>
+    </b-card>
   </div>
 </template>
 
@@ -71,6 +72,7 @@ export default {
 
     refresh() {
       this.editTogal = false;
+      this.get();
     },
   },
 };

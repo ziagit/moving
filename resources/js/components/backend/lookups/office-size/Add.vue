@@ -1,25 +1,28 @@
 <template>
-  <div>
-    <form @submit.prevent="save">
-      <md-field class="">
-        <label>Title</label>
-        <md-input v-model="form.title" required></md-input>
-      </md-field>
-      <md-field class="">
-        <label>Code</label>
-        <md-input v-model="form.code" required></md-input>
-      </md-field>
-      <md-field class="">
-        <label>Employees</label>
-        <md-input v-model="form.employees" required></md-input>
-      </md-field>
-      <md-field class="">
-        <label>Hours to move</label>
-        <md-input v-model="form.hours_to_move" required type="number"></md-input>
-      </md-field>
-      <md-button type="submit" class="custom-button">Save</md-button>
-    </form>
-  </div>
+  <form @submit.prevent="save">
+    <b-form-group class="">
+      <b-form-input v-model="form.title" required placeholder="Title"></b-form-input>
+    </b-form-group>
+    <b-form-group class="">
+      <b-form-input v-model="form.code" required placeholder="Code"></b-form-input>
+    </b-form-group>
+    <b-form-group class="">
+      <b-form-input
+        v-model="form.employees"
+        required
+        placeholder="Employees"
+      ></b-form-input>
+    </b-form-group>
+    <b-form-group class="">
+      <b-form-input
+        v-model="form.hours_to_move"
+        required
+        type="number"
+        placeholder="Hours to move"
+      ></b-form-input>
+    </b-form-group>
+    <b-button type="submit" variant="primary">Save</b-button>
+  </form>
 </template>
 <script>
 import axios from "axios";

@@ -1,13 +1,13 @@
 <template>
-  <div class="container">
+  <div class="about">
     <div
       class="section0"
       v-bind:style="{ 'background-image': 'url(/images/uploads/about.svg)' }"
     >
       <Header v-on:togal-menu="$emit('togal-menu')" />
       <div class="content">
-        <div class="md-display-1">TingsApp</div>
-        <div class="md-subheading">
+        <h1>TingsApp</h1>
+        <div>
           Everything we trying to do is to solve customer problems through technology.
         </div>
       </div>
@@ -88,7 +88,6 @@
         </div>
       </div>
     </div>
-
     <Footer />
   </div>
 </template>
@@ -132,7 +131,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.container {
+.about {
   background: #fff;
 
   .section0 {

@@ -16,7 +16,7 @@
               <label>Type your email</label>
               <md-input type="email" v-model="form.email" required></md-input>
             </md-field>
-            <Spinner v-if="loading" />
+            <b-spinner variant="primary" v-if="loading" />
 
             <md-button v-else type="submit" class="md-primary">Send reset link</md-button>
           </form>
@@ -24,25 +24,19 @@
       </md-card>
     </div>
     <Footer />
-    <Snackbar :data="snackbar" />
+    <Toaster ref="toaster" />
   </div>
 </template>
 
 <script>
 import axio from "axios";
 import { mapActions, mapGetters } from "vuex";
-import Spinner from "../../shared/Spinner";
-import Snackbar from "../../shared/Snackbar";
+import Toaster from "../../shared/Toaster";
 import Header from "../../shared/Header";
 import Footer from "../../shared/Footer";
 export default {
   name: "Login",
   data: () => ({
-    snackbar: {
-      show: false,
-      message: null,
-      statusCode: null,
-    },
     form: {
       email: null,
     },
@@ -61,9 +55,12 @@ export default {
           console.log("forgot pass res ", res.data.message);
         })
         .catch((err) => {
-          this.snackbar.show = true;
-          this.snackbar.message = err.response.data;
-          this.snackbar.statusCode = err.response.status;
+          this.$refs.toaster.show(
+            "danger",
+            "b-toaster-top-center",
+            "Error",
+            err.response.data
+          );
           this.loading = false;
           console.log(err.response.data.message);
         });
@@ -77,8 +74,7 @@ export default {
   },
   created() {},
   components: {
-    Spinner,
-    Snackbar,
+    Toaster,
     Header,
     Footer,
   },

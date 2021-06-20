@@ -1,11 +1,9 @@
 <template>
   <div class="carrier">
     <Header v-on:togal-menu="$emit('togal-menu')" />
-    <md-card>
-      <md-card-content>
-        <router-view></router-view>
-      </md-card-content>
-    </md-card>
+    <div class="container mb-5 mt-5">
+      <router-view></router-view>
+    </div>
     <Footer />
   </div>
 </template>
@@ -34,14 +32,9 @@ export default {
 
 <style lang="scss" scoped>
 .carrier {
-  .md-card {
-    box-shadow: none;
+  .container {
     margin: 30px auto;
     min-height: calc(100vh - 117px);
-    .md-card-content {
-      padding: 0;
-      text-align: center;
-    }
   }
 }
 

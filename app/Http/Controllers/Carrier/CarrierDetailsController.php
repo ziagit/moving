@@ -46,9 +46,10 @@ class CarrierDetailsController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
+        $validator = $this->validate($request, [
             'first_name' => 'required',
             'last_name' => 'required',
+            'phone'=>'required|unique:users',
             'country' => 'required',
             'state' => 'required',
             'city' => 'required',
@@ -59,6 +60,7 @@ class CarrierDetailsController extends Controller
             'hourly_rate' => 'required',
             'company' => 'required',
         ]);
+        return $validator;
         $addressId = $this->storeAddress($request);
 
         try {
@@ -220,7 +222,6 @@ class CarrierDetailsController extends Controller
 
         return response()->json(["message" => "Updated successfully!"], 200);
     }
-
     public function updateContact($request)
     {
         $user = User::find(JWTAuth::user()->id);

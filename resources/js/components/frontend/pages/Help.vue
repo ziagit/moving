@@ -7,25 +7,30 @@
       <Header v-on:togal-menu="$emit('togal-menu')" />
       <div class="content">
         <div class="">Help Center</div>
-        <div class="md-display-1">{{ header }}</div>
-        <div class="md-subheading">
+        <h1>{{ header }}</h1>
+        <div>
           <div>{{ subheader }}</div>
-          <md-button class="custom-button" to="/register" v-if="carrierToggal"
-            >Signup now</md-button
+          <b-button
+            class="custom-button"
+            @click="$router.push('/register')"
+            v-if="carrierToggal"
+            >Signup now</b-button
           >
-          <md-button class="custom-button" to="/order" v-if="shipperToggal"
-            >Start new quote</md-button
+          <b-button
+            class="custom-button"
+            @click="$router.push('/order')"
+            v-if="shipperToggal"
+            >Start new quote</b-button
           >
         </div>
       </div>
     </div>
 
     <div class="section1">
-      <md-tabs :md-active-tab="tabId">
-        <md-tab
+      <b-tabs :md-active-tab="tabId">
+        <b-tab
           id="shipper"
-          md-label="Customer"
-          md-icon="local_mall"
+          title="Customer"
           @click="
             passData(
               (header = 'Customer'),
@@ -35,11 +40,10 @@
         >
           <p>Not available!</p>
           <!--  <ShipperFaq /> -->
-        </md-tab>
-        <md-tab
+        </b-tab>
+        <b-tab
           id="mover"
-          md-label="Mover"
-          md-icon="directions_boat"
+          title="Mover"
           @click="
             passData(
               (header = 'Mover'),
@@ -49,8 +53,8 @@
         >
           <p>Not available!</p>
           <!-- <CarrierFaq /> -->
-        </md-tab>
-      </md-tabs>
+        </b-tab>
+      </b-tabs>
     </div>
 
     <Footer />
@@ -131,7 +135,7 @@ export default {
     margin: auto;
     padding: 30px;
 
-    .md-tabs {
+    .b-tabs {
       width: 100% !important;
       margin: auto;
     }
