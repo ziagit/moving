@@ -96,6 +96,16 @@
           Calendar
         </span>
       </b-list-group-item>
+      <b-list-group-item button class="border-0" @click="navigate('/legals')">
+        <span
+          class="mb-0"
+          v-bind:class="{
+            active: $route.name == 'legals',
+          }"
+        >
+          Legals
+        </span>
+      </b-list-group-item>
       <b-list-group-item button class="border-0" @click="navigate('/help')">
         <span
           class="mb-0"

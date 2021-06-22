@@ -17,7 +17,7 @@ class CheckUserRole
      */
     public function handle($request, Closure $next)
     {
-        if (Auth::check() && (Auth::user()->roles->first()->name == 'admin')) {
+        if (Auth::check() && (Auth::user()->roles->first()->name == 'admin') || (Auth::user()->roles->first()->name == 'support')) {
             return $next($request);
         }
         return redirect('api/unauthorized');

@@ -1,31 +1,31 @@
 <template>
   <div>
-    <div v-if="isLoaded">
+    <div v-if="isLoaded" class="text-center">
       <GChart class="graph" type="PieChart" :data="chartData" :options="chartOptions" />
-      <div class="legend">
-        <span class="md-caption">
-          <span class="dot" style="background: #4472c4"></span>
-          <span>Jobs received : {{ received }}</span></span
-        >
-        <span class="md-caption">
-          <span class="dot" style="background: #ed7d31"></span>
-          <span>Jobs accepted: {{ accepted }}</span></span
-        >
-        <span class="md-caption">
-          <span class="dot" style="background: #a5a5a5"></span>
-          <span>Jobs declined : {{ declined }}</span></span
-        >
-        <span class="md-caption">
-          <span class="dot" style="background: #ffc000"></span>
-          <span>Jobs compledted {{ completed }}</span></span
-        >
-        <span class="md-caption">
-          <span class="dot" style="background: #5b9bd5"></span>
-          <span>Jobs pending {{ pending }}</span></span
-        >
-      </div>
     </div>
     <div v-else>No data.</div>
+    <div class="legend mt-3 mb-3">
+      <span class="md-caption">
+        <span class="dot" style="background: #4472c4"></span>
+        <span>Jobs received : {{ received }}</span></span
+      >
+      <span class="md-caption">
+        <span class="dot" style="background: #ed7d31"></span>
+        <span>Jobs accepted: {{ accepted }}</span></span
+      >
+      <span class="md-caption">
+        <span class="dot" style="background: #a5a5a5"></span>
+        <span>Jobs declined : {{ declined }}</span></span
+      >
+      <span class="md-caption">
+        <span class="dot" style="background: #ffc000"></span>
+        <span>Jobs compledted {{ completed }}</span></span
+      >
+      <span class="md-caption">
+        <span class="dot" style="background: #5b9bd5"></span>
+        <span>Jobs pending {{ pending }}</span></span
+      >
+    </div>
   </div>
 </template>
 <script>

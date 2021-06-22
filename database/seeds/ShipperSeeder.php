@@ -18,7 +18,7 @@ class ShipperSeeder extends Seeder
             'last_name' => 'KJiow',
             'address_id'=> 1,
             'contact_id' => 1,
-            'user_id' => 2,
+            'user_id' => 4,
         ];
         Shipper::insert($shipper);
     }

@@ -23,6 +23,10 @@
           v-on:hideSideMenu="menuVisible = !menuVisible"
           v-else-if="authenticated && user.role[0].name === 'admin'"
         />
+        <SupportMenu
+          v-on:hideSideMenu="menuVisible = !menuVisible"
+          v-else-if="authenticated && user.role[0].name === 'support'"
+        />
         <HomeMenu v-else v-on:hideSideMenu="menuVisible = !menuVisible" />
       </div>
     </b-sidebar>
@@ -31,18 +35,19 @@
     </div>
   </div>
 </template>
-
 <script>
 import HomeMenu from "./HomeMenu";
 import Header from "../shared/Header";
 import CarrierMenu from "./carrier/CarrierMenu";
 import ShipperMenu from "./shipper/ShipperMenu";
 import AdminMenu from "../backend/AdminSideMenu";
+import SupportMenu from "../backend/SupportSideMenu";
 import { mapGetters, mapActions } from "vuex";
 export default {
   name: "Home",
   components: {
     AdminMenu,
+    SupportMenu,
     HomeMenu,
     CarrierMenu,
     ShipperMenu,

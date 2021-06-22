@@ -20,16 +20,16 @@ class UserSeeder extends Seeder
             [
                 'name' => 'Admin',
                 'email' => 'admin@gmail.com',
-                'phone' => '+12502000000',
+                'phone' => '+12501000000',
                 'phone_verified_at' => $today,
                 'password' => Hash::make('123'),
             ],
             [
-                'name' => 'Customer A',
-                'email' => 'customer@gmail.com',
-                'phone' => '+12503000000',
+                'name' => 'Support A',
+                'email' => 'support@gmail.com',
+                'phone' => '+12502000000',
                 'phone_verified_at' => $today,
-                'password' => Hash::make('123')
+                'password' => Hash::make('123'),
             ],
             [
                 'name' => 'Mover A',
@@ -37,7 +37,15 @@ class UserSeeder extends Seeder
                 'phone' => '+12504000000',
                 'phone_verified_at' => $today,
                 'password' => Hash::make('123')
+            ],
+            [
+                'name' => 'Customer A',
+                'email' => 'customer@gmail.com',
+                'phone' => '+12503000000',
+                'phone_verified_at' => $today,
+                'password' => Hash::make('123')
             ]
+           
         ];
 
         User::insert($users);
@@ -46,12 +54,19 @@ class UserSeeder extends Seeder
         $user = User::find(1);
         $user->roles()->attach($role);
         $user->markEmailAsVerified();
+
         $role = Role::find(2);
         $user = User::find(2);
         $user->roles()->attach($role);
         $user->markEmailAsVerified();
+
         $role = Role::find(3);
         $user = User::find(3);
+        $user->roles()->attach($role);
+        $user->markEmailAsVerified();
+
+        $role = Role::find(4);
+        $user = User::find(4);
         $user->roles()->attach($role);
         $user->markEmailAsVerified();
 

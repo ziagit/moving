@@ -3,18 +3,13 @@
     <div class="section0">
       <Header v-on:togal-menu="$emit('togal-menu')" />
       <div class="content">
-        <div class="md-display-1">Privacy Notice</div>
-        <div class="md-body-1">Read our privacy policy</div>
-        <div class="break"></div>
-        <div class="md-body-1 update">Update: October 25,2020</div>
+        <h1>Privacy Notice</h1>
+        <p>Read our privacy policy</p>
+        <p class="blockquote-footer">Update: June ,2021</p>
       </div>
     </div>
     <div class="section1">
-      <div class="wrapper">
-        <div class="left">
-          <div v-html="body"></div>
-        </div>
-      </div>
+      <div v-html="body"></div>
     </div>
     <Footer />
   </div>
@@ -62,87 +57,14 @@ export default {
     .content {
       text-align: center;
       padding: 38px;
-
-      .md-display-1 {
-        line-height: 60px;
-        font-size: 53px;
-        font-weight: 600;
-        color: #000;
-      }
-      .update {
-        color: #c3c0c0;
-      }
     }
   }
 
   .section1 {
-    max-width: 1200px;
+    max-width: 900px;
     margin: auto;
     padding: 30px;
-    .wrapper {
-      display: flex;
-      justify-content: space-around;
-      flex-wrap: wrap;
-
-      .left {
-        flex: 60%;
-        padding: 60px;
-
-        .md-display-1 {
-          font-weight: 500;
-          line-height: 70px;
-          color: #000;
-        }
-
-        .md-body-1 {
-          font-size: 16px;
-          line-height: 24px;
-        }
-      }
-
-      .right {
-        flex: 30%;
-        padding: 82px 60px;
-
-        .md-icon {
-          color: #66a9fb;
-        }
-
-        .qoute {
-          .md-field {
-            margin: 4px 0 8px;
-          }
-
-          .action {
-            text-align: right;
-
-            .md-button {
-              margin: 0;
-            }
-          }
-        }
-
-        .qoute,
-        .faq,
-        .download-app,
-        .privacy,
-        .terms,
-        .contact {
-          margin-bottom: 30px;
-        }
-
-        .download-app {
-          .md-button {
-            margin-top: 20px;
-          }
-        }
-      }
-    }
   }
-}
-
-.md-body-1 {
-  width: 100% !important;
 }
 
 @media only screen and (max-width: 600px) {

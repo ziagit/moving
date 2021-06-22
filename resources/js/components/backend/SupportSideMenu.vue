@@ -41,21 +41,6 @@
       <li @click="hideMenu('carriers')"><span>Movers</span></li>
       <li @click="hideMenu('shippers')"><span>Customers</span></li>
       <li @click="hideMenu('orders')"><span>Orders</span></li>
-      <li @click="hideMenu('users')"><span>Users</span></li>
-      <li @click="financeTogal = !financeTogal">
-        <div class="childer">
-          <span><span>Finances</span></span>
-          <b-icon v-if="!financeTogal" icon="chevron-right"></b-icon>
-          <b-icon v-else icon="chevron-down"> </b-icon>
-        </div>
-        <ul v-show="financeTogal" class="i-ul">
-          <li @click="hideMenu('revenue')"><span>Revenue</span></li>
-          <li @click="hideMenu('unpaid-jobs')"><span>Unpaid jobs</span></li>
-          <li @click="hideMenu('paid-jobs')"><span>Paid jobs</span></li>
-          <li @click="hideMenu('payouts')"><span>Payouts</span></li>
-          <li @click="hideMenu('refunds')"><span>Refunds</span></li>
-        </ul>
-      </li>
       <li @click="reportTogal = !reportTogal">
         <div class="childer">
           <span><span>Reports</span></span>
@@ -152,6 +137,7 @@ export default {
     padding: 8px 8px 8px 18px;
     cursor: pointer;
   }
+
   .childer {
     display: flex;
     justify-content: space-between;

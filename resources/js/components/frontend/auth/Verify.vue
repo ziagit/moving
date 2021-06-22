@@ -59,6 +59,9 @@ export default {
       statusCode: null,
     },
   }),
+  created() {
+    console.log("user", this.user);
+  },
   mounted() {
     this.me = localData.read("me");
   },
@@ -73,7 +76,7 @@ export default {
       signIn: "auth/signIn",
     }),
     onChange(v) {
-      console.log("onChange ", v);
+      //
     },
     verify(v) {
       this.isSubmitting = true;
@@ -97,6 +100,9 @@ export default {
               });
               break;
             case "admin":
+              this.$router.push("/admin");
+              break;
+            case "support":
               this.$router.push("/admin");
               break;
             default:

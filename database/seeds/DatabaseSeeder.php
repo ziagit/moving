@@ -46,5 +46,6 @@ class DatabaseSeeder extends Seeder
         $this->call(PrivacySeeder::class);
         $this->call(CarrierPageSeeder::class);
         $this->call(ShipperPageSeeder::class);
+        $this->call(LegalSeeder::class);
     }
 }

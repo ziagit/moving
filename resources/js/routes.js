@@ -164,11 +164,20 @@ export default new VueRouter({
                 { name: "about", path: "about", component: AboutUs },
                 { name: "contact", path: "contact", component: ContactUs },
                 { name: "help", path: "help", component: Help },
+                { name: "legals", path: "legals", component: Legals },
                 { name: "cities", path: "cities", component: CityList },
                 { name: "login", path: "login", component: Login },
                 { name: "register", path: "register", component: Register },
-                { name: "social-login", path: "social-login", component: SocialLogin },
-                { name: "social-callback", path: "/api/moving/auth/google/callback", component: CallBack },
+                {
+                    name: "social-login",
+                    path: "social-login",
+                    component: SocialLogin
+                },
+                {
+                    name: "social-callback",
+                    path: "/api/moving/auth/google/callback",
+                    component: CallBack
+                },
                 { name: "verify", path: "verify", component: VerifyContact },
                 { name: "password", path: "password", component: Password },
                 {
@@ -399,11 +408,6 @@ export default new VueRouter({
                             name: "payments",
                             path: "payments",
                             component: CarrierPayments
-                        },
-                        {
-                            name: "legals",
-                            path: "legals",
-                            component: Legals
                         }
                     ],
                     beforeEnter: webGuard
@@ -495,9 +499,9 @@ export default new VueRouter({
                     component: Dashboard
                 },
                 {
-                    name:"admin-account",
-                    path:"account",
-                    component:AdminَAccount,
+                    name: "admin-account",
+                    path: "account",
+                    component: AdminَAccount
                 },
                 {
                     name: "inbox",
@@ -609,7 +613,7 @@ export default new VueRouter({
                     path: "how-it-works",
                     component: AdminHowItWorks
                 },
-               
+
                 {
                     name: "carrier-faq",
                     path: "carrier-faq",
@@ -625,7 +629,7 @@ export default new VueRouter({
                     path: "legals",
                     component: AdminLegals
                 },
-               
+
                 {
                     name: "revenue",
                     path: "revenue",
@@ -689,7 +693,7 @@ export default new VueRouter({
             ]
 
             //  beforeEnter: adminGuard
-        },
+        }
         /* { name: "terms", path: "/terms-and-conditions", component: Terms },
         { path: "*", redirect: "/" } */
     ],

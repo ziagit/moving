@@ -1,10 +1,8 @@
 <template>
   <div>
-    <md-dialog :md-active.sync="checkoutTogal">
-      <md-dialog-content>
-        <Card v-on:close-dialog="refresh" />
-      </md-dialog-content>
-    </md-dialog>
+    <b-modal id="modal-card" :hide-footer="true">
+      <Card v-on:close-dialog="refresh" />
+    </b-modal>
     <table class="table" v-if="cards">
       <thead>
         <tr>
@@ -17,13 +15,13 @@
       <tbody>
         <tr v-for="(card, index) in cards" :key="index">
           <td>
-            <md-radio v-model="selected" :value="true"></md-radio>
+            <b-form-radio v-model="selected" :value="true"></b-form-radio>
           </td>
           <td>{{ card.brand }}</td>
           <td>************{{ card.last4 }}</td>
           <td>{{ card.exp_month }}/{{ card.exp_year }}</td>
           <td>
-            <b-button @click="checkoutTogal = true" variant="light"
+            <b-button v-b-modal.modal-card variant="light"
               ><b-icon icon="pencil"></b-icon
             ></b-button>
           </td>
@@ -32,9 +30,9 @@
     </table>
     <div v-else class="text-center px-6">
       <p>No card added yet!</p>
-      <b-button @click="checkoutTogal = true" variant="primary"> Add </b-button>
+      <b-button v-b-modal.modal-card variant="primary"> Add </b-button>
     </div>
-    <Toaster :data="Toaster" />
+    <Toaster ref="toaster" />
   </div>
 </template>
 
@@ -61,7 +59,7 @@ export default {
   },
   methods: {
     refresh(data) {
-      this.checkoutTogal = false;
+      this.$bvModal.hide("modal-card");
       this.$refs.toaster.show("success", "b-toaster-top-right", "Success", data.message);
       this.getCard();
     },

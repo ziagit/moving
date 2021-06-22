@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div>
     <div v-if="isLoaded">
       <GChart class="graph" type="PieChart" :data="chartData" :options="chartOptions" />
     </div>

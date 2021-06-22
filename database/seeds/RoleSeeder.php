@@ -15,9 +15,9 @@ class RoleSeeder extends Seeder
         Role::truncate();
         $roles = [
             ['name' => 'admin'],
-            ['name' => 'customer'],
-            ['name' => 'mover'],
             ['name' => 'support'],
+            ['name' => 'mover'],
+            ['name' => 'customer'],
         ];
         Role::insert($roles);
     }

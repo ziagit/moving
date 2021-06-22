@@ -57,7 +57,7 @@
         </div>
       </b-card>
     </form>
-    <Toaster :data="Toaster" />
+    <Toaster ref="toaster" />
   </div>
 </template>
 
@@ -85,11 +85,6 @@ export default {
       { value: "USD", text: "USD - US Dollar" },
     ],
     isSubmitting: false,
-    Toaster: {
-      show: false,
-      message: null,
-      statusCode: null,
-    },
   }),
   mounted() {
     this.$refs.focusable.focus();
@@ -98,7 +93,7 @@ export default {
     submit() {
       this.isSubmitting = true;
       axios
-        .post("carrier/payments", this.form)
+        .post("carrier/bank-info", this.form)
         .then((res) => {
           this.isSubmitting = false;
           console.log("response ", res.data);

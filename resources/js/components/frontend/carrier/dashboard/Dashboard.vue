@@ -1,11 +1,8 @@
 <template>
-  <div class="dashboard">
-    <div class="break"></div>
-    <PieChart />
-    <div class="break"></div>
-    <div class="break"></div>
-    <div class="break"></div>
-    <div class="break"></div>
+  <div class="container">
+    <div class="text-center mt-5">
+      <PieChart />
+    </div>
     <b-card-group>
       <div class="p-2 w-50">
         <b-card header="MONTHLY RECEIVED JOBS" class="shadow border-0">
@@ -35,13 +32,10 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.dashboard {
-  margin-bottom: 30px;
+.container {
+  min-height: calc(100vh - 50px);
 }
 
 @media only screen and (max-width: 600px) {
-  .row {
-    flex-direction: column;
-  }
 }
 </style>

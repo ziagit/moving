@@ -8,6 +8,7 @@ use App\Privacy;
 use App\Term;
 use App\CarrierFaq;
 use App\CarrierPage;
+use App\Legal;
 use App\ShipperFaq;
 use App\ShipperPage;
 use Illuminate\Http\Request;
@@ -51,5 +52,8 @@ class PageController extends Controller
     }
     public function carrierPage(){
         return response()->json(CarrierPage::first());
+    }
+    public function legalsPage(){
+        return response()->json(Legal::first());
     }
 }

@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div>
     <div v-if="isLoaded">
       <GChart type="LineChart" :data="chartData" :options="chartOptions" />
     </div>
@@ -113,8 +113,4 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
-.container {
-  width: 100%;
-}
-</style>
+<style scoped lang="scss"></style>

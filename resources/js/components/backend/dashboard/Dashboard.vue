@@ -1,10 +1,6 @@
 <template>
   <div class="container">
-    <b-card
-      class="mb-1 mt-3 bg-white rounded border-0"
-      align="center"
-      title="DAYLY PROJECTIONS"
-    >
+    <b-card class="mt-5 text-center border-0" title="DAYLY PROJECTIONS">
       <DailyProjections />
     </b-card>
     <b-card-group>
@@ -52,4 +48,8 @@ export default {
 };
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.container {
+  min-height: calc(100vh - 50px);
+}
+</style>

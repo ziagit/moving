@@ -187,6 +187,7 @@ Route::group(['prefix' => 'moving'], function () {
   Route::get("get-about", "PageController@about");
   Route::get("get-shipper-page", "PageController@carrierPage");
   Route::get("get-carrier-page", "PageController@shipperPage");
+  Route::get("get-legals", "PageController@legalsPage");
 
   Route::get("stripe-key", function () {
     return env("STRIPE_KEY");
