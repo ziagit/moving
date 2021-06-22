@@ -2,37 +2,33 @@
   <div>
     <form @submit.prevent="submit" class="border-0 shadow text-left">
       <b-card header="Add Profile">
-        <div class="carrier-details">
-          <b-input-group class="mb-3">
-            <b-form-input
-              type="text"
-              v-model="form.first_name"
-              required
-              placeholder="First name"
-              ref="focusable"
-            ></b-form-input>
-            <b-form-input
-              type="text"
-              v-model="form.last_name"
-              required
-              placeholder="Last name"
-            ></b-form-input>
-            <b-form-input
-              placeholder="Phone number"
-              v-model="form.phone"
-              required
-              type="tel"
-            ></b-form-input>
-          </b-input-group>
-          <GoogleAddress3
-            v-if="form.address != null"
-            v-on:google-valid-address="googleValidAddress"
-            v-on:google-invalid-address="googleInvalidAddress"
-            :initialData="form.address"
-            label="Full address"
-            class="mb-3"
-          />
-        </div>
+        <b-input-group class="mb-3">
+          <b-form-input
+            type="text"
+            v-model="form.first_name"
+            required
+            placeholder="First name"
+            ref="focusable"
+          ></b-form-input>
+          <b-form-input
+            type="text"
+            v-model="form.last_name"
+            required
+            placeholder="Last name"
+          ></b-form-input>
+          <b-form-input
+            placeholder="Phone number"
+            v-model="form.phone"
+            required
+            type="tel"
+          ></b-form-input>
+        </b-input-group>
+        <GoogleAddress3
+          v-on:google-valid-address="googleValidAddress"
+          v-on:google-invalid-address="googleInvalidAddress"
+          :initialData="form.address"
+          label="Full address"
+        />
         <b-input-group class="mb-3">
           <b-form-input
             v-model="form.company"
@@ -40,14 +36,14 @@
             placeholder="Company name"
           ></b-form-input>
           <b-form-input
+            type="number"
             v-model="form.year_established"
             required
             placeholder="Year established"
           ></b-form-input>
           <b-form-input
             v-model="form.website"
-            required
-            placeholder="Company name"
+            placeholder="Website (optional)"
           ></b-form-input>
         </b-input-group>
         <b-input-group class="mb-3">
@@ -146,11 +142,6 @@ export default {
     insurance_papers: null,
     business_license: null,
     isSubmitting: false,
-    snackbar: {
-      show: false,
-      message: null,
-      statusCode: null,
-    },
   }),
   mounted() {
     this.$refs.focusable.focus();
@@ -163,6 +154,7 @@ export default {
   },
   methods: {
     googleValidAddress(address, latlng) {
+      console.log("google add", address);
       this.supportedArea = "";
       this.form.country = address.country;
       this.form.state = address.state;
@@ -218,6 +210,7 @@ export default {
         axios
           .post("carrier/details", fd)
           .then((res) => {
+            console.log("res", res.data);
             this.isSubmitting = false;
             this.$refs.toast.show(
               "success",

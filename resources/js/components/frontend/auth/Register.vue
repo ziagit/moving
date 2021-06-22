@@ -113,20 +113,19 @@ export default {
         axios
           .post("auth/verify-email", this.form)
           .then((res) => {
+            this.isSubmitting = false;
             console.log("user created: ", res.data);
             if (res.status == 203) {
               this.$refs.toaster.show(
-                "success",
-                "b-toaster-top-right",
-                "Success",
+                "danger",
+                "b-toaster-top-center",
+                "Error",
                 res.data
               );
             } else {
               localData.save("me", res.data);
               this.$router.push("verify");
-              //this.$router.push("welcome");
             }
-            this.isSubmitting = false;
           })
           .catch((error) => {
             this.isSubmitting = false;
@@ -155,6 +154,7 @@ export default {
   components: {
     Header,
     Footer,
+    Toaster,
   },
 };
 </script>

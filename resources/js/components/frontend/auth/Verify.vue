@@ -14,18 +14,16 @@
           v-on:change="onChange"
           v-on:complete="verify"
         />
-        <div class="caption">We texted a code to your email/phone number</div>
+        <div class="caption">We texted a code to your email & phone number</div>
         <div class="break"></div>
 
-        <div class="resend">
-          <span>Code not received?</span>
-          <b-button to="/login">Resend</b-button>
-        </div>
         <p class="md-caption">Test code: 0-0-0-0</p>
         <p style="color: red" v-if="invalidCode">{{ invalidCode }}</p>
         <b-spinner variant="primary" v-if="isSubmitting"></b-spinner>
         <template #footer>
-          <small variant="light" @click="$router.push('/login')">Resnd</small>
+          <small variant="light" @click="$router.push('/login')" class="resend"
+            >Resnd</small
+          >
         </template>
       </b-card>
     </div>

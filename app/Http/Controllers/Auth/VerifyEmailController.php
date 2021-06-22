@@ -82,10 +82,7 @@ class VerifyEmailController extends Controller
                 ));
                 $role = Role::where('name', '=', $data->type)->first();
                 $user->roles()->attach($role);
-                $user->notify(new VerifyEmail($vcode));
-                /*                 if (!$token = Auth::attempt($data->only('email', 'password'))) {
-                    return response()->json(null, 401);
-                } */
+                //$user->notify(new VerifyEmail($vcode));
                 return response()->json($user->id);
             } catch (Exception $e) {
                 return $e->getCode();

@@ -2,7 +2,7 @@
   <div class="select-carrier">
     <div v-show="dataLoading" class="loading">
       <b-spinner variant="primary" />
-      <span class="md-display-1">Calculating...</span>
+      <h1>Calculating...</h1>
       <div class="md-display-body">Your price will here soon. please wait</div>
     </div>
 
@@ -14,9 +14,8 @@
             <b-button id="popover-target-1" variant="ligth">
               <b-icon icon="info-circle-fill" aria-hidden="true"></b-icon>
             </b-button>
-
             <b-popover target="popover-target-1" triggers="hover" placement="top">
-              <template #title>Price breakdown</template>
+              <template #title>Price Breakdown</template>
               <CarrierRateInfo :price="carrier" />
             </b-popover>
           </div>

@@ -20,13 +20,14 @@
       <span>Taxes:</span>
       <span>${{ tax }}</span>
     </div>
-    <md-divider></md-divider>
+    <div class="line"></div>
     <div class="md-body-1">
       <span><b>Total:</b></span>
       <span
         ><b>${{ (moving + travel + supplies + tax).toFixed(2) }}</b></span
       >
     </div>
+    <div class="break"></div>
     <p class="details">
       The price includes basic damage protection. Your items are covered up to 60 cents
       per pound per item. This is the minimum coverage required by law. If you would like

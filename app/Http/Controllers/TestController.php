@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Carrier;
 use App\Events\NewMessage;
+use App\Notifications\VerifyEmail;
 use App\Test;
+use App\User;
 use Exception;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -21,8 +23,13 @@ class TestController extends Controller
        
     }
     public function index(){
-        $tests = Test::all();
-        return response()->json($tests);
+       try{
+        $admin = User::find(1);
+        $x = $admin->notify(new VerifyEmail('O123455'));
+        return response()->json($x);
+       }catch(Exception $e){
+           return response()->json($e->getMessage());
+       }
     }
     public function store(Request $request){
         $test = new Test();

@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Exception;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Validator;
 class CarrierDetailsController extends Controller
 {
     /**
@@ -46,7 +46,7 @@ class CarrierDetailsController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = $this->validate($request, [
+        $validator = Validator::make($request->all(), [
             'first_name' => 'required',
             'last_name' => 'required',
             'phone'=>'required|unique:users',
@@ -60,7 +60,9 @@ class CarrierDetailsController extends Controller
             'hourly_rate' => 'required',
             'company' => 'required',
         ]);
-        return $validator;
+        if($validator->failed()){
+            return response()->json($validator->errors());
+        }
         $addressId = $this->storeAddress($request);
 
         try {

@@ -1,11 +1,13 @@
 <template>
   <div>
-    <b-form-input
-      v-model="list.formatted_address"
-      required
-      id="autocomplete3"
-      placeholder="Address"
-    ></b-form-input>
+    <b-form-group>
+      <b-form-input
+        v-model="list.formatted_address"
+        required
+        id="autocomplete3"
+        placeholder="Address"
+      ></b-form-input>
+    </b-form-group>
   </div>
 </template>
 <script>

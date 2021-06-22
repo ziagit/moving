@@ -27,19 +27,13 @@
       <div class="break"></div>
       <div class="break"></div>
       <div class="actions">
-        <md-button
-          to="/order/moving-types"
-          class="md-raised md-fab md-icon-button rounded-primary-button"
-        >
-          <md-icon>arrow_back</md-icon>
-        </md-button>
+        <b-button @click="$router.push('/order/moving-types')" variant="light">
+          <b-icon icon="arrow-left"></b-icon>
+        </b-button>
         <div class="tab"></div>
-        <md-button
-          @click="next()"
-          class="md-raised md-fab md-icon-button rounded-secondary-button"
-        >
-          <md-icon>arrow_forward</md-icon>
-        </md-button>
+        <b-button @click="next()" variant="primary">
+          <b-icon icon="arrow-right"></b-icon>
+        </b-button>
       </div>
     </form>
     <Toaster ref="toaster" />

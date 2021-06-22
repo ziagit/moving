@@ -25,7 +25,9 @@
             </b-button>
           </div>
         </div>
-
+        <div>
+          <b-button @click="send()">Send email</b-button>
+        </div>
         <template #footer>
           <b-icon icon="chevron-compact-left"></b-icon>
         </template>
@@ -58,6 +60,14 @@ export default {
           console.log("url:", res.data.url);
         }
       });
+    },
+    send() {
+      axios
+        .get("tests")
+        .then((res) => {
+          console.log("tests", res.data);
+        })
+        .catch((err) => console.log(err));
     },
   },
 
