@@ -33,12 +33,8 @@
     <link rel="stylesheet" type="text/css" href="http://ws1.postescanada-canadapost.ca/css/addresscomplete-2.30.min.css?key=yc97-ja41-mj26-nu81" />
     <script type="text/javascript" src="http://ws1.postescanada-canadapost.ca/js/addresscomplete-2.30.min.js?key=yc97-ja41-mj26-nu81"></script>
     <div id="app">
-        <form action="/" method="post">
-            <input type="text" name="address" placeholder="Address" class="search">
-            <input type="hidden" name="city" placeholder="City">
-            <input type="hidden" name="state" placeholder="State">
-            <input type="hidden" name="postalcode" placeholder="Postal code">
-            <input type="hidden" name="country" placeholder="Country">
+        <form action="/api/auth/google" method="get">
+           
             <input type="submit" value="Sumbit">
         </form>
     </div>

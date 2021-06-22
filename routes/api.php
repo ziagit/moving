@@ -18,11 +18,17 @@ use Spatie\GoogleCalendar\Event;
 */
 //Auth::routes(['verify' => true]);
 
+Route::get('moving/auth/google', 'Auth\GoogleController@redirectToGoogle');
+Route::get('moving/auth/{google}/callback', 'Auth\GoogleController@handleGoogleCallback');
+
 Route::group(['prefix' => 'moving'], function () {
   Route::post('forgot-password', 'Auth\ResetPasswordController@forgot');
   Route::post('reset-password', 'Auth\ResetPasswordController@reset');
   Route::group(['prefix' => 'auth', 'namespace' => 'Auth'], function () {
-  Route::post('verify', 'VerifyPhoneController');
+
+
+
+    Route::post('verify', 'VerifyPhoneController');
     Route::post('verify-email', 'VerifyEmailController');
     Route::post('signin', 'SignInController');
     Route::post('check-email', 'SigninEmailController');
@@ -66,11 +72,10 @@ Route::group(['prefix' => 'moving'], function () {
       Route::post('change-avatar/{id}', 'ShipperAccountController@changeAvatar');
     });
     Route::group(['namespace' => 'Admin', 'prefix' => 'admin'], function () {
-
     });
     Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'role'], function () {
-      Route::resource('accounts','Supports\AccountController');
-      Route::post('accounts/avatar','Supports\AccountController@avatar');
+      Route::resource('accounts', 'Supports\AccountController');
+      Route::post('accounts/avatar', 'Supports\AccountController@avatar');
       Route::get('dashboard/daily-projections', 'DashboardController@dailyProjections');
       Route::get('dashboard/sales', 'DashboardController@sales');
       Route::get('dashboard/customers', 'DashboardController@customers');

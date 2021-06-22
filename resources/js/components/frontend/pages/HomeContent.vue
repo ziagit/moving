@@ -2,7 +2,9 @@
   <div class="home-content">
     <div
       class="section0"
-      v-bind:style="{ 'background-image': 'url(/images/uploads/' + bgImage + '.svg)' }"
+      v-bind:style="{
+        'background-image': 'url(/images/uploads/' + bgImage + '.svg)',
+      }"
     >
       <Header v-on:togal-menu="$emit('togal-menu')" />
       <div class="content">
@@ -26,7 +28,7 @@
         </div>
       </div>
     </div>
-    <div class="wrapper">
+    <div class="bottom-container">
       <div class="section2">
         <div class="heading">
           <h1>Safe and hassle-free Moving</h1>
@@ -138,8 +140,10 @@
             We know moving is stressful. To make sure the availability and on-time
             service, schedule your moving day ahead of time. Relax, we will notify you
             when its time. Or request ondemand for last minute moving.
+            <br /><br />
+            <br />
+            <b-button @click="$router.push('/')">Get Quote</b-button>
           </p>
-          <b-button @click="$router.push('/')">Get Quote</b-button>
         </div>
       </div>
       <div class="section5">
@@ -155,8 +159,8 @@
               <div class="break"></div>
               <div class="customer"><span>Tim F. Vancouver</span></div>
             </div>
+            <b-button class="mt-3" @click="$router.push('/')">Leave a Review</b-button>
           </div>
-          <b-button @click="$router.push('/')">Leave a Review</b-button>
         </div>
         <div class="row img">
           <img :src="'/images/uploads/home-graph.svg'" alt="" />
@@ -167,18 +171,14 @@
           <h2>500+</h2>
           <p>App Download In 2021</p>
           <div>
-            <router-link to="#"
-              >Download Now <b-icon icon="arrow-right"></b-icon>
-            </router-link>
+            <b-link href="#">Download Now <b-icon icon="arrow-right"></b-icon> </b-link>
           </div>
         </div>
         <div class="col-3">
           <h2>1200+</h2>
           <p>Moving booked In 2021</p>
           <div>
-            <router-link to="#"
-              >Book Now <b-icon icon="arrow-right"></b-icon>
-            </router-link>
+            <b-link href="#">Book Now <b-icon icon="arrow-right"></b-icon> </b-link>
           </div>
         </div>
         <div class="col-6">
@@ -254,39 +254,18 @@ export default {
     }
   }
 
-  .wrapper {
+  .bottom-container {
     background: #fff;
     max-width: 1200px;
     margin: auto;
     padding-bottom: 126px;
 
     .section1 {
-      padding: 46px 100px;
-
-      .row {
-        flex: 25%;
-
-        .md-display-1 {
+      padding: 46px 73px;
+      margin: 0 !important;
+      .col-3 {
+        h2 {
           color: #ffa500;
-          font-weight: 500;
-        }
-
-        .md-subheading {
-          color: #000;
-        }
-      }
-
-      .row2 {
-        .md-display-1 {
-          color: #f58720;
-        }
-      }
-
-      .row3 {
-        .md-display-1 {
-          color: #000;
-          font-size: 22px;
-          line-height: 28px;
         }
       }
     }

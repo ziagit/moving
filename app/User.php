@@ -72,4 +72,8 @@ class User extends Authenticatable implements JWTSubject,MustVerifyEmail
     public function shipperWithAddress(){
         return $this->shipper()->with('address','contact');
     }
+
+    public function socialAccounts(){
+        return $this->hasMany(SocialAccount::class);
+    }
 }

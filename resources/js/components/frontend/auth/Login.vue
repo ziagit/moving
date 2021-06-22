@@ -24,9 +24,8 @@
             <b-button v-else type="submit" variant="primary"> Signin </b-button>
           </div>
         </form>
-
         <template #footer>
-          <small @click="$router.push('/register')" variant="ligth"
+          <small @click="$router.push('/social-login')" variant="ligth"
             >Login using a social account</small
           >
         </template>

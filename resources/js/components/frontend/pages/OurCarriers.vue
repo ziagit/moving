@@ -15,7 +15,7 @@
         </div>
         <div class="break"></div>
         <div class="break"></div>
-        <md-button class="custom-button" to="/register">Sign Up</md-button>
+        <b-button variant="primary" @click="$router.push('/register')">Sign Up</b-button>
       </div>
     </div>
 
@@ -27,13 +27,13 @@
         </div>
         <div class="right">
           <div class="download-app">
-            <div class="md-title">Download our Application</div>
+            <h5>Download our Application</h5>
             <div class="md-body-1">
               By downloading our application the task will be much easier.
             </div>
-            <div>
-              <md-button class="custom-button" to="https://play.google.com"
-                >Download</md-button
+            <div class="mt-3">
+              <b-button variant="primary" @click="Window.open('https://play.google.com')"
+                >Download</b-button
               >
             </div>
           </div>
@@ -45,14 +45,14 @@
         <div class="row">
           <img :src="'/images/uploads/carrier-tech.svg'" width="30" alt="" />
           <div>
-            <div class="md-title">Carrier Technology</div>
+            <h5>Carrier Technology</h5>
             <div class="md-body-1">Easy to use tools to find freight.</div>
           </div>
         </div>
         <div class="row">
           <img :src="'/images/uploads/carrier-payment.svg'" width="30" alt="" />
           <div>
-            <div class="md-title">Get Paid</div>
+            <h5>Get Paid</h5>
             <div class="md-body-1">
               Get paid fast with options to further speed the process.
             </div>
@@ -61,7 +61,7 @@
         <div class="row">
           <img :src="'/images/uploads/carrier-freight.svg'" width="50" alt="" />
           <div>
-            <div class="md-title">Carrier Programs</div>
+            <h5>Carrier Programs</h5>
             <div class="md-body-1">
               Personalized service and more freight opportunities.
             </div>
@@ -180,7 +180,7 @@ export default {
           .action {
             text-align: right;
 
-            .md-button {
+            .b-button {
               margin: 0;
             }
           }
@@ -196,7 +196,7 @@ export default {
         }
 
         .download-app {
-          .md-button {
+          .b-button {
             margin-top: 20px;
           }
         }
@@ -257,7 +257,7 @@ export default {
       .left {
         margin-bottom: 74px !important;
       }
-      .md-button {
+      .b-button {
         margin: 30px 0 0 0;
       }
     }

@@ -49,7 +49,6 @@ Vue.component("app", require("./components/App.vue").default);
 
 //Vue.material.locale.dateFormat = "dd/MM/yyyy";
 
-
 import axios from "axios";
 
 //axios.defaults.baseURL = "http://localhost:8000/api/moving";

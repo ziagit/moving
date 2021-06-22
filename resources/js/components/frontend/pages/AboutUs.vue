@@ -14,74 +14,74 @@
     </div>
 
     <div class="section1">
-      <div class="wrapper">
+      <div class="content">
         <div class="left">
           <p>No data available!</p>
           <!-- <div v-html="body"></div> -->
         </div>
         <div class="right">
           <div class="qoute">
-            <div class="md-title">Get a Free Qoute</div>
+            <h5>Get a Free Qoute</h5>
             <form>
-              <md-field>
-                <label>Postal code</label>
-                <md-input type="text" v-model="form.city" required></md-input>
-              </md-field>
-              <div>What kind of moving is it?</div>
-              <div>
-                <md-radio v-model="type" value="residential">
-                  <small>Residential</small></md-radio
-                >
-                <md-radio v-model="type" value="office"><small>Office</small></md-radio>
-              </div>
-
-              <div class="action">
-                <md-button class="custom-button" @click="getQuot()">Start</md-button>
+              <b-form-group>
+                <b-form-input
+                  type="text"
+                  v-model="form.city"
+                  required
+                  placeholder="Postalcode"
+                ></b-form-input>
+              </b-form-group>
+              <div class="text-right mt-2">
+                <b-button variant="primary" size="sm" @click="getQuot()">Start</b-button>
               </div>
             </form>
           </div>
           <div class="faq">
-            <div class="md-title">Help Center</div>
+            <h5>Help Center</h5>
             <div class="md-body-1">Access to the most asked questions</div>
             <div>
-              <router-link to="/help">Answers</router-link>
-              <md-icon>keyboard_arrow_right</md-icon>
+              <b-link href="/help">Answers</b-link>
+              <b-icon icon="arrow-right"></b-icon>
             </div>
           </div>
           <div class="terms">
-            <div class="md-title">Terms and Conditions</div>
+            <h5>Terms and Conditions</h5>
             <div class="md-body-1">Read our terms and conditions</div>
             <div>
-              <router-link to="/terms-and-conditions">More</router-link>
-              <md-icon>keyboard_arrow_right</md-icon>
+              <b-link href="/terms-and-conditions">More</b-link>
+              <b-icon icon="arrow-right"></b-icon>
             </div>
           </div>
           <div class="privacy">
-            <div class="md-title">Privacy Policies</div>
+            <h5>Privacy Policies</h5>
             <div class="md-body-1">Do you want to know about our privacies?</div>
             <div>
-              <router-link to="/privacy-policies">More</router-link>
-              <md-icon>keyboard_arrow_right</md-icon>
+              <b-link href="/privacy-policies">More</b-link>
+              <b-icon icon="arrow-right"></b-icon>
             </div>
           </div>
           <div class="contact">
-            <div class="md-title">Contact us</div>
+            <h5>Contact us</h5>
             <div class="md-body-1">
               If you want to know more about us, drop us an email.
             </div>
             <div>
-              <router-link to="/contact">Contact us</router-link>
-              <md-icon>keyboard_arrow_right</md-icon>
+              <b-link href="/contact">Contact us</b-link>
+              <b-icon icon="arrow-right"></b-icon>
             </div>
           </div>
           <div class="download-app">
-            <div class="md-title">Download our Application</div>
+            <h5>Download our Application</h5>
             <div class="md-body-1">
               By downloading our application the task will be much easier.
             </div>
-            <div>
-              <md-button class="custom-button" to="https://play.google.com"
-                >Download</md-button
+            <div class="text-right">
+              <b-button
+                variant="primary"
+                size="sm"
+                class="mt-2"
+                href="https://play.google.com"
+                >Download</b-button
               >
             </div>
           </div>
@@ -143,7 +143,7 @@ export default {
     .content {
       height: 268px;
       padding: 85px 200px 85px 106px;
-      .md-display-1 {
+      .h1 {
         line-height: 60px;
         font-size: 53px;
         font-weight: 600;
@@ -162,7 +162,7 @@ export default {
     margin: auto;
     padding: 30px;
 
-    .wrapper {
+    .content {
       display: flex;
       justify-content: space-around;
       flex-wrap: wrap;
@@ -171,7 +171,7 @@ export default {
         flex: 60%;
         padding: 60px;
 
-        .md-display-1 {
+        .h1 {
           font-weight: 500;
           line-height: 70px;
           color: #000;
@@ -186,22 +186,9 @@ export default {
       .right {
         flex: 30%;
         padding: 82px 60px;
-
-        .md-icon {
-          color: #66a9fb;
-        }
-
         .qoute {
           .md-field {
             margin: 4px 0 8px;
-          }
-
-          .action {
-            text-align: right;
-
-            .md-button {
-              margin: 0;
-            }
           }
         }
 
@@ -213,12 +200,6 @@ export default {
         .contact {
           margin-bottom: 30px;
         }
-
-        .download-app {
-          .md-button {
-            margin-top: 20px;
-          }
-        }
       }
     }
   }
@@ -229,7 +210,7 @@ export default {
     .content {
       padding: 20px !important;
       height: 188px !important;
-      .md-display-1 {
+      .h1 {
         font-size: 32px !important;
         line-height: 48px !important;
       }
@@ -241,20 +222,6 @@ export default {
 
   .section1 {
     padding: 30 !important;
-
-    .wrapper {
-      flex-direction: column;
-      .left,
-      .right {
-        padding: 0 !important;
-      }
-      .left {
-        margin-bottom: 74px !important;
-      }
-      .md-button {
-        margin: 30px 0 0 0;
-      }
-    }
   }
 }
 </style>

@@ -2,6 +2,8 @@ window.Vue = require("vue");
 import VueRouter from "vue-router";
 import Home from "./components/frontend/Home";
 import Register from "./components/frontend/auth/Register";
+import SocialLogin from "./components/frontend/auth/socials/SocialLogin";
+import CallBack from "./components/frontend/auth/socials/CallBack";
 import Login from "./components/frontend/auth/Login";
 import VerifyContact from "./components/frontend/auth/Verify";
 import Password from "./components/frontend/auth/Password";
@@ -165,6 +167,8 @@ export default new VueRouter({
                 { name: "cities", path: "cities", component: CityList },
                 { name: "login", path: "login", component: Login },
                 { name: "register", path: "register", component: Register },
+                { name: "social-login", path: "social-login", component: SocialLogin },
+                { name: "social-callback", path: "/api/moving/auth/google/callback", component: CallBack },
                 { name: "verify", path: "verify", component: VerifyContact },
                 { name: "password", path: "password", component: Password },
                 {

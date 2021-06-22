@@ -158,7 +158,7 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 92px;
+    padding: 10px 82px;
 
     color: rgb(121, 120, 120);
 

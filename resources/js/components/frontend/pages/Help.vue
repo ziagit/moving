@@ -112,13 +112,6 @@ export default {
     .content {
       height: 268px;
       padding: 85px 200px 85px 106px;
-      .md-display-1 {
-        line-height: 60px;
-        font-size: 53px;
-        font-weight: 600;
-        color: #000;
-        max-width: 355px;
-      }
 
       .md-subheading {
         color: #000;
@@ -132,6 +125,7 @@ export default {
 
   .section1 {
     max-width: 1200px;
+    min-height: calc(100vh - 200px);
     margin: auto;
     padding: 30px;
 
@@ -146,10 +140,7 @@ export default {
     .content {
       padding: 20px !important;
       height: 188px !important;
-      .md-display-1 {
-        font-size: 32px !important;
-        line-height: 48px !important;
-      }
+
       .md-subheading {
         font-size: 14px !important;
       }

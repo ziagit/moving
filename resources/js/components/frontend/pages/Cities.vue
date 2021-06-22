@@ -52,8 +52,8 @@
             <div class="md-body-1">
               By downloading our application the task will be much easier.
             </div>
-            <div>
-              <md-button class="custom-button" @click="open()">Download</md-button>
+            <div class="mt-3">
+              <b-button variant="primary" @click="open()">Download</b-button>
             </div>
           </div>
         </div>

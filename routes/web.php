@@ -13,6 +13,11 @@ use Spatie\GoogleCalendar\Event;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get("test",function(){
+    return view('address');
+});
+/* Route::get('api/auth/google', 'Auth\GoogleController@redirectToGoogle');
+Route::get('api/auth/{google}/callback', 'Auth\GoogleController@handleGoogleCallback'); */
 
 Route::get('/', function () {
     return view('shipbay');

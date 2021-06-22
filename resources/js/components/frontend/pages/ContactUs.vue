@@ -14,25 +14,37 @@
       ></iframe>
     </div>
     <div class="section1">
-      <div class="wrapper">
+      <div class="bottom-container">
         <div class="left">
-          <div class="md-display-1">Drop us a line</div>
+          <h2>Drop us a line</h2>
           <form @submit.prevent="submit" action="">
-            <md-field>
-              <label>Name</label>
-              <md-input v-model="form.name" type="text" required></md-input>
-            </md-field>
-            <md-field>
-              <label>Email</label>
-              <md-input v-model="form.email" type="text" required></md-input>
-            </md-field>
+            <b-form-group>
+              <b-form-input
+                v-model="form.name"
+                type="text"
+                required
+                placeholder="Name"
+              ></b-form-input>
+            </b-form-group>
+            <b-form-group>
+              <b-form-input
+                v-model="form.email"
+                type="text"
+                required
+                placeholder="Email"
+              ></b-form-input>
+            </b-form-group>
 
-            <md-field>
-              <label>Message</label>
-              <md-textarea v-model="form.message" required></md-textarea>
-            </md-field>
-
-            <md-button type="submit" slot="right" class="custom-button">Send</md-button>
+            <b-form-group>
+              <b-form-textarea
+                v-model="form.message"
+                required
+                placeholder="Message"
+              ></b-form-textarea>
+            </b-form-group>
+            <div class="text-right">
+              <b-button type="submit" variant="primary">Send</b-button>
+            </div>
           </form>
         </div>
         <div class="right">
@@ -116,7 +128,7 @@ export default {
     max-width: 1200px;
     margin: auto;
     padding: 30px;
-    .wrapper {
+    .bottom-container {
       display: flex;
       justify-content: space-between;
       flex-wrap: wrap;
@@ -130,10 +142,6 @@ export default {
           line-height: 70px;
           color: #000;
         }
-
-        .md-button {
-          float: right;
-        }
       }
 
       .right {
@@ -142,14 +150,11 @@ export default {
 
         .content {
           text-align: center;
-
           .md-headline {
             font-size: 18px;
           }
           img {
             margin: 30px;
-          }
-          .md-caption {
           }
         }
       }
@@ -167,10 +172,6 @@ export default {
     .left {
       text-align: center;
       align-items: center;
-
-      .md-button {
-        margin: 0;
-      }
     }
 
     .md-display-1 {

@@ -28,6 +28,18 @@ export default {
             console.log("response in login auth.js",response)
             return dispatch('attempt', response.data)
         },
+        async signInGoogl({ dispatch }) {
+            let response = await axios.get("auth/google")
+            return response;
+            //return dispatch('attempt', response.data)
+        },
+        async signInGooglCallback({ dispatch }, payload) {
+            let response = await axios.get("auth/google/callback", {
+                params: payload
+            })
+            return response;
+            //return dispatch('attempt', response.data)
+        },
 
         async signUp({ dispatch }, credentials) {
             let response = await axios.post("auth/signup/", credentials)
