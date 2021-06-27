@@ -2,26 +2,26 @@
   <b-card header="Bank Information" class="border-0 shadow text-left">
     <b-tabs>
       <b-tab title="Payement method">
-        <div v-if="bank" class="px-3">
+        <div v-if="bank" class="pt-3">
           <div class="row">
             <span class="col-4">Currency:</span>
-            <span class="col-6">{{ bank.currency }}</span>
+            <span class="col-8">{{ bank.currency }}</span>
           </div>
           <div class="row">
             <span class="col-4">Transit number:</span>
-            <span class="col-6">{{ bank.transit_number }}</span>
+            <span class="col-8">{{ bank.transit_number }}</span>
           </div>
           <div class="row">
             <span class="col-4">Institution number:</span>
-            <span class="col-6">{{ bank.institution_number }}</span>
+            <span class="col-8">{{ bank.institution_number }}</span>
           </div>
           <div class="row">
             <span class="col-4">Currency:</span>
-            <span class="col-6">{{ bank.account_number }}</span>
+            <span class="col-8">{{ bank.account_number }}</span>
           </div>
           <div class="row">
             <span class="col-4">Account number:</span>
-            <span class="col-6">{{ bank.account_number }}</span>
+            <span class="col-8">{{ bank.account_number }}</span>
           </div>
           <div class="text-right mt-3" v-if="bank">
             <b-button @click="$router.push('edit/' + bank.id)" variant="primary">

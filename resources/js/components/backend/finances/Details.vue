@@ -10,73 +10,73 @@
         <div class="col-md-6">
           <b-card class="border-0 shadow mb-3" header="Order">
             <div class="row">
-              <span class="col-3">Order: </span>
-              <span class="col-6">{{ earning.order_detail.uniqid }}</span>
+              <span class="col-4">Order: </span>
+              <span class="col-8">{{ earning.order_detail.uniqid }}</span>
             </div>
             <div class="row">
-              <span class="col-3">Placed on: </span>
-              <span class="col-6">{{ formatDate(earning.order_detail.created_at) }}</span>
+              <span class="col-4">Placed on: </span>
+              <span class="col-8">{{ formatDate(earning.order_detail.created_at) }}</span>
             </div>
             <div class="row">
-              <span class="col-3">Pickup location: </span>
-              <span class="col-6">{{
+              <span class="col-4">Pickup location: </span>
+              <span class="col-8">{{
                 earning.order_detail.addresses[0].formatted_address
               }}</span>
             </div>
             <div class="row">
-              <span class="col-3">Floor: </span>
-              <span class="col-6" v-if="earning.order_detail.floor_from">{{
+              <span class="col-4">Floor: </span>
+              <span class="col-8" v-if="earning.order_detail.floor_from">{{
                 earning.order_detail.floor_from
               }}</span>
-              <span class="col-6" v-else>No stairs</span>
+              <span class="col-8" v-else>No stairs</span>
             </div>
             <div class="row">
-              <span class="col-3">Destination: </span>
-              <span class="col-6">{{
+              <span class="col-4">Destination: </span>
+              <span class="col-8">{{
                 earning.order_detail.addresses[1].formatted_address
               }}</span>
             </div>
             <div class="row">
-              <span class="col-3">Floor: </span>
-              <span class="col-6" v-if="earning.order_detail.floor_to">{{
+              <span class="col-4">Floor: </span>
+              <span class="col-8" v-if="earning.order_detail.floor_to">{{
                 earning.order_detail.floor_to
               }}</span>
-              <span class="col-6" v-else>No stairs</span>
+              <span class="col-8" v-else>No stairs</span>
             </div>
             <div class="row" v-if="earning.order_detail.movingtype.code == 'apartment'">
-              <span class="col-3">Moving size: </span>
-              <span class="col-6">{{ earning.order_detail.movingsize.title }}</span>
+              <span class="col-4">Moving size: </span>
+              <span class="col-8">{{ earning.order_detail.movingsize.title }}</span>
             </div>
             <div class="row" v-if="earning.order_detail.movingtype.code == 'office'">
-              <span class="col-3">Office size: </span>
-              <span class="col-6">{{ earning.order_detail.officesize.title }}</span>
+              <span class="col-4">Office size: </span>
+              <span class="col-8">{{ earning.order_detail.officesize.title }}</span>
             </div>
             <div class="row" v-if="earning.order_detail.vehicle">
-              <span class="col-3">Requested vehicle: </span>
-              <span class="col-6">{{ earning.order_detail.vehicle.name }}</span>
+              <span class="col-4">Requested vehicle: </span>
+              <span class="col-8">{{ earning.order_detail.vehicle.name }}</span>
             </div>
             <div class="row" v-if="earning.order_detail.movernumber">
-              <span class="col-3">Number of movers: </span>
-              <span class="col-6">{{ earning.order_detail.movernumber.number }}</span>
+              <span class="col-4">Number of movers: </span>
+              <span class="col-8">{{ earning.order_detail.movernumber.number }}</span>
             </div>
             <div class="row">
-              <span class="col-3">Schedualed date: </span>
-              <span class="col-6">{{ earning.order_detail.pickup_date }}</span>
+              <span class="col-4">Schedualed date: </span>
+              <span class="col-8">{{ earning.order_detail.pickup_date }}</span>
             </div>
             <div class="row">
-              <span class="col-3">Time window: </span>
-              <span class="col-6">{{ earning.order_detail.appointment_time }}</span>
+              <span class="col-4">Time window: </span>
+              <span class="col-8">{{ earning.order_detail.appointment_time }}</span>
             </div>
 
             <div class="break"></div>
             <div class="row">
-              <span class="col-3">Moving type: </span>
-              <span class="col-6">{{ earning.order_detail.movingtype.title }}</span>
+              <span class="col-4">Moving type: </span>
+              <span class="col-8">{{ earning.order_detail.movingtype.title }}</span>
             </div>
             <div class="break"></div>
             <div class="row">
-              <span class="col-3">Instructions: </span>
-              <span class="col-6">{{ earning.order_detail.instructions }}</span>
+              <span class="col-4">Instructions: </span>
+              <span class="col-8">{{ earning.order_detail.instructions }}</span>
             </div>
           </b-card>
           <b-card header="Supplies" class="border-0 shadow mb-3">
@@ -87,11 +87,11 @@
                   :key="index"
                   class="list"
                 >
-                  <span class="col-3">{{ supply.name }}:</span>
-                  <span class="col-6"> {{ supply.pivot.number }}</span>
+                  <span class="col-4">{{ supply.name }}:</span>
+                  <span class="col-8"> {{ supply.pivot.number }}</span>
                 </div>
               </span>
-              <span class="col-6" v-else>Not selected</span>
+              <span class="col-8" v-else>Not selected</span>
             </div>
           </b-card>
           <b-card
@@ -106,8 +106,8 @@
                   :key="index"
                   class="list"
                 >
-                  <span class="col-3">{{ item.name }}:</span>
-                  <span class="col-6"> {{ item.pivot.number }}</span>
+                  <span class="col-4">{{ item.name }}:</span>
+                  <span class="col-8"> {{ item.pivot.number }}</span>
                 </div>
               </span>
             </div>
@@ -116,57 +116,57 @@
         <div class="col-md-6">
           <b-card header="Customer" class="shadow border-0 mb-3">
             <div class="row">
-              <span class="col-3"><b>Contacts:</b></span>
+              <span class="col-4"><b>Contacts:</b></span>
             </div>
             <div class="row">
-              <span class="col-3">Name: </span>
-              <span class="col-6">{{
+              <span class="col-4">Name: </span>
+              <span class="col-8">{{
                 earning.order_detail.shipper_contacts.user.name
               }}</span>
             </div>
             <div class="row">
-              <span class="col-3">Email: </span>
-              <span class="col-6">{{
+              <span class="col-4">Email: </span>
+              <span class="col-8">{{
                 earning.order_detail.shipper_contacts.user.email
               }}</span>
             </div>
             <div class="row">
-              <span class="col-3">Phone: </span>
-              <span class="col-6">{{
+              <span class="col-4">Phone: </span>
+              <span class="col-8">{{
                 earning.order_detail.shipper_contacts.user.phone
               }}</span>
             </div>
             <div class="break"></div>
             <div class="row">
-              <span class="col-3"><b>Price:</b></span>
+              <span class="col-4"><b>Price:</b></span>
             </div>
             <div class="row">
-              <span class="col-3">Total: </span>
-              <span class="col-6">${{ earning.order_detail.cost }}</span>
+              <span class="col-4">Total: </span>
+              <span class="col-8">${{ earning.order_detail.cost }}</span>
             </div>
             <div class="row">
-              <span class="col-3">Moving cost: </span>
-              <span class="col-6">${{ earning.order_detail.moving_cost }}</span>
+              <span class="col-4">Moving cost: </span>
+              <span class="col-8">${{ earning.order_detail.moving_cost }}</span>
             </div>
             <div class="row">
-              <span class="col-3">Travel cost: </span>
-              <span class="col-6">${{ earning.order_detail.travel_cost }}</span>
+              <span class="col-4">Travel cost: </span>
+              <span class="col-8">${{ earning.order_detail.travel_cost }}</span>
             </div>
             <div class="row">
-              <span class="col-3">Supplies cost: </span>
-              <span class="col-6">${{ earning.order_detail.supplies_cost }}</span>
+              <span class="col-4">Supplies cost: </span>
+              <span class="col-8">${{ earning.order_detail.supplies_cost }}</span>
             </div>
             <div class="row" v-if="earning.order_detail.disposal_fee">
-              <span class="col-3">Disposal fee: </span>
-              <span class="col-6">${{ earning.order_detail.disposal_fee }}</span>
+              <span class="col-4">Disposal fee: </span>
+              <span class="col-8">${{ earning.order_detail.disposal_fee }}</span>
             </div>
             <div class="row">
-              <span class="col-3">Tax: </span>
-              <span class="col-6">${{ earning.order_detail.tax }}</span>
+              <span class="col-4">Tax: </span>
+              <span class="col-8">${{ earning.order_detail.tax }}</span>
             </div>
             <div class="row" v-if="earning.order_detail.tips">
-              <span class="col-3">Tips: </span>
-              <span class="col-6">${{ earning.order_detail.tips }}</span>
+              <span class="col-4">Tips: </span>
+              <span class="col-8">${{ earning.order_detail.tips }}</span>
             </div>
             <div class="mt-3 text-right">
               <b-spinner variant="primary" v-if="isRefunding" />
@@ -182,33 +182,33 @@
           </b-card>
           <b-card class="shadow border-0 mb-3" header="Mover">
             <div class="row">
-              <span class="col-3"><b>Contacts:</b></span>
+              <span class="col-4"><b>Contacts:</b></span>
             </div>
             <div class="row">
-              <span class="col-3">Name: </span>
-              <span class="col-6">{{
+              <span class="col-4">Name: </span>
+              <span class="col-8">{{
                 earning.order_detail.job_with_carrier.carrier_detail.company
               }}</span>
             </div>
             <div class="row">
-              <span class="col-3">Email: </span>
-              <span class="col-6">{{
+              <span class="col-4">Email: </span>
+              <span class="col-8">{{
                 earning.order_detail.job_with_carrier.carrier_detail.user.email
               }}</span>
             </div>
             <div class="row">
-              <span class="col-3">Phone: </span>
-              <span class="col-6">{{
+              <span class="col-4">Phone: </span>
+              <span class="col-8">{{
                 earning.order_detail.job_with_carrier.carrier_detail.user.phone
               }}</span>
             </div>
             <div class="break"></div>
             <div class="row">
-              <span class="col-3"><b>Cost:</b></span>
+              <span class="col-4"><b>Cost:</b></span>
             </div>
             <div class="row">
-              <span class="col-3">Total: </span>
-              <span class="col-6"
+              <span class="col-4">Total: </span>
+              <span class="col-8"
                 >${{
                   Math.round(
                     earning.order_detail.cost - earning.order_detail.service_fee
@@ -217,34 +217,34 @@
               >
             </div>
             <div class="row">
-              <span class="col-3">Moving cost: </span>
-              <span class="col-6">${{ earning.order_detail.moving_cost }}</span>
+              <span class="col-4">Moving cost: </span>
+              <span class="col-8">${{ earning.order_detail.moving_cost }}</span>
             </div>
             <div class="row">
-              <span class="col-3">Travel cost: </span>
-              <span class="col-6">${{ earning.order_detail.travel_cost }}</span>
+              <span class="col-4">Travel cost: </span>
+              <span class="col-8">${{ earning.order_detail.travel_cost }}</span>
             </div>
             <div class="row">
-              <span class="col-3">Supplies cost: </span>
-              <span class="col-6">${{ earning.order_detail.supplies_cost }}</span>
+              <span class="col-4">Supplies cost: </span>
+              <span class="col-8">${{ earning.order_detail.supplies_cost }}</span>
             </div>
             <div class="row">
-              <span class="col-3">Service fee: </span>
-              <span class="col-6">-${{ earning.order_detail.service_fee }}</span>
+              <span class="col-4">Service fee: </span>
+              <span class="col-8">-${{ earning.order_detail.service_fee }}</span>
             </div>
             <div class="row">
-              <span class="col-3">Tax: </span>
-              <span class="col-6">${{ earning.paid_gst }}</span>
+              <span class="col-4">Tax: </span>
+              <span class="col-8">${{ earning.paid_gst }}</span>
             </div>
             <div class="row">
-              <span class="col-3">Tips: </span>
-              <span class="col-6"
+              <span class="col-4">Tips: </span>
+              <span class="col-8"
                 >${{ earning.order_detail.tips ? earning.order_detail.tips : 0 }}</span
               >
             </div>
             <div class="row" v-if="earning.order_detail.tips">
-              <span class="col-3">Tips: </span>
-              <span class="col-6">${{ earning.order_detail.tips }}</span>
+              <span class="col-4">Tips: </span>
+              <span class="col-8">${{ earning.order_detail.tips }}</span>
             </div>
             <div class="mt-3 text-right">
               <b-spinner variant="primary" v-if="isSubmitting" />
@@ -301,7 +301,7 @@ export default {
 
     edit(status) {
       this.$bvModal
-        .msgBoxConfirm("Do you want this account to be " + status + "?")
+        .msgBoxConfirm("Do you want this order to be " + status + "?")
         .then((value) => {
           if (value) {
             this.confirm(status);

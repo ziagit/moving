@@ -5,12 +5,14 @@
         <b-form-datepicker
           v-model="form.from"
           placeholder="Start of earning period"
+          required
         ></b-form-datepicker>
       </b-form-group>
       <b-form-group>
         <b-form-datepicker
           v-model="form.to"
           placeholder="End of earning period"
+          required
         ></b-form-datepicker>
       </b-form-group>
       <b-form-group>
@@ -39,11 +41,14 @@
         <b-button v-else type="submit" variant="primary"> Save </b-button>
       </div>
     </form>
+    <Toaster ref="toaster" />
   </div>
 </template>
 <script>
+import Toaster from "../../shared/Toaster";
 export default {
   name: "Add",
+  components: { Toaster },
   data: () => ({
     carriers: null,
     form: {

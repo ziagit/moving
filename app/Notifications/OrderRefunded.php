@@ -4,14 +4,14 @@ namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class VerifyEmail extends Notification
+class OrderRefunded extends Notification
 {
     use Queueable;
-    public $mailData;
-
+    public $amount;
     /**
      * Create a new notification instance.
      *
@@ -20,7 +20,7 @@ class VerifyEmail extends Notification
     public function __construct($data)
     {
         //
-        $this->mailData = $data;
+        $this->amount = $data;
     }
 
     /**
@@ -31,7 +31,7 @@ class VerifyEmail extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return ['database', 'broadcast'];
     }
 
     /**
@@ -42,13 +42,10 @@ class VerifyEmail extends Notification
      */
     public function toMail($notifiable)
     {
-        $url = url('/verify');
         return (new MailMessage)
-        ->subject('Email Verification')
-        ->greeting('Welcome to TingsApp!')
-        ->line('We are excited to have you get started. First, you need to confirm your account.')
-        ->line('Copy this code '.$this->mailData.' and paste in the verification page')
-        ->action('Verification page', $url);
+                    ->line('The introduction to the notification.')
+                    ->action('Notification Action', url('/'))
+                    ->line('Thank you for using our application!');
     }
 
     /**
@@ -57,6 +54,12 @@ class VerifyEmail extends Notification
      * @param  mixed  $notifiable
      * @return array
      */
+    public function toBroadcast($notifiable)
+    {
+        return new BroadcastMessage([
+            'notification' => $notifiable->notifications()->latest()->first()
+        ]);
+    }
     public function toArray($notifiable)
     {
         return [

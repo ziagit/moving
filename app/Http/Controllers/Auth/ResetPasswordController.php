@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Mail\PasswordReset;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Mail\Message;
@@ -17,7 +18,7 @@ class ResetPasswordController extends Controller
     public function forgot(Request $request){
 
         if(!$token = User::where('status','active')->where('email',$request->email)->first()){
-            return response()->json(['message'=>'Your account is blocked!'],401);
+            return response()->json(['message'=>'Invalid email!'],401);
         }
         $validator = Validator::make($request->only('email'), [
             'email' => 'required',
@@ -40,13 +41,13 @@ class ResetPasswordController extends Controller
             'token' => $token
         ]);
         //send email
-        Mail::send('mails.resetpassword', ['token'=> $token], function(Message $message) use($email) {
-            $message->to($email);
-            $message->subject('Reset your password');
-        });
+        Mail::to('tingsapp4@gmail.com')->queue(new PasswordReset($token));
         return response([
-            'message'=>'Check your email'
+            'message'=>'Email sent check your inbox',
+            'token'=>$token,
         ]);
+       
+       
       }catch(\Exception $exception){
         return response([
             'message'=> $exception->getMessage()
@@ -78,8 +79,7 @@ class ResetPasswordController extends Controller
         }
 
         $user->password= Hash::make($request->password);
-
-        $user->save();
+        $user->update();
         return response([
             'message'=>'Your password reset successfully!'
         ], 200);

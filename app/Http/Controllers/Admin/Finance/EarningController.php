@@ -96,6 +96,7 @@ class EarningController extends Controller
      */
     public function update(Request $request, $id)
     {
+        return "hi";
         $earning = Earning::find($id);
         $earning->status = $request->status;
         $earning->update();

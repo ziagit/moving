@@ -10,24 +10,22 @@
         <div class="mt-5">
           <p>Choose and account</p>
           <div class="row mb-3">
-            <b-button class="col-12" variant="danger" @click="google()">
+            <b-button class="col-12" variant="danger" @click="login('google')">
               <span>GOOGLE</span>
             </b-button>
           </div>
           <div class="row mb-3">
-            <b-button class="col-12" variant="primary">
+            <b-button class="col-12" variant="primary" @click="login('facebook')">
               <span>FACEBOOK</span>
             </b-button>
           </div>
           <div class="row">
-            <b-button class="col-12" variant="info">
+            <b-button class="col-12" variant="info" @click="login('twitter')">
               <span>TWITTER</span>
             </b-button>
           </div>
         </div>
-        <div>
-          <b-button @click="send()">Send email</b-button>
-        </div>
+
         <template #footer>
           <b-icon icon="chevron-compact-left"></b-icon>
         </template>
@@ -51,21 +49,14 @@ export default {
   }),
   methods: {
     ...mapActions({
-      signInGoogl: "auth/signInGoogl",
+      socialLogin: "auth/socialLogin",
     }),
-    google() {
-      this.signInGoogl().then((res) => {
-        if (res.data) {
-          window.location.href = res.data.url;
-          console.log("url:", res.data.url);
-        }
-      });
-    },
-    send() {
-      axios
-        .get("tests")
+    login(provider) {
+      this.socialLogin(provider)
         .then((res) => {
-          console.log("tests", res.data);
+          if (res.data) {
+            window.location.href = res.data.url;
+          }
         })
         .catch((err) => console.log(err));
     },

@@ -19,14 +19,14 @@ class UserSeeder extends Seeder
         $users =  [
             [
                 'name' => 'Admin',
-                'email' => 'admin@gmail.com',
+                'email' => 'admin@tingsapp.com',
                 'phone' => '+12501000000',
                 'phone_verified_at' => $today,
                 'password' => Hash::make('123'),
             ],
             [
                 'name' => 'Support A',
-                'email' => 'support@gmail.com',
+                'email' => 'support@tingsapp.com',
                 'phone' => '+12502000000',
                 'phone_verified_at' => $today,
                 'password' => Hash::make('123'),

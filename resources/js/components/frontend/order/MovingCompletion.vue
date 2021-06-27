@@ -1,5 +1,5 @@
 <template>
-  <div class="container completion">
+  <div class="completion">
     <Header v-on:togal-menu="$emit('togal-menu')" />
     <div class="content mt-5">
       <b-card class="border-0 shadow px-0">

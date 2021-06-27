@@ -17,17 +17,21 @@ use Spatie\GoogleCalendar\Event;
 |
 */
 //Auth::routes(['verify' => true]);
-
-Route::get('moving/auth/google', 'Auth\GoogleController@redirectToGoogle');
-Route::get('moving/auth/{google}/callback', 'Auth\GoogleController@handleGoogleCallback');
+/* Route::get('/moving/auth/facebook', 'Auth\Social\FacebookController@redirect');
+Route::get('/moving/auth/facebook/callback', 'Auth\Social\FacebookController@callback'); */
 
 Route::group(['prefix' => 'moving'], function () {
   Route::post('forgot-password', 'Auth\ResetPasswordController@forgot');
   Route::post('reset-password', 'Auth\ResetPasswordController@reset');
   Route::group(['prefix' => 'auth', 'namespace' => 'Auth'], function () {
-
-
-
+    Route::group(['namespace'=>'Social'], function(){
+      Route::get('google', 'GoogleController@redirect');
+      Route::get('google/callback', 'GoogleController@callback');
+      Route::get('facebook', 'FacebookController@redirect');
+      Route::get('facebook/callback', 'FacebookController@callback');
+      Route::get('twitter', 'TwitterController@redirect');
+      Route::get('twitter/callback', 'TwitterController@callback');
+    });
     Route::post('verify', 'VerifyPhoneController');
     Route::post('verify-email', 'VerifyEmailController');
     Route::post('signin', 'SignInController');
@@ -41,7 +45,6 @@ Route::group(['prefix' => 'moving'], function () {
     });
     Route::group(['namespace' => 'Carrier', 'prefix' => 'carrier'], function () {
       Route::resource('details', 'CarrierDetailsController');
-      Route::resource('rate', 'CarrierRateController');
       Route::resource('account', 'CarrierAccountController');
       Route::post('change-avatar/{id}', 'CarrierAccountController@changeAvatar');
       Route::resource('bank-info', 'BankController');
@@ -196,7 +199,7 @@ Route::group(['prefix' => 'moving'], function () {
     return response()->json(['message' => 'You are unauthorized!'], 401);
   })->name('unauthorized');
 
-  Route::resource('tests', 'TestController');
+  Route::get('tests', 'TestController@index');
 
   Route::get('pages/privacy', function () {
     $page = PrivacyPage::first();

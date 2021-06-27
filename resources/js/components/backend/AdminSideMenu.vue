@@ -87,6 +87,16 @@
       </li>
       <div class="line"></div>
       <li @click="signOut()"><span>Logout</span></li>
+      <li @click="settingsTogal = !settingsTogal">
+        <div class="childer">
+          <span><span>Settings</span></span>
+          <b-icon v-if="!settingsTogal" icon="chevron-right"></b-icon>
+          <b-icon v-else icon="chevron-down"> </b-icon>
+        </div>
+        <ul v-show="settingsTogal" class="i-ul">
+          <li @click="hideMenu('about')"><span>Logs</span></li>
+        </ul>
+      </li>
     </ul>
   </div>
 </template>
@@ -105,6 +115,7 @@ export default {
     financeTogal: false,
     reportTogal: false,
     pageTogal: false,
+    settingsTogal: false,
   }),
   created() {},
   computed: {

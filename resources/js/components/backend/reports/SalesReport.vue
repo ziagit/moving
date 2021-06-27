@@ -61,7 +61,7 @@
               <tr>
                 <td>{{ result.movingtype.title }}</td>
                 <td>
-                  {{ result.movingszise ? result.movingszise.title : "" }}
+                  {{ result.movingsize ? result.movingsize.title : "" }}
                 </td>
                 <td>{{ result.movernumber.number }}</td>
 

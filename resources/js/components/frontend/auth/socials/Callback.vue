@@ -1,26 +1,35 @@
 <template>
-  <div>Callback page</div>
+  <div class="container d-flex">
+    <div class="m-auto text-center">
+      <p>Please wait...</p>
+      <b-spinner></b-spinner>
+    </div>
+  </div>
 </template>
 <script>
-import axios from "axios";
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 export default {
+  computed: {
+    ...mapGetters({
+      authenticated: "auth/authenticated",
+      user: "auth/user",
+    }),
+  },
   created() {
     this.login();
   },
   methods: {
     ...mapActions({
-      loginGoogle: "auth/signInGooglCallback",
+      socialCallback: "auth/socialCallback",
     }),
     login() {
-      this.loginGoogle({
-        code: this.$route.query.code,
-      }).then((res) => {
-        if (res.data) {
-          window.location.href = res.data.url;
-          console.log("url:", res.data.url);
-        }
-      });
+      var token = this.$route.params.token;
+      if (token) {
+        this.socialCallback(token).then((res) => {
+          this.$router.push("/carrier/profile/add");
+          console.log("user info", this.user);
+        });
+      }
     },
   },
 };

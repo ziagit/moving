@@ -8,63 +8,64 @@
     >
       <Header v-on:togal-menu="$emit('togal-menu')" />
       <div class="content">
-        <div class="md-display-1">Become a Mover</div>
+        <h1>Become a Mover</h1>
 
-        <div class="md-subheading">
-          Join our mover networks by creating an account with us.
-        </div>
+        <p>Join our mover networks by creating an account with us.</p>
         <div class="break"></div>
         <div class="break"></div>
         <b-button variant="primary" @click="$router.push('/register')">Sign Up</b-button>
       </div>
     </div>
 
-    <div class="section1">
-      <div class="wrapper">
-        <div class="left">
+    <div class="container pt-5">
+      <div class="row">
+        <div class="col-9">
           <p>Not available!</p>
           <!-- <div v-html="body"></div> -->
         </div>
-        <div class="right">
+        <div class="col-3">
           <div class="download-app">
             <h5>Download our Application</h5>
-            <div class="md-body-1">
-              By downloading our application the task will be much easier.
-            </div>
-            <div class="mt-3">
-              <b-button variant="primary" @click="Window.open('https://play.google.com')"
-                >Download</b-button
-              >
+            <p>By downloading our application the task will be much easier.</p>
+            <div class="text-right">
+              <b-button-group>
+                <b-button
+                  variant="success"
+                  size="sm"
+                  class="mt-2"
+                  href="https://play.google.com"
+                  >ANDROID</b-button
+                >
+                <b-button variant="dark" size="sm" class="mt-2" href="https://apple.com"
+                  >IPHONE</b-button
+                >
+              </b-button-group>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="section2">
-      <div class="rows">
-        <div class="row">
+      <br />
+      <br />
+      <div class="row d-flex justify-content-between">
+        <div class="col-3 text-center">
           <img :src="'/images/uploads/carrier-tech.svg'" width="30" alt="" />
           <div>
             <h5>Carrier Technology</h5>
-            <div class="md-body-1">Easy to use tools to find freight.</div>
+            <p>Easy to use tools to find freight.</p>
           </div>
         </div>
-        <div class="row">
+        <div class="col-3 text-center">
           <img :src="'/images/uploads/carrier-payment.svg'" width="30" alt="" />
           <div>
             <h5>Get Paid</h5>
-            <div class="md-body-1">
-              Get paid fast with options to further speed the process.
-            </div>
+            <p>Get paid fast with options to further speed the process.</p>
           </div>
         </div>
-        <div class="row">
+        <div class="col-3 text-center">
           <img :src="'/images/uploads/carrier-freight.svg'" width="50" alt="" />
           <div>
             <h5>Carrier Programs</h5>
-            <div class="md-body-1">
-              Personalized service and more freight opportunities.
-            </div>
+            <p>Personalized service and more freight opportunities.</p>
           </div>
         </div>
       </div>
@@ -109,7 +110,6 @@ export default {
 <style lang="scss" scoped>
 .carriers {
   background: #fff;
-
   .section0 {
     background-repeat: no-repeat;
     background-size: cover;
@@ -119,113 +119,14 @@ export default {
     .content {
       height: 268px;
       padding: 85px 200px 85px 106px;
-
-      .md-display-1 {
-        line-height: 60px;
-        font-size: 53px;
-        font-weight: 600;
-        color: #000;
-      }
-
-      .md-subheading {
-        color: #000;
-        max-width: 70%;
-      }
-    }
-  }
-
-  .section1 {
-    max-width: 1200px;
-    margin: auto;
-    padding: 30px;
-
-    .wrapper {
-      display: flex;
-      justify-content: space-around;
-      flex-wrap: wrap;
-
-      .left {
-        flex: 60%;
-        padding: 60px;
-
-        .md-display-1 {
-          font-weight: 500;
-          line-height: 70px;
-          color: #000;
-        }
-
-        .md-body-1 {
-          font-size: 16px;
-          line-height: 24px;
-        }
-      }
-
-      .right {
-        flex: 30%;
-        padding: 82px 60px;
-
-        .md-headline {
-          font-size: 22px;
-        }
-
-        .md-icon {
-          color: #66a9fb;
-        }
-
-        .qoute {
-          .md-field {
-            margin: 4px 0 8px;
-          }
-
-          .action {
-            text-align: right;
-
-            .b-button {
-              margin: 0;
-            }
-          }
-        }
-
-        .qoute,
-        .faq,
-        .download-app,
-        .privacy,
-        .terms,
-        .contact {
-          margin-bottom: 30px;
-        }
-
-        .download-app {
-          .b-button {
-            margin-top: 20px;
-          }
-        }
-      }
     }
   }
 
   .section2 {
-    padding: 0 100px 46px 100px;
-
-    .rows {
-      display: flex;
-      justify-content: space-around;
-      flex-wrap: wrap;
-
-      .row {
-        flex: 30%;
-        padding: 30px;
-        border: solid 1px #ddd;
-        border-radius: 3px;
-        margin: 10px;
-        text-align: center;
-
-        .md-title {
-          line-height: 52px;
-          font-weight: 600;
-          line-height: 44px;
-        }
-      }
+    .col-3 {
+      border: solid 1px #ddd;
+      padding: 10px;
+      margin: 5px;
     }
   }
 }
@@ -248,7 +149,7 @@ export default {
   .section1 {
     padding: 30 !important;
 
-    .wrapper {
+    .my-wrapper {
       flex-direction: column;
       .left,
       .right {

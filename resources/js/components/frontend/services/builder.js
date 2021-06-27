@@ -17,10 +17,12 @@ export default {
         order["duration"] = await localData.read("duration");
         order["supplies"] = this.buildSupplies();
         order["carrier"] = await localData.read("carrier");
+        order['editable_id'] = await localData.read('editable_id');
         return order;
     },
     editOrder(order) {
         var d = new Date(order.pickup_date);
+        localData.save('editable_id',order.id)
         localData.save("from", order.addresses[0]);
         localData.save("to", order.addresses[1]);
         localData.save("moving-type", order.movingtype);

@@ -7,7 +7,7 @@
             <div v-for="(not, index) in notifications" :key="index">
               <b-list-group-item
                 button
-                class="border-0"
+                class="border-0 item"
                 @click="open(not)"
                 :class="{ selected: selectedNot == not.id }"
               >

@@ -32,6 +32,7 @@ export default {
         sessionStorage.removeItem('contacts');
         sessionStorage.removeItem('phone');
         sessionStorage.removeItem('me');
+        sessionStorage.removeItem('editable_id');
       return ;
     }
 }

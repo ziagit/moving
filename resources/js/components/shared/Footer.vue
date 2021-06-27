@@ -10,7 +10,7 @@
             <a @click="navigate('/about')"><b>What is TingsApp</b></a>
           </li>
           <li>
-            <a @click="navigate('/help')"><b>How it Works</b> </a>
+            <a @click="navigate('/how-it-works')"><b>How it Works</b> </a>
           </li>
           <li>
             <a @click="navigate('/help')"><b>Help center</b> </a>
@@ -23,7 +23,7 @@
       <div class="row">
         <ul>
           <li>
-            <a @click="navigate('/help')"><b>Become a Mover</b></a>
+            <a @click="navigate('/carriers')"><b>Become a Mover</b></a>
           </li>
           <li>
             <a @click="navigate('/login')"><b>My account</b></a>

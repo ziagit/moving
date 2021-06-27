@@ -242,8 +242,8 @@ export default {
           console.log("res: ", res.data);
           this.form.first_name = res.data.first_name;
           this.form.last_name = res.data.last_name;
-          this.form.email = this.user.email;
-          this.form.phone = this.user.phone;
+          this.form.email = res.data.user.email;
+          this.form.phone = res.data.user.phone;
           this.form.website = res.data.website;
           this.form.company = res.data.company;
           this.form.detail = res.data.detail;

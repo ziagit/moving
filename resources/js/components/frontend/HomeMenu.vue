@@ -96,12 +96,6 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.md-list {
-  padding-bottom: 0 !important;
-  .md-list-item-text {
-    font-weight: 500;
-  }
-}
 .active {
   color: #ffa500 !important;
 }

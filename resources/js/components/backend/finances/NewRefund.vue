@@ -55,6 +55,7 @@ export default {
       shipper_id: null,
       amount: null,
       order: null,
+      status: "Refunded",
     },
     isSubmitting: false,
     isLoading: false,
@@ -149,8 +150,8 @@ export default {
           .post("admin/refunds", this.form)
           .then((res) => {
             console.log("res", res.data);
-            this.isSubmitting = false;
-            this.$emit("close-dialog", res.data);
+            /*    this.isSubmitting = false;
+            this.$emit("close-dialog", res.data); */
           })
           .catch((err) => {
             this.$emit("close-dialog", err.response);

@@ -12,10 +12,13 @@ use App\User;
 use App\CarrierEarning;
 use App\Constant;
 use App\Earning;
+use App\Http\Services\Sms;
 use App\Item;
+use App\Mail\CustomerPaid;
+use App\Mail\OrderUpdated;
 use App\Movingsize;
-use App\Notifications\CustomerPaid;
-use App\Notifications\OrderUpdated;
+use App\Notifications\CustomerPaid as NotificationsCustomerPaid;
+use App\Notifications\OrderUpdated as NotificationsOrderUpdated;
 use App\Officesize;
 use App\Order;
 use App\Rate;
@@ -28,6 +31,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 
 class JobController extends Controller
@@ -105,29 +109,31 @@ class JobController extends Controller
         $order->update();
         try {
             if ($request->status == 'Completed') {
-                return $this->calculate($request, $id);
-                $this->readNotification($request->notificationId);
+                $this->calculate($request, $id);
             }
-            $this->sms($request);
-            $customerEmail = $request->order_detail['shipper_contacts']['user']['email'];
-            $user = User::where('email', $customerEmail)->first();
-            if ($user) {
-                return $user->notify(new OrderUpdated($order));
-            }
+            $this->createNotification($request, $order);
+            return response()->json("Order updated", 200);
         } catch (Exception $e) {
             return response()->json($e->getMessage());
         }
     }
-    public function sms($request)
+    public function createNotification($request, $order)
     {
-        $customerPhone = $request->order_detail['shipper_contacts']['user']['phone'];
+        $job = Job::where('order_id', $order->id)->first();
         try {
-            $nexmo = app('Nexmo\Client');
-            $nexmo->message()->send([
-                'to'   => $customerPhone,
-                'from' => '+93793778030',
-                'text' => 'Dear Customer this order is being' . $request->status
-            ]);
+            $email = $request->order_detail['shipper_contacts']['user']['email'];
+            $user = User::where('email', $email)->first();
+            if ($user) {
+                //email
+                Mail::to($user->email)->queue(new OrderUpdated($order));
+                //sms
+                $sms = new Sms();
+                $sms->updateJob($user->phone, $order);
+                //notify
+                $user->notify(new NotificationsOrderUpdated($order));
+            }
+            //sms
+            $this->readNotification($request->notificationId);
             return true;
         } catch (Exception $e) {
             return $e->getMessage();
@@ -196,26 +202,27 @@ class JobController extends Controller
             ]);
             $order->charge_id = $charge['id'];
             $order->update();
-            $this->customerPaid($request);
+            $this->paymentNotification($request);
             return response()->json('Payment proceed successfully!', 200);
         } catch (Exception $e) {
             return $e->getMessage();
         }
     }
-    public function customerPaid($request)
+    public function paymentNotification($request)
     {
         try {
-            $shipperMail = $request->order_detail['shipper_contacts']['user']['email'];
-            $shipper = User::where('email', $shipperMail)->first();
-            if ($shipper) {
-                $shipper->notify(new CustomerPaid($request->order_detail['id']));
+            $email = $request->order_detail['shipper_contacts']['user']['email'];
+            $user = User::where('email', $email)->first();
+            if ($user) {
+                //email
+                Mail::to($user->email)->queue(new CustomerPaid($request->order_detail));
+                //sms
+                $sms = new Sms();
+                $sms->customerPaid($user->phone, $request->order_detail['uniqid']);
+                //notify
+                $user->notify(new NotificationsCustomerPaid($request->order_detail['uniqid']));
             }
-            $nexmo = app('Nexmo\Client');
-            $nexmo->message()->send([
-                'to'   => $request->order_detail['shipper_contacts']['user']['phone'],
-                'from' => '+93793778030',
-                'text' => 'Dear Customer your payment proceed to TingsApp'
-            ]);
+            //sms
             return true;
         } catch (Exception $e) {
             return $e->getMessage();

@@ -29,7 +29,11 @@ return [
         'secret' => env('AWS_SECRET_ACCESS_KEY'),
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
-
+    'signalwire'=>[
+        'client' => env('SIGNALWIRE_CLIENT'),
+        'token' => env('SIGNALWIRE_TOKEN'),
+        'space_url' => array('signalwireSpaceUrl' => 'tingsapp.signalwire.com')
+    ],
     'stripe' => [
         'key' => env('STRIPE_KEY'),
         'secret' => env('STRIPE_SECRET'),

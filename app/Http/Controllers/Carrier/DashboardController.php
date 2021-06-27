@@ -25,7 +25,6 @@ class DashboardController extends Controller
     {
         $carrierId = User::with('carrier')->find(Auth::id())->carrier->id;
         $jobs = Job::with('order')->where('carrier_id', $carrierId)->get();
-
        return response()->json($jobs);
     }
     public function columnChart()

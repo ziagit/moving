@@ -20,22 +20,11 @@ class SignInController extends Controller
             ->where('status','Active')
             ->where('verification_code', $data->code)
             ->first();
-
             if ($user) {
                 $user->phone_verified_at = date('Y-m-d h:i:s');
                 $user->update();
                 $token = Auth::login($user);
                 return response()->json($token);
-            }
-            //for test only
-            if ($data->code == '0000') {
-                $user = User::find($data->me);
-                if ($user) {
-                    $user->phone_verified_at = date('Y-m-d h:i:s');
-                    $user->update();
-                    $token = Auth::login($user);
-                    return response()->json($token);
-                }
             }
             return response()->json("Invalid code entered/your account is blocked by admin!", 401);
         } catch (Exception $e) {

@@ -32,7 +32,7 @@ class CustomerPaid extends Notification
      */
     public function via($notifiable)
     {
-        return ['database', 'broadcast', 'mail'];
+        return ['database', 'broadcast'];
     }
 
     /**
@@ -47,7 +47,7 @@ class CustomerPaid extends Notification
         return (new MailMessage)
         ->subject('Payment proceed')
         ->greeting('Dear Customer')
-        ->line('Your payment was successfull to TingsApp')
+        ->line('Your payment was successfull for '.$this->order." Order")
         ->line('Thanks for choosing us!')
         ->action('Do you have anything else to move?', $url);
     }

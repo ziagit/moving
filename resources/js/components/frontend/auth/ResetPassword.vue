@@ -1,27 +1,33 @@
 <template>
-  <div class="container">
+  <div>
     <Header v-on:togal-menu="$emit('togal-menu')" />
-    <div class="content">
-      <b-card title="Reset Password">
+    <div class="content w-25 mx-auto mt-5">
+      <b-card header="New Password" class="border-0 shadow">
         <div class="md-title"></div>
-        <md-button @click="$router.back()" class="md-icon-button close"
-          ><md-icon>close</md-icon></md-button
-        >
+        <b-button @click="$router.back()" class="md-icon-button close"
+          ><b-icon icon="x"></b-icon
+        ></b-button>
         <form @submit.prevent="submit">
-          <md-field>
-            <label>New password</label>
-            <md-input type="password" v-model="form.password" required></md-input>
-          </md-field>
-          <md-field>
-            <label>Confirm password</label>
-            <md-input
+          <b-form-group>
+            <b-form-input
+              type="password"
+              v-model="form.password"
+              required
+              placeholder="New password"
+            ></b-form-input>
+          </b-form-group>
+          <b-form-group>
+            <b-form-input
               type="password"
               v-model="form.password_confirmation"
               required
-            ></md-input>
-          </md-field>
-          <b-spinner variant="primary" v-if="loading"></b-spinner>
-          <md-button v-else type="submit" class="md-primary">Reset</md-button>
+              placeholder="Confirm password"
+            ></b-form-input>
+          </b-form-group>
+          <div class="text-right">
+            <b-spinner variant="primary" v-if="loading"></b-spinner>
+            <b-button v-else type="submit" variant="primary">Submit</b-button>
+          </div>
         </form>
       </b-card>
     </div>
@@ -54,7 +60,7 @@ export default {
         .post("reset-password", this.form)
         .then((res) => {
           this.loading = false;
-          this.$router.push("/login");
+          this.$router.push("/password");
         })
         .catch((err) => {
           this.errMessage = err.response.data.message;
@@ -87,42 +93,22 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.container {
-  width: 100%;
+.content {
+  min-height: calc(100vh - 50px);
 
-  .content {
-    padding: 60px 20px;
-    height: calc(100vh - 3px);
-
-    .md-card {
-      margin: auto;
-      text-align: center;
-      background: #fff;
-      max-width: 500px;
-
-      .md-card-content {
-        padding: 20px;
-      }
-
-      .md-display-1 {
-        font-size: 24px;
-      }
-      .close {
-        position: absolute;
-        right: 0;
-        top: 0;
-      }
-    }
+  .close {
+    position: absolute;
+    right: 0;
+    top: 0;
   }
 }
-
 @media only screen and (max-width: 600px) {
   .login {
     padding-top: 3em;
 
     .md-card {
       .login-througth {
-        .md-button {
+        .b-button {
           font-size: 11px;
         }
       }

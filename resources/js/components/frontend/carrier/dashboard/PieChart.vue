@@ -5,23 +5,23 @@
     </div>
     <div v-else>No data.</div>
     <div class="legend mt-3 mb-3">
-      <span class="md-caption">
+      <span class="caption">
         <span class="dot" style="background: #4472c4"></span>
         <span>Jobs received : {{ received }}</span></span
       >
-      <span class="md-caption">
+      <span class="caption">
         <span class="dot" style="background: #ed7d31"></span>
         <span>Jobs accepted: {{ accepted }}</span></span
       >
-      <span class="md-caption">
+      <span class="caption">
         <span class="dot" style="background: #a5a5a5"></span>
         <span>Jobs declined : {{ declined }}</span></span
       >
-      <span class="md-caption">
+      <span class="caption">
         <span class="dot" style="background: #ffc000"></span>
         <span>Jobs compledted {{ completed }}</span></span
       >
-      <span class="md-caption">
+      <span class="caption">
         <span class="dot" style="background: #5b9bd5"></span>
         <span>Jobs pending {{ pending }}</span></span
       >
@@ -121,16 +121,19 @@ export default {
   margin: 30px 10px;
   display: flex;
   justify-content: center;
-  .md-caption {
+  .caption {
     margin: 10px;
     display: flex;
     align-items: center;
     .dot {
-      height: 10px;
-      width: 10px;
+      height: 8px;
+      width: 8px;
       border-radius: 0%;
       display: inline-block;
       margin: 1px;
+    }
+    span {
+      font-size: 11px;
     }
   }
 }

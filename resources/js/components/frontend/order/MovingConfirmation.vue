@@ -159,7 +159,7 @@
     </div> -->
     <div class="confirming">
       <div>
-        <div class="md-title">Please wait !</div>
+        <h5>Please wait !</h5>
         <div>Your order is processing...</div>
         <div class="break"></div>
         <b-spinner variant="primary" />

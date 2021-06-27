@@ -39,6 +39,8 @@
             type="number"
             v-model="form.year_established"
             required
+            :min="1995"
+            :max="2021"
             placeholder="Year established"
           ></b-form-input>
           <b-form-input

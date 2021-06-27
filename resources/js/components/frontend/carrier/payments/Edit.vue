@@ -125,20 +125,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.md-card {
-  text-align: left;
-  .md-card-content {
-    padding: 20px;
-  }
-  .md-card-actions {
-    display: flex;
-    justify-content: flex-start;
-  }
-
-  .add-btn {
-    position: absolute;
-    top: 0;
-    right: 0;
-  }
+.add-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 </style>

@@ -31,7 +31,9 @@
           </div>
         </form>
         <template #footer>
-          <small to="/forgot-password">Reset Password</small>
+          <b-button variant="light" size="sm" @click="$router.push('/forgot-password')"
+            >Reset Password</b-button
+          >
         </template>
       </b-card>
     </div>
@@ -80,6 +82,9 @@ export default {
                   : this.$router.push("/shipper/profile/add");
               });
               break;
+            case "support":
+              this.$router.push("/admin");
+              break;
             case "admin":
               this.$router.push("/admin");
               break;
@@ -87,13 +92,13 @@ export default {
               this.$router.push("/");
           }
         })
-        .catch((error) => {
-          console.log("errrr", error);
+        .catch((err) => {
+          console.log("errrr", err.response.data);
           this.$refs.toaster.show(
             "danger",
             "b-toaster-top-center",
-            "Error",
-            err.response.data
+            "Faild",
+            err.response.data.message
           );
           this.isSubmitting = false;
         });

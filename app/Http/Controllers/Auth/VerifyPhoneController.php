@@ -13,11 +13,7 @@ class VerifyPhoneController extends Controller
 {
     public function __invoke(Request $data)
     {
-        /*    $nexmo = app('Nexmo\Client');
-        $verification = $nexmo->verify()->start([
-            'number' => $user->phone,
-            'brand'  => 'TingsApp Demo'
-        ]); */
+        
         $user = User::where('phone', $data->phone)->first();
         if ($user) {
             if ($user->status == 'Active') {

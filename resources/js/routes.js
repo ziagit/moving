@@ -175,7 +175,7 @@ export default new VueRouter({
                 },
                 {
                     name: "social-callback",
-                    path: "/api/moving/auth/google/callback",
+                    path: "/callback/:token",
                     component: CallBack
                 },
                 { name: "verify", path: "verify", component: VerifyContact },

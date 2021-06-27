@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
-    <title>Shipbay</title>
+    <title>TingsApp</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -56,7 +56,7 @@
 <body>
     <div class="container">
        <div class="heading">
-            <h1>ShipBay</h1>
+            <h1>TingsApp</h1>
        </div>
        <div class="content">
            <p>Hello there !</p>
@@ -64,14 +64,14 @@
        </div><br><br>
         <div class="action">
             <!--<a class="reset-button" href="http://localhost:8000/#/reset-password/{{$token}}">Change my password</a>-->
-           <a class="reset-button" href="https://tingsapp.com/reset-password/{{$token}}">Change my password</a>
+           <a class="btn btn-primary" href="https://tingsapp.com/reset-password/{{$token}}">Change my password</a>
         </div>
 
         <br><br>
         <p>If you didn't request this, please ignore this email. Your password will stay safe and won't be changed.</p>
         <div class="line"></div>
-        <span class="grading">Yours, ShipBay Team</span><br>
-        <span class="email">support@shipbay.com</span>
+        <span class="grading">Yours, TingsApp Team</span><br>
+        <span class="email">support@tingsapp.com</span>
     </div>
 
 

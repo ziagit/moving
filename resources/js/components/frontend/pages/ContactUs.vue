@@ -146,13 +146,10 @@ export default {
 
       .right {
         flex: 30%;
-        padding: 82px 60px;
+        padding: 0px 60px;
 
         .content {
           text-align: center;
-          .md-headline {
-            font-size: 18px;
-          }
           img {
             margin: 30px;
           }

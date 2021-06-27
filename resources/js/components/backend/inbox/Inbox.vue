@@ -1,31 +1,23 @@
 <template>
   <div class="container inbox">
     <b-card header="Notifications" class="border-0 shadow mt-3 mb-3">
-      <div class="wrapper row">
+      <div class="row">
         <div class="menu col-3">
-          <md-list class="md-triple-line md-dense">
+          <b-list-group>
             <div v-for="(not, index) in notifications" :key="index">
-              <md-list-item
+              <b-list-group-item
+                class="border-0 item"
                 @click="open(not)"
                 :class="{ selected: selectedNot == not.id }"
               >
-                <md-avatar>
-                  <img src="https://placeimg.com/40/40/people/1" alt="People" />
-                </md-avatar>
-                <div class="md-list-item-text">
-                  <span>{{ not.id }}</span>
-                  <span>{{ not.notifiable_type }}</span>
-                  <p>
-                    {{ not.created_at }}
-                  </p>
-                </div>
-              </md-list-item>
-              <md-divider class="md-inset"></md-divider>
+                <span>{{ not.id }}</span>
+                <span>{{ not.notifiable_type }}</span>
+              </b-list-group-item>
             </div>
-          </md-list>
+          </b-list-group>
         </div>
         <b-jumbotron
-          class="col-6 mb-0"
+          class="col-9 mb-0"
           header="Notification"
           lead="I'm pleased to notify you"
         >
@@ -76,17 +68,17 @@ export default {
 };
 </script>
 <style lang="scss">
-.wrapper {
+.container {
   height: calc(100vh - 162px);
-
-  .menu {
-    flex: 1;
-    max-width: 300px;
-    border-right: solid 1px #ddd;
-    padding-right: 10px;
+  .item {
+    cursor: pointer;
+    font-size: 12px;
   }
-}
-.selected {
-  background: #ffa60017;
+  .item:hover {
+    background: #e7e3db;
+  }
+  .selected {
+    background: #ffa60017;
+  }
 }
 </style>

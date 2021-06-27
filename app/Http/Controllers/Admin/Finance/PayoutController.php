@@ -5,11 +5,15 @@ namespace App\Http\Controllers\Admin\Finance;
 use App\Carrier;
 use App\Earning;
 use App\Http\Controllers\Controller;
+use App\Http\Services\Sms;
+use App\Mail\MoverPaid;
 use App\Notifications\CarrierPaid;
+use App\Notifications\MoverPaid as NotificationsMoverPaid;
 use App\Payout;
 use App\User;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class PayoutController extends Controller
 {
@@ -49,7 +53,7 @@ class PayoutController extends Controller
         $payout->carrier_id = $request->carrier;
         $payout->save();
         $this->updateEarning($payout, $request->earning_ids);
-
+        $this->createNotification($request->carrier,$request->amount);
         return response()->json('Payment succeed!', 200);
     }
     public function updateEarning($payout, $ids)
@@ -97,7 +101,7 @@ class PayoutController extends Controller
             $earning = Earning::find($id);
             $earning->status = $request->status;
             $earning->update();
-            return $this->payNow($request, $earning);
+            $this->payNow($request, $earning);
             return response()->json("Paid successfully!", 200);
         } catch (Exception $e) {
             return response()->json($e->getMessage());
@@ -109,30 +113,30 @@ class PayoutController extends Controller
         $today = date('d-m-y h:i:s');
         try {
             $payout = new Payout();
-            $payout->amount = $earning->carrier_earning + $earning->paid_gst;
+            $payout->amount = round($earning->carrier_earning + $earning->paid_gst, 2);
             $payout->from = $today;
             $payout->to = $today;
             $payout->carrier_id = $request->order_detail['job_with_carrier']['carrier_id'];
             $payout->save();
             $earning->payouts()->attach($payout->id);
-            $userId = $request->order_detail['job_with_carrier']['carrier_detail']['user_id'];
-            $user = User::find($userId);
-            $user->notify(new CarrierPaid($request->order_detail['uniqid']));
-            $this->sms($request);
+            $this->createNotification($request->order_detail['job_with_carrier']['carrier_detail']['id'], $payout->amount);
         } catch (Exception $e) {
             return response()->json($e->getMessage());
         }
     }
-    public function sms($request)
+    public function createNotification($carrierId, $amount)
     {
-        $phone = $request->order_detail['job_with_carrier']['carrier_detail']['user']['phone'];
+        $carrier = Carrier::find($carrierId)->first();
+        $user = User::find($carrier->user_id);
         try {
-            $nexmo = app('Nexmo\Client');
-            $nexmo->message()->send([
-                'to'   => $phone,
-                'from' => '+93793778030',
-                'text' => 'Dear partner you have paid by TingsApp due to ' . $request->order_detail['uniqid'] . ' job'
-            ]);
+            //email
+            return "hi";
+            Mail::to($user->email)->queue(new MoverPaid($amount));
+            //sms
+            $sms = new Sms();
+            $sms->moverPaid($user->phone, $amount);
+            //notify
+            $user->notify(new NotificationsMoverPaid($amount));
             return true;
         } catch (Exception $e) {
             return response()->json($e->getMessage());
@@ -169,8 +173,8 @@ class PayoutController extends Controller
     public function earnings($id)
     {
         $earnings = Earning::where('carrier_id', $id)
-        ->where('status', 'Unpaid')
-        ->get();
+            ->where('status', 'Unpaid')
+            ->get();
         return response()->json($earnings);
     }
 }

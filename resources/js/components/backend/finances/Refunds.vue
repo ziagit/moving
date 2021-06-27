@@ -91,7 +91,7 @@ export default {
 
     refresh(data) {
       this.$bvModal.hide("modal-add");
-      this.$refs.toaster.show("success", "b-toaster-top-center", "Invalid Data", data);
+      this.$refs.toaster.show("success", "b-toaster-top-right", "Mover paid", data);
       this.get();
     },
   },

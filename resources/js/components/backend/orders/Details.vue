@@ -20,83 +20,83 @@
         <div class="col-md-6">
           <b-card class="border-0 shadow mb-3" header="Order Details">
             <div class="row">
-              <span class="col-3">Order: </span>
-              <span class="col-6">{{ order.uniqid }}</span>
+              <span class="col-4">Order: </span>
+              <span class="col-8">{{ order.uniqid }}</span>
             </div>
             <div class="row">
-              <span class="col-3">Placed on: </span>
-              <span class="col-6">{{ formatDate(order.created_at) }}</span>
+              <span class="col-4">Placed on: </span>
+              <span class="col-8">{{ formatDate(order.created_at) }}</span>
             </div>
             <div class="row">
-              <span class="col-3">Pickup location: </span>
-              <span class="col-6">{{ order.addresses[0].formatted_address }}</span>
+              <span class="col-4">Pickup location: </span>
+              <span class="col-8">{{ order.addresses[0].formatted_address }}</span>
             </div>
             <div class="row">
-              <span class="col-3">Floor: </span>
-              <span class="col-6" v-if="order.floor_from">{{ order.floor_from }}</span>
-              <span class="col-6" v-else>No stairs</span>
+              <span class="col-4">Floor: </span>
+              <span class="col-8" v-if="order.floor_from">{{ order.floor_from }}</span>
+              <span class="col-8" v-else>No stairs</span>
             </div>
             <div class="row">
-              <span class="col-3">Destination: </span>
-              <span class="col-6">{{ order.addresses[1].formatted_address }}</span>
+              <span class="col-4">Destination: </span>
+              <span class="col-8">{{ order.addresses[1].formatted_address }}</span>
             </div>
             <div class="row">
-              <span class="col-3">Floor: </span>
-              <span class="col-6" v-if="order.floor_to">{{ order.floor_to }}</span>
-              <span class="col-6" v-else>No stairs</span>
+              <span class="col-4">Floor: </span>
+              <span class="col-8" v-if="order.floor_to">{{ order.floor_to }}</span>
+              <span class="col-8" v-else>No stairs</span>
             </div>
             <div class="row" v-if="order.movingtype.code == 'apartment'">
-              <span class="col-3">Moving size: </span>
-              <span class="col-6">{{ order.movingsize.title }}</span>
+              <span class="col-4">Moving size: </span>
+              <span class="col-8">{{ order.movingsize.title }}</span>
             </div>
             <div class="row" v-if="order.movingtype.code == 'office'">
-              <span class="col-3">Office size: </span>
-              <span class="col-6">{{ order.officesize.title }}</span>
+              <span class="col-4">Office size: </span>
+              <span class="col-8">{{ order.officesize.title }}</span>
             </div>
             <div class="row" v-if="order.vehicle">
-              <span class="col-3">Requested vehicle: </span>
-              <span class="col-6">{{ order.vehicle.name }}</span>
+              <span class="col-4">Requested vehicle: </span>
+              <span class="col-8">{{ order.vehicle.name }}</span>
             </div>
             <div class="row" v-if="order.movernumber">
-              <span class="col-3">Number of movers: </span>
-              <span class="col-6">{{ order.movernumber.number }}</span>
+              <span class="col-4">Number of movers: </span>
+              <span class="col-8">{{ order.movernumber.number }}</span>
             </div>
             <div class="row">
-              <span class="col-3">Schedualed date: </span>
-              <span class="col-6">{{ order.pickup_date }}</span>
+              <span class="col-4">Schedualed date: </span>
+              <span class="col-8">{{ order.pickup_date }}</span>
             </div>
             <div class="row">
-              <span class="col-3">Time window: </span>
-              <span class="col-6">{{ order.appointment_time }}</span>
-            </div>
-            <div class="break"></div>
-            <div class="row">
-              <span class="col-3">Moving type: </span>
-              <span class="col-6">{{ order.movingtype.title }}</span>
+              <span class="col-4">Time window: </span>
+              <span class="col-8">{{ order.appointment_time }}</span>
             </div>
             <div class="break"></div>
             <div class="row">
-              <span class="col-3">Instructions: </span>
-              <span class="col-6">{{ order.instructions }}</span>
+              <span class="col-4">Moving type: </span>
+              <span class="col-8">{{ order.movingtype.title }}</span>
+            </div>
+            <div class="break"></div>
+            <div class="row">
+              <span class="col-4">Instructions: </span>
+              <span class="col-8">{{ order.instructions }}</span>
             </div>
           </b-card>
           <b-card class="mt-3 shadow border-0" header="Supplies">
             <div class="row">
               <span v-if="order.supplies.length > 0">
                 <div v-for="(supply, index) in order.supplies" :key="index" class="list">
-                  <span class="col-3">{{ supply.name }}:</span>
-                  <span class="col-6"> {{ supply.pivot.number }}</span>
+                  <span class="col-4">{{ supply.name }}:</span>
+                  <span class="col-8"> {{ supply.pivot.number }}</span>
                 </div>
               </span>
-              <span class="col-6" v-else>Not selected</span>
+              <span class="col-8" v-else>Not selected</span>
             </div>
           </b-card>
           <b-card v-if="order.items.length > 0" header="Items" class="shadow border-0">
             <div class="row">
               <span>
                 <div v-for="(item, index) in order.items" :key="index" class="list">
-                  <span class="col-3">{{ item.name }}:</span>
-                  <span class="col-6"> {{ item.pivot.number }}</span>
+                  <span class="col-4">{{ item.name }}:</span>
+                  <span class="col-8"> {{ item.pivot.number }}</span>
                 </div>
               </span>
             </div>
@@ -105,113 +105,113 @@
         <div class="col-md-6">
           <b-card header="Customer" class="mb-3 border-0 shadow">
             <div class="row">
-              <span class="col-3"><b>Contacts:</b></span>
+              <span class="col-4"><b>Contacts:</b></span>
             </div>
             <div class="row">
-              <span class="col-3">Name: </span>
-              <span class="col-6">{{ order.shipper_contacts.user.name }}</span>
+              <span class="col-4">Name: </span>
+              <span class="col-8">{{ order.shipper_contacts.user.name }}</span>
             </div>
             <div class="row">
-              <span class="col-3">Email: </span>
-              <span class="col-6">{{ order.shipper_contacts.user.email }}</span>
+              <span class="col-4">Email: </span>
+              <span class="col-8">{{ order.shipper_contacts.user.email }}</span>
             </div>
             <div class="row">
-              <span class="col-3">Phone: </span>
-              <span class="col-6">{{ order.shipper_contacts.user.phone }}</span>
+              <span class="col-4">Phone: </span>
+              <span class="col-8">{{ order.shipper_contacts.user.phone }}</span>
             </div>
             <div class="break"></div>
             <div class="row">
-              <span class="col-3"><b>Price:</b></span>
+              <span class="col-4"><b>Price:</b></span>
             </div>
             <div class="row">
-              <span class="col-3">Total: </span>
-              <span class="col-6">${{ order.cost }}</span>
+              <span class="col-4">Total: </span>
+              <span class="col-8">${{ order.cost }}</span>
             </div>
             <div class="row">
-              <span class="col-3">Moving cost: </span>
-              <span class="col-6">${{ order.moving_cost }}</span>
+              <span class="col-4">Moving cost: </span>
+              <span class="col-8">${{ order.moving_cost }}</span>
             </div>
             <div class="row">
-              <span class="col-3">Travel cost: </span>
-              <span class="col-6">${{ order.travel_cost }}</span>
+              <span class="col-4">Travel cost: </span>
+              <span class="col-8">${{ order.travel_cost }}</span>
             </div>
             <div class="row">
-              <span class="col-3">Supplies cost: </span>
-              <span class="col-6">${{ order.supplies_cost }}</span>
+              <span class="col-4">Supplies cost: </span>
+              <span class="col-8">${{ order.supplies_cost }}</span>
             </div>
             <div class="row" v-if="order.disposal_fee">
-              <span class="col-3">Disposal fee: </span>
-              <span class="col-6">${{ order.disposal_fee }}</span>
+              <span class="col-4">Disposal fee: </span>
+              <span class="col-8">${{ order.disposal_fee }}</span>
             </div>
             <div class="row">
-              <span class="col-3">Tax: </span>
-              <span class="col-6">${{ order.tax }}</span>
+              <span class="col-4">Tax: </span>
+              <span class="col-8">${{ order.tax }}</span>
             </div>
             <div class="row" v-if="order.tips">
-              <span class="col-3">Tips: </span>
-              <span class="col-6">${{ order.tips }}</span>
+              <span class="col-4">Tips: </span>
+              <span class="col-8">${{ order.tips }}</span>
             </div>
           </b-card>
           <b-card header="Mover" class="border-0 shadow mb-3">
             <div class="row">
-              <span class="col-3"><b>Contacts:</b></span>
+              <span class="col-4"><b>Contacts:</b></span>
             </div>
             <div class="row">
-              <span class="col-3">Name: </span>
-              <span class="col-6">{{
+              <span class="col-4">Name: </span>
+              <span class="col-8">{{
                 order.job_with_carrier.carrier_detail.company
               }}</span>
             </div>
             <div class="row">
-              <span class="col-3">Email: </span>
-              <span class="col-6">{{
+              <span class="col-4">Email: </span>
+              <span class="col-8">{{
                 order.job_with_carrier.carrier_detail.user.email
               }}</span>
             </div>
             <div class="row">
-              <span class="col-3">Phone: </span>
-              <span class="col-6">{{
+              <span class="col-4">Phone: </span>
+              <span class="col-8">{{
                 order.job_with_carrier.carrier_detail.user.phone
               }}</span>
             </div>
             <div class="break"></div>
             <div class="row">
-              <span class="col-3"><b>Cost:</b></span>
+              <span class="col-4"><b>Cost:</b></span>
             </div>
             <div class="row">
-              <span class="col-3">Total: </span>
-              <span class="col-6"
+              <span class="col-4">Total: </span>
+              <span class="col-8"
                 >${{ Math.round(order.cost - order.service_fee).toFixed(2) }}</span
               >
             </div>
             <div class="row">
-              <span class="col-3">Moving cost: </span>
-              <span class="col-6">${{ order.moving_cost }}</span>
+              <span class="col-4">Moving cost: </span>
+              <span class="col-8">${{ order.moving_cost }}</span>
             </div>
             <div class="row">
-              <span class="col-3">Travel cost: </span>
-              <span class="col-6">${{ order.travel_cost }}</span>
+              <span class="col-4">Travel cost: </span>
+              <span class="col-8">${{ order.travel_cost }}</span>
             </div>
             <div class="row">
-              <span class="col-3">Supplies cost: </span>
-              <span class="col-6">${{ order.supplies_cost }}</span>
+              <span class="col-4">Supplies cost: </span>
+              <span class="col-8">${{ order.supplies_cost }}</span>
             </div>
             <div class="row">
-              <span class="col-3">Service fee: </span>
-              <span class="col-6">-${{ order.service_fee }}</span>
+              <span class="col-4">Service fee: </span>
+              <span class="col-8">-${{ order.service_fee }}</span>
             </div>
 
             <div class="row">
-              <span class="col-3">Tax: </span>
-              <span class="col-3">${{ order.tax }}</span>
+              <span class="col-4">Tax: </span>
+              <span class="col-4">${{ order.tax }}</span>
             </div>
             <div class="row">
-              <span class="col-3">Tips: </span>
-              <span class="col-6">${{ order.tips ? order.tips : 0 }}</span>
+              <span class="col-4">Tips: </span>
+              <span class="col-8">${{ order.tips ? order.tips : 0 }}</span>
             </div>
             <div class="row" v-if="order.tips">
-              <span class="col-3">Tips: </span>
-              <span class="col-6">${{ order.tips }}</span>
+              <span class="col-4">Tips: </span>
+              <span class="col-8">${{ order.tips }}</span>
             </div>
           </b-card>
         </div>

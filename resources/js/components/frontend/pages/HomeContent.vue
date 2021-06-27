@@ -2,6 +2,7 @@
   <div class="home-content">
     <div
       class="section0"
+      id="section0"
       v-bind:style="{
         'background-image': 'url(/images/uploads/' + bgImage + '.svg)',
       }"
@@ -9,7 +10,7 @@
       <Header v-on:togal-menu="$emit('togal-menu')" />
       <div class="content">
         <div>
-          <div class="h6">Hey there,</div>
+          <h6>Hey there,</h6>
           <div class="break"></div>
           <h1 class="main-title">Let's get you moved.</h1>
           <!-- <div class="md-subheading">The way you book your moving tickets.</div> -->
@@ -77,7 +78,7 @@
         <div class="text">
           <h1>How it works</h1>
           <div class="break"></div>
-          <div><b>TingsApp works just the way ride-hailing apps work.</b></div>
+          <p><b>TingsApp works just the way ride-hailing apps work.</b></p>
           <div class="break"></div>
           <p>
             Your guaranteed price is based on the size of moving, number of movers, size
@@ -94,9 +95,7 @@
               </div>
               <div class="text">
                 <h6>Request in the app</h6>
-                <div class="details">
-                  Let us know your moving needs and get an upfront price.
-                </div>
+                <p>Let us know your moving needs and get an upfront price.</p>
               </div>
             </li>
             <hr />
@@ -106,10 +105,10 @@
               </div>
               <div class="text">
                 <h6>Get matched with movers</h6>
-                <div class="details">
+                <p>
                   Get connected with your movers in minutes. You can message them in app
                   and track your stuff as moving happens.
-                </div>
+                </p>
               </div>
               <hr />
             </li>
@@ -120,10 +119,10 @@
               </div>
               <div class="text">
                 <h6>Rate & tip</h6>
-                <div class="details">
+                <p>
                   We place your stuff right where you want them. Tell us about your
                   experience and tip your movers for a job well done in app.
-                </div>
+                </p>
               </div>
             </li>
           </ul>
@@ -141,8 +140,7 @@
             service, schedule your moving day ahead of time. Relax, we will notify you
             when its time. Or request ondemand for last minute moving.
             <br /><br />
-            <br />
-            <b-button @click="$router.push('/')">Get Quote</b-button>
+            <b-button href="#section0">Get Quote</b-button>
           </p>
         </div>
       </div>
@@ -152,10 +150,12 @@
           <div class="break"></div>
           <div>
             <div class="customer-comment">
-              "This was my first time using TingsApp, simple and impressive. The way
-              everything worked from booking to up-front pricing and professional movers I
-              would say my satisfaction level is to the roof compare to my previous moving
-              experiences and yet cheaper. Highly recommended.
+              <p>
+                "This was my first time using TingsApp, simple and impressive. The way
+                everything worked from booking to up-front pricing and professional movers
+                I would say my satisfaction level is to the roof compare to my previous
+                moving experiences and yet cheaper. Highly recommended.
+              </p>
               <div class="break"></div>
               <div class="customer"><span>Tim F. Vancouver</span></div>
             </div>
@@ -171,7 +171,9 @@
           <h2>500+</h2>
           <p>App Download In 2021</p>
           <div>
-            <b-link href="#">Download Now <b-icon icon="arrow-right"></b-icon> </b-link>
+            <b-link href="play.google.com" target="_blank"
+              >Download Now <b-icon icon="arrow-right"></b-icon>
+            </b-link>
           </div>
         </div>
         <div class="col-3">
@@ -326,18 +328,7 @@ export default {
       position: relative;
 
       .text {
-        .md-display-1 {
-          line-height: 38px;
-          max-width: 367px;
-          color: #000;
-          font-weight: 500;
-        }
-
-        .md-body-1 {
-          max-width: 380px;
-          font-size: 14px;
-          line-height: 20px;
-        }
+        max-width: 436px;
       }
 
       .steps {
@@ -373,10 +364,6 @@ export default {
                 font-weight: 600;
                 line-height: 34px;
                 font-size: 16px;
-              }
-              .details {
-                font-size: 12px;
-                color: #6c6b6b;
               }
             }
           }

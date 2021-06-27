@@ -25,9 +25,10 @@
           </div>
         </form>
         <template #footer>
-          <small @click="$router.push('/social-login')" variant="ligth"
-            >Login using a social account</small
-          >
+          <p>Login using:</p>
+          <b-button variant="outline-danger" size="sm">Gmail</b-button>
+          <b-button variant="outline-primary" size="sm">Facebook</b-button>
+          <b-button variant="outline-info" size="sm">Twitter</b-button>
         </template>
       </b-card>
     </div>

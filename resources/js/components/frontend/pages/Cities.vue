@@ -8,15 +8,15 @@
     >
       <Header v-on:togal-menu="$emit('togal-menu')" />
       <div class="content">
-        <div class="md-display-1">Cities</div>
-        <div class="md-subheading">List of cities under our services.</div>
+        <h1>Cities</h1>
+        <p>List of cities under our services.</p>
       </div>
     </div>
 
     <div class="section1">
-      <div class="wrapper">
+      <div class="my-wrapper">
         <div class="left">
-          <div class="md-display-1">Cities Under Our Service Coverage</div>
+          <h4>Cities Under Our Service Coverage</h4>
           <ul>
             <li v-for="country in countries" :key="country.id">
               <div class="content">
@@ -48,12 +48,21 @@
         </div>
         <div class="right">
           <div class="download-app">
-            <div class="md-title">Download our Application</div>
-            <div class="md-body-1">
-              By downloading our application the task will be much easier.
-            </div>
-            <div class="mt-3">
-              <b-button variant="primary" @click="open()">Download</b-button>
+            <h5>Download our Application</h5>
+            <p>By downloading our application the task will be much easier.</p>
+            <div class="text-right">
+              <b-button-group>
+                <b-button
+                  variant="success"
+                  size="sm"
+                  class="mt-2"
+                  href="https://play.google.com"
+                  >ANDROID</b-button
+                >
+                <b-button variant="dark" size="sm" class="mt-2" href="https://apple.com"
+                  >IPHONE</b-button
+                >
+              </b-button-group>
             </div>
           </div>
         </div>
@@ -126,7 +135,7 @@ export default {
     margin: auto;
     padding: 30px;
 
-    .wrapper {
+    .my-wrapper {
       display: flex;
       justify-content: space-around;
       flex-wrap: wrap;
@@ -215,7 +224,7 @@ export default {
   .section1 {
     padding: 30 !important;
 
-    .wrapper {
+    .my-wrapper {
       flex-direction: column;
       .left,
       .right {

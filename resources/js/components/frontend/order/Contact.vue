@@ -21,7 +21,6 @@
             <p class="mb-0">Code not received?</p>
             <b-link class="ml-3" @click="me = null">Resend</b-link>
           </div>
-          <p class="blockquote-footer">Test code: 0-0-0-0</p>
           <p style="color: red" v-if="invalidCode">{{ invalidCode }}</p>
           <b-spinner variant="primary" v-if="isSubmitting" />
         </b-card>

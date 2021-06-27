@@ -14,10 +14,9 @@
           v-on:change="onChange"
           v-on:complete="verify"
         />
-        <div class="caption">We texted a code to your email & phone number</div>
+        <p class="blockquote-footer">We texted a code to your email & phone number</p>
         <div class="break"></div>
 
-        <p class="md-caption">Test code: 0-0-0-0</p>
         <p style="color: red" v-if="invalidCode">{{ invalidCode }}</p>
         <b-spinner variant="primary" v-if="isSubmitting"></b-spinner>
         <template #footer>

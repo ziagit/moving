@@ -19,8 +19,8 @@
           <tr v-for="(payout, index) in payouts.data" :key="index">
             <td md-numeric>{{ payout.carrier.first_name }}</td>
             <td>{{ formatter(payout.created_at) }}</td>
-            <td>{{ formatter(payout.from) }}</td>
-            <td>{{ formatter(payout.to) }}</td>
+            <td>{{ payout.from }}</td>
+            <td>{{ payout.to }}</td>
             <td>${{ payout.amount }}</td>
           </tr>
         </tbody>
@@ -30,14 +30,16 @@
       </div>
     </b-card>
     <pagination :limit="4" :data="payouts" @pagination-change-page="get"></pagination>
+    <Toaster ref="toaster" />
   </div>
 </template>
 
 <script>
 import formatter from "../../frontend/services/dateFormatter";
 import NewPayout from "./NewPayout";
+import Toaster from "../../shared/Toaster.vue";
 export default {
-  components: { NewPayout },
+  components: { NewPayout, Toaster },
   name: "payouts",
   data: () => ({
     keywords: null,
@@ -90,7 +92,8 @@ export default {
     },
 
     refresh() {
-      this.addTogal = false;
+      this.$bvModal.hide("modal-add");
+      this.$refs.toaster.show("success", "b-toaster-top-right", "Paid successfully!");
       this.get();
     },
   },

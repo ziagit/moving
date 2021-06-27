@@ -8,12 +8,14 @@ use App\Item;
 use App\Order;
 use App\Carrier;
 use App\Job;
-use App\Notifications\JobCreated;
 use App\Address;
 use App\Contact;
+use App\Http\Services\Sms;
+use App\Mail\JobCreated;
 use App\Movernumber;
 use App\Movingsize;
 use App\Movingtype;
+use App\Notifications\JobCreated as NotificationsJobCreated;
 use App\Officesize;
 use App\Supply;
 use App\User;
@@ -21,6 +23,7 @@ use App\Vehicle;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class ShipmentController extends Controller
 {
@@ -53,10 +56,10 @@ class ShipmentController extends Controller
 
             $number_of_movers = $request->number_of_movers ?  Movernumber::where('code', $request->number_of_movers['code'])->first()->id : null;
             $vehicle = $request->vehicle ? Vehicle::where('code', $request->vehicle['code'])->first()->id : null;
-            
+
             $order = new Order();
 
-            $order->uniqid = 'O' . rand();
+            $order->uniqid = 'TO' . rand();
 
             $order->pickup_date = $request->moving_date['date'];
             $order->appointment_time = $request->moving_date['time'];
@@ -105,8 +108,9 @@ class ShipmentController extends Controller
             return response()->json($e->getMessage());
         }
     }
-    public function shipper(){
-        $shipper = Shipper::where('user_id',Auth::id())->first();
+    public function shipper()
+    {
+        $shipper = Shipper::where('user_id', Auth::id())->first();
         return $shipper->id;
     }
     public function storeAddress($request)
@@ -142,7 +146,6 @@ class ShipmentController extends Controller
     }
     public function createNewJob($order, $request)
     {
-        
         try {
             $job = new Job();
             $job->order_id = $order;
@@ -157,11 +160,16 @@ class ShipmentController extends Controller
 
     public function createNotification($job,  $order, $request)
     {
+        $user  = Carrier::with('user')->find($request->carrier['id'])->user;
         try {
-            $user  = Carrier::with('user')->find($request->carrier['id'])->user;
-            $user->notify(new JobCreated($job));
-            $admin = User::find(1);
-            $admin->notify(new JobCreated($job));
+            //email
+            Mail::to($user->email)->queue(new JobCreated($job->id));
+            //sms
+            $sms = new Sms();
+            $sms->newJob($user->phone, $job->id);
+
+            //notify
+            $user->notify(new NotificationsJobCreated($job));
             return true;
         } catch (Exception $e) {
             return response()->json($e->getMessage());

@@ -33,7 +33,7 @@ class TermsSeeder extends Seeder
                   accessing and using the Service you acknowledge that you have read,
                   understood and agree to be lawfully bound by these Terms and Conditions
                   and our
-                  <a href="">Privacy Policy</a>.
+                  <a href="/privacy-policies">Privacy Policy</a>.
                 </p>
                 <h2>The Services</h2>
                 <p>

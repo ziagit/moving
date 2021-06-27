@@ -190,7 +190,7 @@ class CarrierDetailsController extends Controller
             $insurance_papers_name = time() . '.' . $file->getClientOriginalName();
             $file->move(public_path('images/pub'), $insurance_papers_name);
         } else {
-            $logo_name = $carrier->insurance_papers;
+            $insurance_papers_name = $carrier->insurance_papers;
         }
         if ($request->hasFile('business_license')) {
             $old_image_path = public_path('images/pub/' . $carrier->business_license);
@@ -201,7 +201,7 @@ class CarrierDetailsController extends Controller
             $business_license_name = time() . '.' . $file->getClientOriginalName();
             $file->move(public_path('images/pub'), $business_license_name);
         } else {
-            $logo_name = $carrier->business_license;
+            $business_license_name = $carrier->business_license;
         }
 
         $carrier->first_name = $request->first_name;
@@ -210,18 +210,14 @@ class CarrierDetailsController extends Controller
         $carrier->employees = $request->employees;
         $carrier->vehicles = $request->vehicles;
         $carrier->hourly_rate = $request->hourly_rate;
-        $carrier->insurance_papers = $request->insurance_papers;
-        $carrier->business_license = $request->business_license;
+        $carrier->insurance_papers = $insurance_papers_name;
+        $carrier->business_license = $business_license_name;
         $carrier->website = $request->website;
         $carrier->company = $request->company;
         $carrier->detail = $request->detail;
-        $carrier->logo = $logo_name;
         $carrier->address_id = $addressId;
-        $carrier->user_id = JWTAuth::user()->id;
         $carrier->update();
-
         $this->updateContact($request);
-
         return response()->json(["message" => "Updated successfully!"], 200);
     }
     public function updateContact($request)

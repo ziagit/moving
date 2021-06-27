@@ -5,64 +5,73 @@
         <span
           >Status: <b-badge pill variant="dark">{{ order.status }}</b-badge></span
         >
-        <b-button-group>
-          <b-button
-            v-if="order.status == 'Completed'"
-            variant="primary"
-            @click="review(order.id)"
-            >Review</b-button
-          >
-          <div
-            v-if="
-              order.movingtype.code == 'appartment' || order.movingtype.code == 'office'
-            "
-          >
-            <b-spinner variant="primary" v-if="isSubmitting" />
-            <div v-else>
-              <b-button
-                :disabled="
-                  checkMovingTime(order.pickup_date, order.appointment_time) ||
-                  order.status == 'Canceled'
-                "
-                variant="success"
-                @click="edit('Edited')"
-                >Edit</b-button
-              >
-              <b-button
-                :disabled="
-                  checkMovingTime(order.pickup_date, order.appointment_time) ||
-                  order.status != 'New'
-                "
-                variant="danger"
-                @click="edit('Canceled')"
-                >Cancel</b-button
-              >
-            </div>
-          </div>
-          <div v-else>
-            <b-spinner variant="primary" v-if="isSubmitting" />
-            <div v-else>
-              <b-button
-                :disabled="
-                  checkItemTime(order.pickup_date, order.appointment_time) ||
-                  order.status == 'Canceled'
-                "
-                variant="primary"
-                @click="edit('Edited')"
-                >Edit</b-button
-              >
-              <b-button
-                :disabled="
-                  checkItemTime(order.pickup_date, order.appointment_time) ||
-                  order.status != 'New'
-                "
-                variant="danger"
-                @click="edit('Canceled')"
-                >Cancel</b-button
-              >
-            </div>
-          </div>
-        </b-button-group>
+
+        <div
+          v-if="
+            order.movingtype.code == 'appartment' || order.movingtype.code == 'office'
+          "
+        >
+          <b-spinner variant="primary" v-if="isSubmitting" />
+          <b-button-group v-else>
+            <b-button
+              :disabled="
+                checkMovingTime(order.pickup_date, order.appointment_time) ||
+                order.status == 'Canceled' ||
+                order.status == 'Completed'
+              "
+              variant="success"
+              @click="edit('Edited')"
+              >Edit</b-button
+            >
+            <b-button
+              :disabled="
+                checkMovingTime(order.pickup_date, order.appointment_time) ||
+                order.status != 'New' ||
+                order.status == 'Completed'
+              "
+              variant="danger"
+              @click="edit('Canceled')"
+              >Cancel</b-button
+            >
+            <b-button
+              v-if="order.status == 'Completed'"
+              variant="primary"
+              @click="review(order.id)"
+              >Review</b-button
+            >
+          </b-button-group>
+        </div>
+        <div v-else>
+          <b-spinner variant="primary" v-if="isSubmitting" />
+          <b-button-group v-else>
+            <b-button
+              :disabled="
+                checkItemTime(order.pickup_date, order.appointment_time) ||
+                order.status == 'Canceled' ||
+                order.status == 'Completed'
+              "
+              variant="primary"
+              @click="edit('Edited')"
+              >Edit</b-button
+            >
+            <b-button
+              :disabled="
+                checkItemTime(order.pickup_date, order.appointment_time) ||
+                order.status != 'New' ||
+                order.status == 'Completed'
+              "
+              variant="danger"
+              @click="edit('Canceled')"
+              >Cancel</b-button
+            >
+            <b-button
+              v-if="order.status == 'Completed'"
+              variant="primary"
+              @click="review(order.id)"
+              >Review</b-button
+            >
+          </b-button-group>
+        </div>
       </div>
       <div class="row">
         <div class="w-50">

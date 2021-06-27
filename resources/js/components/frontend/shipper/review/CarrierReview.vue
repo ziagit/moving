@@ -1,31 +1,41 @@
 <template>
-  <div class="container">
+  <div class="">
     <Header v-on:togal-menu="$emit('togal-menu')" :scrollValue="scrollValue" />
-    <div class="content">
-      <md-card>
-        <md-card-header>
-          <span class="md-title">Tips & Review</span>
-        </md-card-header>
-        <md-divider></md-divider>
-        <md-card-content>
-          <p>How you evalvate our performance?</p>
+    <div class="container mt-5">
+      <b-card header="Tips & Reviews" class="shadow border-0">
+        <h4>How you evalvate our performance?</h4>
+        <br />
+        <b-form-group>
           <star-rating
             v-model="form.rating"
             :star-size="30"
             @rating-selected="setRating"
           />
-          <md-switch v-model="isTips">Are you willing to give some tips?</md-switch>
-          <md-field v-if="isTips">
-            <label>Amount($)</label>
-            <md-input v-model="form.tips" :required="isTips"></md-input>
-          </md-field>
-        </md-card-content>
+        </b-form-group>
 
-        <md-card-actions>
+        <b-form-group>
+          <b-form-checkbox v-model="isTips">
+            Are you willing to give some tips?
+          </b-form-checkbox>
+        </b-form-group>
+
+        <b-form-group v-if="isTips">
+          <b-input-group prepend="$">
+            <b-form-input
+              v-model="form.tips"
+              :required="isTips"
+              placeholder="Amount"
+              type="number"
+              :min="1"
+            ></b-form-input>
+          </b-input-group>
+        </b-form-group>
+
+        <div class="text-right mt-3">
           <b-spinner variant="primary" v-if="isSubmitting" />
-          <md-button v-else @click="submit" class="md-primary">Submit</md-button>
-        </md-card-actions>
-      </md-card>
+          <b-button v-else @click="submit" variant="primary">Submit</b-button>
+        </div>
+      </b-card>
     </div>
     <Footer />
     <Toaster ref="toaster" />
@@ -94,15 +104,6 @@ export default {
 </script>
 <style scoped lang="scss">
 .container {
-  .content {
-    text-align: center;
-    height: calc(100vh - 55px);
-    padding: 30px;
-    max-width: 600px;
-    margin: auto;
-    .md-card {
-      text-align: left;
-    }
-  }
+  height: calc(100vh - 55px);
 }
 </style>

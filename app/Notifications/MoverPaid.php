@@ -11,8 +11,7 @@ use Illuminate\Notifications\Notification;
 class MoverPaid extends Notification
 {
     use Queueable;
-    public $job;
-
+    public $amount;
     /**
      * Create a new notification instance.
      *
@@ -21,7 +20,7 @@ class MoverPaid extends Notification
     public function __construct($data)
     {
         //
-        $this->job = $data;
+        $this->amount = $data;
     }
 
     /**
@@ -32,7 +31,7 @@ class MoverPaid extends Notification
      */
     public function via($notifiable)
     {
-        return ['database', 'broadcast', 'mail'];
+        return ['database', 'broadcast'];
     }
 
     /**
@@ -43,13 +42,13 @@ class MoverPaid extends Notification
      */
     public function toMail($notifiable)
     {
-        $url = url('/carrier/history/details/'.$this->job->jobId);
+        $url = url('/carrier/history/details');
         return (new MailMessage)
         ->subject('Payment done')
-        ->greeting('Dear Partner')
-        ->line('TingsApp paied you')
-        ->line('Thanks for working with us!')
-        ->action('Check earning history', $url);
+        ->greeting('Dear Partner,')
+        ->line('You are paid by TingsApp due to completion of jobs ')
+        ->line('Amount: '.$this->amount)
+        ->line('Thanks for working with us!');
     }
     /**
      * Get the broadcastable representation of the notification.

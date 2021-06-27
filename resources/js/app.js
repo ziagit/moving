@@ -26,11 +26,17 @@ import "vue-material/dist/theme/default.css"; */
 require("./bootstrap");
 require("./store/subscriber");
 
-//Vue.use(VueMaterial);
-/* 
-import Vue2TouchEvents from 'vue2-touch-events'
- 
-Vue.use(Vue2TouchEvents) */
+/* const HelloJs = require('hellojs/dist/hello.all.min.js');
+const VueHello = require('vue-hellojs');
+
+HelloJs.init({
+  google: '1044730439558-frnjivpacf33ejrqaa9suqlr909tjbeg.apps.googleusercontent.com',
+  facebook: '952682128637553',
+  twitter: '8EatGLGykHZX0W1wyRcTWHfAQ'
+}, {
+  redirect_uri: 'http://localhost:3000/api/moving/auth/google/callback'
+});
+Vue.use(VueHello, HelloJs); */
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue

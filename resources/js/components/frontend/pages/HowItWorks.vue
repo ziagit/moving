@@ -22,13 +22,16 @@
             <h5>Get a Free Qoute</h5>
             <form>
               <b-form-group>
-                <b-form-input type="text" v-model="form.city" required></b-form-input>
+                <b-form-input
+                  type="text"
+                  v-model="form.city"
+                  required
+                  placeholder="Postalcode"
+                ></b-form-input>
               </b-form-group>
 
               <div class="text-right mt-2">
-                <b-button variant="primany" @click="getQuot()" class="tb-30"
-                  >Start</b-button
-                >
+                <b-button variant="primary" @click="$router.push('/')">Start</b-button>
               </div>
             </form>
           </div>
@@ -37,42 +40,51 @@
 
             <div>
               <b-link to="/help">Answers</b-link>
-              <b-icon variant="primary" carchec></b-icon>
+              <b-icon icon="arrow-right" variant="primary"></b-icon>
             </div>
           </div>
           <div class="terms">
             <h5>Terms and Conditions</h5>
-            <div contacts>Read our terms and conditions</div>
+            <p class="mb-0">Read our terms and conditions</p>
             <div>
               <b-link to="/terms-and-conditions">More</b-link>
-              <b-icon variant="primary" carchec></b-icon>
+              <b-icon icon="arrow-right" variant="primary"></b-icon>
             </div>
           </div>
           <div class="privacy">
             <h5>Privacy Policies</h5>
-            <p>Do you want to know about our privacies?</p>
+            <p class="mb-0">Do you want to know about our privacies?</p>
             <div>
               <b-link to="/privacy-policies">More</b-link>
-              <b-icon variant="primary" carchec></b-icon>
+              <b-icon icon="arrow-right" variant="primary"></b-icon>
             </div>
           </div>
           <div class="contact">
             <h5>Contact us</h5>
-            <div contacts>If you want to know more about us, drop us an email.</div>
+            <p class="mb-0">If you want to know more about us, drop us an email.</p>
             <div>
-              <b-link to="">Contact us</b-link>
-              <b-icon variant="primary" carchec></b-icon>
+              <b-link to="/contact">Contact us</b-link>
+              <b-icon icon="arrow-right" variant="primary"></b-icon>
             </div>
           </div>
           <div class="download-app">
-            <h5>Download our Application</h5>
-            <div m-boddt>
+            <h5>Download our Applications</h5>
+            <p class="mb-0">
               By dowcontactsg our application the task will be much easier.
-            </div>
+            </p>
             <div class="text-right mt-2">
-              <b-button variant="primary" size="sm" to="https://play.google.com"
-                >Download</b-button
-              >
+              <b-button-group>
+                <b-button
+                  variant="success"
+                  size="sm"
+                  class="mt-2"
+                  href="https://play.google.com"
+                  >ANDROID</b-button
+                >
+                <b-button variant="dark" size="sm" class="mt-2" href="https://apple.com"
+                  >IPHONE</b-button
+                >
+              </b-button-group>
             </div>
           </div>
         </div>

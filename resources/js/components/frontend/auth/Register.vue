@@ -127,21 +127,22 @@ export default {
               this.$router.push("verify");
             }
           })
-          .catch((error) => {
+          .catch((err) => {
+            console.log(err.response.data);
             this.isSubmitting = false;
-            if (error.response.status === 409) {
+            if (err.response.status === 409) {
               this.$refs.toaster.show(
                 "danger",
                 "b-toaster-top-center",
-                "Faild",
-                error.response.data.error
+                "Conflict",
+                err.response.data.error.email[0]
               );
             } else {
               this.$refs.toaster.show(
                 "danger",
                 "b-toaster-top-center",
                 "Faild",
-                error.response.data.error
+                err.response.data.error
               );
             }
           });

@@ -29,10 +29,12 @@
     },
     "dependencies": {
         "bootstrap-vue": "^2.21.2",
+        "hellojs": "^1.19.4",
         "jspdf": "^2.3.1",
         "laravel-vue-pagination": "^2.3.1",
         "vue-date-fns": "^2.0.1",
         "vue-google-charts": "^0.3.3",
+        "vue-hellojs": "0.0.4",
         "vue-material": "^1.0.0-beta-15",
         "vue-phone-number-input": "^1.1.10",
         "vue-radial-progress": "^0.3.2",

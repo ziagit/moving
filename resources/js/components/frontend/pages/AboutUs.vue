@@ -7,9 +7,9 @@
       <Header v-on:togal-menu="$emit('togal-menu')" />
       <div class="content">
         <h1>TingsApp</h1>
-        <div>
+        <p>
           Everything we trying to do is to solve customer problems through technology.
-        </div>
+        </p>
       </div>
     </div>
 
@@ -32,57 +32,62 @@
                 ></b-form-input>
               </b-form-group>
               <div class="text-right mt-2">
-                <b-button variant="primary" size="sm" @click="getQuot()">Start</b-button>
+                <b-button variant="primary" size="sm" @click="$router.push('/')"
+                  >Start</b-button
+                >
               </div>
             </form>
           </div>
           <div class="faq">
             <h5>Help Center</h5>
-            <div class="md-body-1">Access to the most asked questions</div>
+            <p class="mb-0">Access to the most asked questions</p>
             <div>
-              <b-link href="/help">Answers</b-link>
-              <b-icon icon="arrow-right"></b-icon>
+              <b-link @click="$router.push('/help')">Answers</b-link>
+              <b-icon icon="arrow-right" variant="primary"></b-icon>
             </div>
           </div>
           <div class="terms">
             <h5>Terms and Conditions</h5>
-            <div class="md-body-1">Read our terms and conditions</div>
+            <p class="mb-0">Read our terms and conditions</p>
             <div>
-              <b-link href="/terms-and-conditions">More</b-link>
-              <b-icon icon="arrow-right"></b-icon>
+              <b-link @click="$router.push('/terms-and-conditions')">More</b-link>
+              <b-icon icon="arrow-right" variant="primary"></b-icon>
             </div>
           </div>
           <div class="privacy">
             <h5>Privacy Policies</h5>
-            <div class="md-body-1">Do you want to know about our privacies?</div>
+            <p class="mb-0">Do you want to know about our privacies?</p>
             <div>
-              <b-link href="/privacy-policies">More</b-link>
-              <b-icon icon="arrow-right"></b-icon>
+              <b-link @click="$router.push('/privacy-policies')">More</b-link>
+              <b-icon icon="arrow-right" variant="primary"></b-icon>
             </div>
           </div>
           <div class="contact">
             <h5>Contact us</h5>
-            <div class="md-body-1">
-              If you want to know more about us, drop us an email.
-            </div>
+            <p class="mb-0">If you want to know more about us, drop us an email.</p>
             <div>
-              <b-link href="/contact">Contact us</b-link>
-              <b-icon icon="arrow-right"></b-icon>
+              <b-link @click="$router.push('/contact')">Contact us</b-link>
+              <b-icon icon="arrow-right" variant="primary"></b-icon>
             </div>
           </div>
           <div class="download-app">
-            <h5>Download our Application</h5>
-            <div class="md-body-1">
+            <h5>Download our Applications</h5>
+            <p class="mb-0">
               By downloading our application the task will be much easier.
-            </div>
+            </p>
             <div class="text-right">
-              <b-button
-                variant="primary"
-                size="sm"
-                class="mt-2"
-                href="https://play.google.com"
-                >Download</b-button
-              >
+              <b-button-group>
+                <b-button
+                  variant="success"
+                  size="sm"
+                  class="mt-2"
+                  href="https://play.google.com"
+                  >ANDROID</b-button
+                >
+                <b-button variant="dark" size="sm" class="mt-2" href="https://apple.com"
+                  >IPHONE</b-button
+                >
+              </b-button-group>
             </div>
           </div>
         </div>
@@ -115,10 +120,6 @@ export default {
         this.body = res.data.body;
       });
     },
-    getQuot() {
-      localData.save("type", this.type);
-      this.$router.push("/order/from");
-    },
   },
   created() {
     this.get();
@@ -149,7 +150,6 @@ export default {
         font-weight: 600;
         color: #000;
       }
-
       .md-subheading {
         color: #000;
         max-width: 70%;

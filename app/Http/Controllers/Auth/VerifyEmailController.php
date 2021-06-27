@@ -67,11 +67,10 @@ class VerifyEmailController extends Controller
             'password' => 'required|min:3',
             'password_confirmation' => 'required|same:password',
         ]);
-
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 400);
+        }
         if ($data->type === "mover") {
-            if ($validator->fails()) {
-                return response()->json(['error' => $validator->errors()], 400);
-            }
             try {
                 $vcode = rand(1000, 9999);
                 $user = User::create(array(
@@ -82,7 +81,6 @@ class VerifyEmailController extends Controller
                 ));
                 $role = Role::where('name', '=', $data->type)->first();
                 $user->roles()->attach($role);
-                //$user->notify(new VerifyEmail($vcode));
                 return response()->json($user->id);
             } catch (Exception $e) {
                 return $e->getCode();

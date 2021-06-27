@@ -25,39 +25,30 @@ export default {
     actions: {
         async signIn({ dispatch }, credentials) {
             let response = await axios.post("auth/signin", credentials)
-            console.log("response in login auth.js",response)
             return dispatch('attempt', response.data)
         },
-        async signInGoogl({ dispatch }) {
-            let response = await axios.get("auth/google")
+        async socialLogin({ dispatch }, provider) {
+            let response = await axios.get("auth/"+provider)
             return response;
-            //return dispatch('attempt', response.data)
         },
-        async signInGooglCallback({ dispatch }, payload) {
-            let response = await axios.get("auth/google/callback", {
-                params: payload
-            })
-            return response;
-            //return dispatch('attempt', response.data)
+        async socialCallback({ dispatch }, token) {
+            return dispatch('attempt', token)
         },
-
         async signUp({ dispatch }, credentials) {
-            let response = await axios.post("auth/signup/", credentials)
+            let response = await axios.post("auth/signup", credentials)
             return dispatch('attempt', response.data)
         },
-
         async attempt({ commit, state }, token) {
             if (token) {
                 commit('SET_TOKEN', token)
             }
-
             if (!state.token) {
                 return
             }
-
             //header will be set by subsciber here
+
             try {
-                let response = await axios.get('auth/me')
+                let response = await axios.get('auth/me');
                 commit('SET_USER', response.data)
             } catch (e) {
                 commit('SET_TOKEN', null)
@@ -68,8 +59,8 @@ export default {
             return axios.post('auth/signout').then(() => {
                 commit('SET_TOKEN', null)
                 commit('SET_USER', null)
-                localStorage.removeItem('token');
                 sessionStorage.removeItem('me');
+                localStorage.removeItem('token');
             })
         }
     },
