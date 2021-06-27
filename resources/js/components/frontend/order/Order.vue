@@ -38,7 +38,7 @@
           />
           <ul class="selectedData" id="ul_o" v-if="selectedData">
             <li v-if="selectedData.from">
-              <div class="row">
+              <div class="row" style="width: 95%">
                 <b-icon icon="geo" font-scale="1.5" variant="warning"></b-icon>
                 <div class="col">
                   <span>Pickup</span><br />
@@ -47,7 +47,9 @@
                     :initialData="selectedData.from.formatted_address"
                     v-if="originTogal"
                   />
-                  <span v-else> {{ selectedData.from.formatted_address }}</span>
+                  <span v-else class="lst">
+                    {{ selectedData.from.formatted_address }}</span
+                  >
                 </div>
               </div>
               <b-icon
@@ -59,7 +61,7 @@
             </li>
 
             <li v-if="selectedData.to">
-              <div class="row">
+              <div class="row" style="width: 95%">
                 <b-icon icon="geo" font-scale="1.5" variant="warning"></b-icon>
                 <div class="col">
                   <span>Destination</span><br />
@@ -68,7 +70,7 @@
                     :initialData="selectedData.to.formatted_address"
                     v-if="destinationTogal"
                   />
-                  <span v-else> {{ selectedData.to.formatted_address }}</span>
+                  <span v-else class="lst"> {{ selectedData.to.formatted_address }}</span>
                 </div>
               </div>
 
@@ -84,7 +86,7 @@
                 <b-icon icon="filter" font-scale="1.5" variant="warning"></b-icon>
                 <div class="col">
                   <span>Moving type:</span><br />
-                  <span> {{ selectedData.movingType.title }}</span>
+                  <span class="lst"> {{ selectedData.movingType.title }}</span>
                 </div>
               </div>
 
@@ -100,7 +102,7 @@
                 <b-icon icon="aspect-ratio" font-scale="1.5" variant="warning"></b-icon>
                 <div class="col">
                   <span>Moving size:</span><br />
-                  <span> {{ selectedData.movingSize.title }}</span>
+                  <span class="lst"> {{ selectedData.movingSize.title }}</span>
                 </div>
               </div>
 
@@ -116,11 +118,7 @@
                 <b-icon icon="card-list" font-scale="1.5" variant="warning"></b-icon>
                 <div class="col">
                   <span>Items:</span><br />
-                  <span
-                    class="md-body-1"
-                    v-for="item in selectedData.items"
-                    :key="item.id"
-                  >
+                  <span class="lst" v-for="item in selectedData.items" :key="item.id">
                     {{ item.name }}: {{ item.number }},
                   </span>
                 </div>
@@ -142,7 +140,9 @@
                 ></b-icon>
                 <div class="col">
                   <span>Movers:</span><br />
-                  <span> {{ selectedData.numberOfMovers.number }} movers</span>
+                  <span class="lst">
+                    {{ selectedData.numberOfMovers.number }} movers</span
+                  >
                 </div>
               </div>
               <b-icon
@@ -157,7 +157,7 @@
                 <b-icon icon="truck-flatbed" font-scale="1.5" variant="warning"></b-icon>
                 <div class="col">
                   <span>Vehicle:</span><br />
-                  <span> {{ selectedData.vehicle.name }}</span>
+                  <span class="lst"> {{ selectedData.vehicle.name }}</span>
                 </div>
               </div>
               <b-icon
@@ -176,7 +176,7 @@
                 ></b-icon>
                 <div class="col">
                   <span>Pickup date & time:</span><br />
-                  <span>
+                  <span class="lst">
                     {{
                       selectedData.date.date.year +
                       "-" +
@@ -212,13 +212,13 @@
                 ></b-icon>
                 <div class="col">
                   <span>Floors:</span><br />
-                  <span
+                  <span class="lst"
                     >At pickup:
                     {{
                       selectedData.floors.pickup ? selectedData.floors.pickup : "None"
                     }},
                   </span>
-                  <span
+                  <span class="lst"
                     >At destination:
                     {{
                       selectedData.floors.destination
@@ -241,7 +241,7 @@
                 <div class="col">
                   <span>Supplies:</span><br />
                   <span
-                    class="md-body-1"
+                    class="lst"
                     v-for="supply in selectedData.supplies"
                     :key="supply.id"
                   >
@@ -261,7 +261,7 @@
             <hr v-if="togal()" />
             <li v-if="togal()">
               <div class="footer">
-                <span class="md-title">Price: ${{ selectedData.carrier.price }}</span>
+                <h5>Price: ${{ selectedData.carrier.price }}</h5>
               </div>
             </li>
           </ul>
@@ -419,10 +419,12 @@ export default {
             align-items: center;
             .col {
               padding-left: 10px;
-              padding-bottom: 10px;
               :first-child {
                 color: #ffa500;
                 font-size: 12px;
+              }
+              .lst {
+                font-size: 14px;
               }
             }
           }

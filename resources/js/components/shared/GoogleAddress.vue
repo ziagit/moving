@@ -1,11 +1,12 @@
 <template>
-  <div class="container">
+  <div class="w-100">
     <md-dialog-alert
       :md-active.sync="popupTogal"
       md-title="Invalid Address"
       :md-content="popupData"
     />
     <input
+      class="w-100"
       v-model="list.formatted_address"
       required
       id="autocomplete"
