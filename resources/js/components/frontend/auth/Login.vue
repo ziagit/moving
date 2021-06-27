@@ -26,9 +26,15 @@
         </form>
         <template #footer>
           <p>Login using:</p>
-          <b-button variant="outline-danger" size="sm">Gmail</b-button>
-          <b-button variant="outline-primary" size="sm">Facebook</b-button>
-          <b-button variant="outline-info" size="sm">Twitter</b-button>
+          <b-button variant="outline-danger" size="sm" @click="login('google')"
+            >Gmail</b-button
+          >
+          <b-button variant="outline-primary" size="sm" @click="login('facebook')"
+            >Facebook</b-button
+          >
+          <b-button variant="outline-info" size="sm" @click="login('twitter')"
+            >Twitter</b-button
+          >
         </template>
       </b-card>
     </div>
@@ -58,6 +64,7 @@ export default {
   methods: {
     ...mapActions({
       signIn: "auth/signIn",
+      socialLogin: "auth/socialLogin",
     }),
     submit() {
       if (!this.authenticated) {
@@ -84,6 +91,16 @@ export default {
             );
           });
       }
+    },
+
+    login(provider) {
+      this.socialLogin(provider)
+        .then((res) => {
+          if (res.data) {
+            window.location.href = res.data.url;
+          }
+        })
+        .catch((err) => console.log(err));
     },
   },
 
