@@ -22,7 +22,7 @@ class FacebookController extends Controller
         if(!$user->token){
             dd('Failde');
         }
-        $appUser = User::whereEmail($user->email)->first();
+        $appUser = User::whereEmail($user->email)->first(); 
         if(!$appUser){
             $appUser = new User();
             $appUser->name = $user->name;

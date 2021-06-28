@@ -47,7 +47,12 @@ class OrderRefunded extends Notification
                     ->action('Notification Action', url('/'))
                     ->line('Thank you for using our application!');
     }
-
+    public function toDatabase($notifiable)
+    {
+        return [
+            'amount' => $this->amount
+        ];
+    }
     /**
      * Get the array representation of the notification.
      *

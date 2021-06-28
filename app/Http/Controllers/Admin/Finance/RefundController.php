@@ -71,7 +71,9 @@ class RefundController extends Controller
         $user = User::find($shipper->user_id);
         try {
             //email
-            Mail::to($user->email)->queue(new Refunded($amount));
+            if($user->email){
+                Mail::to($user->email)->queue(new Refunded($amount));
+            }
             //sms
             $sms = new Sms();
             $sms->refunded($user->phone, $amount);

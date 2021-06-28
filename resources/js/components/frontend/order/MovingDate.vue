@@ -1,6 +1,6 @@
 <template>
   <div class="origin">
-    <span class="md-display-1">When should be picked up?</span>
+    <h3>When should be picked up?</h3>
     <div class="break"></div>
     <div class="break"></div>
     <form @submit.prevent="next()">

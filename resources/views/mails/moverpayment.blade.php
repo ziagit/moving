@@ -60,13 +60,14 @@
        </div>
        <div class="content">
            <p>Dear partner,</p>
-           <p>Your are paid by TingsApp due to completion of {{$order}} Order </p>
+           <p>Your are paid by TingsApp due to completion of Jobs </p>
            <p>Amount: ${{amount}}</p>
-           <p>Do you want to see your order?  </p>
+           <p>Do you want to see your dashboard?  </p>
        </div><br><br>
         <div class="action">
-            <a class="btn btn-primary" href="http://localhost:8000/carrier/history/details">My Dashboard (local)</a>
-           <a class="btn btn-primary" href="https://tingsapp.com/carrier/history/details">My Dashboard</a>
+            <a class="btn btn-primary" href="http://localhost:8000/carrier">My Dashboard (local)</a>
+            <br>
+           <a class="btn btn-primary" href="https://tingsapp.com/carrier">My Dashboard</a>
         </div>
 
         <br><br>

@@ -67,9 +67,9 @@ export default {
   },
 };
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .container {
-  height: calc(100vh - 162px);
+  min-height: calc(100vh - 162px);
   .item {
     cursor: pointer;
     font-size: 12px;

@@ -50,6 +50,12 @@ class OrderUpdated extends Notification
         ->line('This moving is being '.$this->order->status)
         ->action('View more details', $url);
     }
+    public function toDatabase($notifiable)
+    {
+        return [
+            'order' => $this->order->id
+        ];
+    }
     /**
      * Get the broadcastable representation of the notification.
      *

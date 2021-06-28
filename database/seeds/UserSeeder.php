@@ -33,7 +33,7 @@ class UserSeeder extends Seeder
             ],
             [
                 'name' => 'Mover A',
-                'email' => 'mover@gmail.com',
+                'email' => 'tingsapp4@gmail.com',
                 'phone' => '+12504000000',
                 'phone_verified_at' => $today,
                 'password' => Hash::make('123')

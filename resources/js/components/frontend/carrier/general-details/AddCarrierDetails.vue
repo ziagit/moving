@@ -261,41 +261,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.md-card {
-  margin-bottom: 30px;
-  text-align: left;
-  .md-card-content {
-    padding: 20px;
-    .row {
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      .md-field {
-        flex: 25%;
-      }
-    }
-  }
-  .md-card-actions {
-    display: flex;
-    justify-content: flex-start;
-  }
-
-  .add-btn {
-    position: absolute;
-    top: 0;
-    right: 0;
-  }
-}
-.company {
-  .row {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-
-    .md-field {
-      flex: 32%;
-    }
-  }
-}
-</style>
+<style lang="scss" scoped></style>

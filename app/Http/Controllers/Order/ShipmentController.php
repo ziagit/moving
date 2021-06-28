@@ -28,18 +28,14 @@ class ShipmentController extends Controller
 {
     public function store(Request $request)
     {
-        if($request->editable_id){
+        if ($request->editable_id) {
             $editable = new EditOrder();
             return $editable->update($request);
         }
-        try {
-            $order = $this->createOrder($request);
-            $job = $this->createNewJob($order->id, $request);
-            $this->createNotification($job,  $order, $request);
-            return response()->json($order);
-        } catch (Exception $e) {
-            return response()->json($e->getMessage());
-        }
+        $order = $this->createOrder($request);
+        $job = $this->createNewJob($order->id, $request);
+        $this->createNotification($job,  $order, $request);
+        return response()->json($order);
     }
     public function createOrder($request)
     {
@@ -170,7 +166,6 @@ class ShipmentController extends Controller
             //sms
             $sms = new Sms();
             $sms->newJob($user->phone, $job->id);
-
             //notify
             $user->notify(new NotificationsJobCreated($job));
             return true;

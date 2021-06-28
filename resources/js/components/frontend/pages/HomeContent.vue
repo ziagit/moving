@@ -225,7 +225,6 @@ export default {
 
 <style lang="scss" scoped>
 .home-content {
-  background: #fff;
   .section0 {
     text-align: left;
     background-repeat: no-repeat;
@@ -249,7 +248,6 @@ export default {
         color: #848484;
         font-size: 18px;
       }
-
       .actions {
         width: 100%;
       }
@@ -258,7 +256,6 @@ export default {
 
   .bottom-container {
     background: #fff;
-    max-width: 1200px;
     margin: auto;
     padding-bottom: 126px;
 

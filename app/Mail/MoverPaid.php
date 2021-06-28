@@ -30,7 +30,6 @@ class MoverPaid extends Mailable
     {
         return $this->from('support@tingsapp.com')
         ->subject('Payment Proceed')
-        ->with(['order'=>$this->earning['order_id']])
         ->with(['amount'=>$this->earning['carrier_earning']])
         ->view('mails.moverpayment');
     }

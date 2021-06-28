@@ -48,8 +48,4 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
-.container {
-  min-height: calc(100vh - 50px);
-}
-</style>
+<style scoped lang="scss"></style>

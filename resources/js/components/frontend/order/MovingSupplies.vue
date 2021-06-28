@@ -1,7 +1,7 @@
 <template>
   <div class="origin">
-    <span class="md-display-1"
-      >Do you need moving supplies?
+    <div class="d-flex justify-content-center text-center">
+      <h3>Do you need moving supplies?</h3>
       <b-button id="popover-target-1" variant="ligth">
         <b-icon icon="info-circle-fill" aria-hidden="true"></b-icon>
       </b-button>
@@ -9,7 +9,7 @@
         <template #title>Price breakdown</template>
         <SuppliesInfo />
       </b-popover>
-    </span>
+    </div>
     <div class="break"></div>
     <div class="break"></div>
     <form @submit.prevent="next()">

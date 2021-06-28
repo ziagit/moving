@@ -64,6 +64,7 @@
        </div><br><br>
         <div class="action">
             <a class="btn btn-primary" href="http://localhost:8000/carrier/history/details/{{$job}}">My Dashboard (local)</a>
+            <br>
            <a class="btn btn-primary" href="https://tingsapp.com/carrier/history/details/{{$job}}">My Dashboard</a>
         </div>
 

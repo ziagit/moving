@@ -9,24 +9,16 @@ use App\Term;
 use App\CarrierFaq;
 use App\CarrierPage;
 use App\Legal;
+use App\Mail\Contactus;
 use App\ShipperFaq;
 use App\ShipperPage;
 use Illuminate\Http\Request;
-use Mail;
+use Illuminate\Support\Facades\Mail;
 
 class PageController extends Controller
 {
     public function aboutForm(Request $request){
-        $from_email = $request->email;
-        $to_name = $request->name;
-        $to_email = "eadings20@gmail.com";
-        $data = array("name"=>"Tingsapp", "body" => $request->message);
-        Mail::send("mails.email", $data, function($message) use ($to_name, $to_email, $from_email) {
-            $message->to($to_email, $to_name)
-            ->subject("TignsApp Customers");
-            $message->from('eadinds20@gmail.com',"TingsApp");
-        });
-
+        Mail::to("support@tingsapp.com")->queue(new Contactus($request->name, $request->email, $request->message));
         return response()->json(['message'=>'Thnaks form contacting us!'],200); 
     }
     public function terms(){

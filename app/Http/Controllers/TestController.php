@@ -26,16 +26,6 @@ class TestController extends Controller
                 return response()->json($res->errorMessage,400);
             }
             return $res->status;
-         $token = Str::random(10);
-        //send email
-        $email= "zia.googl@gmail.com";
-        Mail::send('mails.resetpassword', ['token'=> $token], function(Message $message) use($email) {
-            $message->to($email);
-            $message->subject('Reset your password');
-        });
-        return response([
-            'message'=>'Check your email'
-        ]);
     }
 
     public function testEvent()

@@ -2,37 +2,22 @@
 
 namespace App\Http\Controllers\Carrier;
 
-use App\Carrier;
 use App\Http\Controllers\Controller;
 use App\Job;
-use App\Jobstatus;
-use App\Notifications\JobUpdated;
-use App\Notifications\UserJobUpdated;
 use App\User;
-use App\CarrierEarning;
 use App\Constant;
 use App\Earning;
 use App\Http\Services\Sms;
-use App\Item;
 use App\Mail\CustomerPaid;
 use App\Mail\OrderUpdated;
-use App\Movingsize;
 use App\Notifications\CustomerPaid as NotificationsCustomerPaid;
 use App\Notifications\OrderUpdated as NotificationsOrderUpdated;
-use App\Officesize;
 use App\Order;
-use App\Rate;
-use App\Shipper;
-use App\Supply;
-use App\Vehicle;
-use Carbon\Carbon;
 use Cartalyst\Stripe\Laravel\Facades\Stripe;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Notification;
 
 class JobController extends Controller
 {
@@ -119,16 +104,17 @@ class JobController extends Controller
     }
     public function createNotification($request, $order)
     {
-        $job = Job::where('order_id', $order->id)->first();
         try {
-            $email = $request->order_detail['shipper_contacts']['user']['email'];
-            $user = User::where('email', $email)->first();
+            $userId = $request->order_detail['shipper_contacts']['user']['id'];
+            $user = User::find($userId);
             if ($user) {
                 //email
-                Mail::to($user->email)->queue(new OrderUpdated($order));
+                if($user->email){
+                    Mail::to($user->email)->queue(new OrderUpdated($order->id));
+                }
                 //sms
                 $sms = new Sms();
-                $sms->updateJob($user->phone, $order);
+                $sms->updateOrder($user->phone, $order);
                 //notify
                 $user->notify(new NotificationsOrderUpdated($order));
             }
@@ -218,7 +204,7 @@ class JobController extends Controller
                 Mail::to($user->email)->queue(new CustomerPaid($request->order_detail));
                 //sms
                 $sms = new Sms();
-                $sms->customerPaid($user->phone, $request->order_detail['uniqid']);
+                $sms->customerPaid($user->phone, $request->order_detail);
                 //notify
                 $user->notify(new NotificationsCustomerPaid($request->order_detail['uniqid']));
             }

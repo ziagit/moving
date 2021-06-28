@@ -63,8 +63,9 @@
            <p>Your order is been {{status}}.</p>
        </div><br><br>
         <div class="action">
-            <a class="btn btn-primary" href="http://localhost:8000/carrier/history/details/{{$order}}">My Dashboard (local)</a>
-           <a class="btn btn-primary" href="https://tingsapp.com/carrier/history/details/{{$order}}">My Dashboard</a>
+            <a class="btn btn-primary" href="http://localhost:8000/shipper/orders/details/{{$order}}">My Dashboard (local)</a>
+            <br>
+           <a class="btn btn-primary" href="https://tingsapp.com/shipper/orders/details/{{$order}}">My Dashboard</a>
         </div>
 
         <br><br>

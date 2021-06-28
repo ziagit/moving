@@ -1,5 +1,5 @@
 <template>
-  <div class="cities">
+  <div class="contact">
     <div class="section0">
       <Header v-on:togal-menu="$emit('togal-menu')" />
       <iframe
@@ -90,11 +90,10 @@ export default {
         .then((res) => {
           this.$refs.toaster.show(
             "success",
-            "b-toaster-top-center",
-            "Success",
-            "Thanks for contacting us!"
+            "b-toaster-top-right",
+            "Thanks,",
+            "For contacting us, we will reply within a day!"
           );
-
           this.form.name = null;
           this.form.email = null;
           this.form.message = null;
@@ -115,8 +114,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.cities {
-  background: #fff;
+.contact {
   iframe {
     left: 0;
     top: 0;
@@ -132,22 +130,13 @@ export default {
       display: flex;
       justify-content: space-between;
       flex-wrap: wrap;
-
       .left {
         flex: 60%;
         padding: 60px;
-
-        .md-display-1 {
-          font-weight: 500;
-          line-height: 70px;
-          color: #000;
-        }
       }
-
       .right {
         flex: 30%;
-        padding: 0px 60px;
-
+        padding: 60px;
         .content {
           text-align: center;
           img {
@@ -160,20 +149,5 @@ export default {
 }
 
 @media only screen and (max-width: 600px) {
-  .md-card {
-    flex-direction: column;
-    margin-bottom: 30px;
-    margin: auto;
-    padding: 0 !important;
-
-    .left {
-      text-align: center;
-      align-items: center;
-    }
-
-    .md-display-1 {
-      font-size: 30px;
-    }
-  }
 }
 </style>

@@ -2,14 +2,12 @@
 
 namespace App\Http\Services;
 
-use App\Http\Controllers\Controller;
 use App\Shipper;
 use App\Item;
 use App\Order;
 use App\Carrier;
 use App\Job;
 use App\Address;
-use App\Contact;
 use App\Http\Services\Sms;
 use App\Mail\JobCanceled;
 use App\Mail\JobChanged;
@@ -18,10 +16,10 @@ use App\Movernumber;
 use App\Movingsize;
 use App\Movingtype;
 use App\Notifications\JobCanceled as NotificationsJobCanceled;
+use App\Notifications\JobChanged as NotificationsJobChanged;
 use App\Notifications\JobCreated as NotificationsJobCreated;
 use App\Officesize;
 use App\Supply;
-use App\User;
 use App\Vehicle;
 use Exception;
 use Illuminate\Http\Request;
@@ -32,7 +30,6 @@ class EditOrder
 {
     public function update(Request $request)
     {
-        return "ok.";
         try {
             $order = $this->updateOrder($request);
             $job = $this->updateJob($order->id, $request);
@@ -47,6 +44,11 @@ class EditOrder
         try {
             $floor_from = 0;
             $floor_to = 0;
+            $order = Order::find($request->editable_id);
+            $order->addresses()->detach();
+            $order->supplies()->detach();
+            $order->items()->detach();
+
             $addressIds = $this->storeAddress($request);
             $shipperId = $this->shipper();
             if ($request->floors) {
@@ -60,13 +62,7 @@ class EditOrder
 
             $number_of_movers = $request->number_of_movers ?  Movernumber::where('code', $request->number_of_movers['code'])->first()->id : null;
             $vehicle = $request->vehicle ? Vehicle::where('code', $request->vehicle['code'])->first()->id : null;
-
-            $order = Order::find($request->editable_id);
-            $order->addresses()->detach();
-            $order->supplies()->detach();
-            $order->items()->detach();
-
-            $order->uniqid = 'TO' . rand();
+        
             $order->pickup_date = $request->moving_date['date'];
             $order->appointment_time = $request->moving_date['time'];
             $order->instructions = $request->instructions;
@@ -89,6 +85,7 @@ class EditOrder
             $order->distance = $request->distance;
             $order->duration = $request->duration;
             $order->tax = $request->carrier['tax'];
+            $order->status = 'Updated';
             $order->shipper_id = $shipperId;
             $order->update();
 
@@ -169,48 +166,30 @@ class EditOrder
 
     public function createNotification($job,  $order, $request)
     {
-        $user  = Carrier::with('user')->find($request->carrier['id'])->user;
+        $newUser  = Carrier::with('user')->find($request->carrier['id'])->user;
         $oldUser  = Carrier::with('user')->find($request->old_carrier)->user;
         $sms = new Sms();
 
         try {
-            //email
-            if($request->carrier['id'] == $request->old_carrier){
-                Mail::to($user->email)->queue(new JobChanged($job->id));
+            if($newUser->id == $oldUser->id){
+                //notify the mover for job update
+                Mail::to($oldUser->email)->queue(new JobChanged($order->uniqid));
                 $sms->jobChanged($oldUser->phone, $job->id);
+                $oldUser->notify(new NotificationsJobChanged($job));
             }else{
+                //notify the old mover that job is canceled
                 Mail::to($oldUser->email)->queue(new JobCanceled($job->id));
-                $sms->jobCanceled($oldUser->phone, $job->id);
-                $user->notify(new NotificationsJobCanceled($job));
-
-                Mail::to($user->email)->queue(new JobCreated($job->id));
-                $sms->newJob($user->phone, $job->id);
-                $user->notify(new NotificationsJobCreated($job));
-
+                $sms->jobCanceled($oldUser->phone, $order->uniqid);
+                $newUser->notify(new NotificationsJobCanceled($job));
+                //notify new mover a job is created
+                Mail::to($newUser->email)->queue(new JobCreated($job->id));
+                $sms->newJob($newUser->phone, $order->uniqid);
+                $newUser->notify(new NotificationsJobCreated($job));
             }
-            //sms
-               
-
-            //notify
             return true;
         } catch (Exception $e) {
             return response()->json($e->getMessage());
         }
     }
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        $job = Job::with('orderDetail', 'jobstatus')->find($id);
-        return $job;
-    }
-    public function carrierContacts($id)
-    {
-        $carrier = Carrier::with('contact')->find($id);
-        return $carrier;
-    }
+   
 }

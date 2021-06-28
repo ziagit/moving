@@ -19,7 +19,7 @@ class CustomerPaid extends Mailable
      */
     public function __construct($data)
     {
-        $this->order = $data['order'];
+        $this->order = $data['uniqid'];
         $this->amount = $data['cost'];
     }
 

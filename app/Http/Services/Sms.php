@@ -8,148 +8,107 @@ use SignalWire\LaML;
 
 class Sms
 {
-
+    public $client;
+    public $from;
+    public $bas_url;
+    public function __construct()
+    {
+        $this->client = new Client(
+            Config::get('services.signalwire.client'),
+            Config::get('services.signalwire.token'),
+            Config::get('services.signalwire.space_url')
+        );
+        $this->from = Config::get('services.signalwire.from');
+        $this->bas_url =  "https://tingsapp.com";
+    }
     public function verify($phone, $code)
     {
-        $client = Config::get('services.signalwire.client');
-        $token = Config::get('services.signalwire.token');
-        $space_url = Config::get('services.signalwire.space_url');
-
-        $client = new Client(
-            $client,
-            $token,
-            $space_url
-        );
-        $message = $client->messages
+        $message = $this->client->messages
             ->create(
                 "+18888186061", // to
-                array("from" => "+18888186061", "body" => "TingsApp: " . $code . " is your verification code.")
+                array("from" => $this->from, "body" => "TingsApp: " . $code . " is your verification code.")
             );
         return $message;
     }
     public function newJob($phone, $job)
     {
-        $client = Config::get('services.signalwire.client');
-        $token = Config::get('services.signalwire.token');
-        $space_url = Config::get('services.signalwire.space_url');
-
-        $client = new Client(
-            $client,
-            $token,
-            $space_url
-        );
-        $message = $client->messages
+        $message = $this->client->messages
             ->create(
                 "+18888186061", // to
-                array("from" => "+18888186061", "body" => "TingsApp: Dear partner a new job arrived in your dashboard")
+                array(
+                    "from" => $this->from,
+                    "body" => "TingsApp: Dear partner a new job arrived in your dashboard, ID: " . $job,
+                )
             );
         return $message;
     }
-    public function updateJob($phone, $order)
+    public function updateOrder($phone, $order)
     {
-        $client = Config::get('services.signalwire.client');
-        $token = Config::get('services.signalwire.token');
-        $space_url = Config::get('services.signalwire.space_url');
-
-        $client = new Client(
-            $client,
-            $token,
-            $space_url
-        );
-        $message = $client->messages
+        $message = $this->client->messages
             ->create(
                 "+18888186061", // to
-                array("from" => "+18888186061", "body" => "Dear customer your order is beeing " . $order->status. " By TingsApp")
+                array(
+                    "from" => $this->from,
+                    "body" => "TingsApp: Dear customer your order is beeing " . $order->status . " By TingsApp, ID: " . $order->uniqid
+                )
             );
         return $message;
     }
-    public function jobChanged($phone, $order)
+    public function jobChanged($phone, $job)
     {
-        $client = Config::get('services.signalwire.client');
-        $token = Config::get('services.signalwire.token');
-        $space_url = Config::get('services.signalwire.space_url');
-
-        $client = new Client(
-            $client,
-            $token,
-            $space_url
-        );
-        $message = $client->messages
+        $message = $this->client->messages
             ->create(
                 "+18888186061", // to
-                array("from" => "+18888186061", "body" => "Dear partner your job is beeing " . $order->status. " By TingsApp")
+                array(
+                    "from" => $this->from,
+                    "body" => "TingsApp: Dear partner your job is beeing updated, ID: " . $job,
+                )
             );
         return $message;
     }
-    public function jobCanceled($phone, $order)
+    public function jobCanceled($phone, $job)
     {
-        $client = Config::get('services.signalwire.client');
-        $token = Config::get('services.signalwire.token');
-        $space_url = Config::get('services.signalwire.space_url');
-
-        $client = new Client(
-            $client,
-            $token,
-            $space_url
-        );
-        $message = $client->messages
+        $message = $this->client->messages
             ->create(
                 "+18888186061", // to
-                array("from" => "+18888186061", "body" => "Dear partner your job is beeing " . $order->status. " By TingsApp")
+                array(
+                    "from" => $this->from,
+                    "body" => "TingsApp: Dear partner your job is beeing canceled, ID: " . $job,
+                )
             );
         return $message;
     }
     public function customerPaid($phone, $order)
     {
-        $client = Config::get('services.signalwire.client');
-        $token = Config::get('services.signalwire.token');
-        $space_url = Config::get('services.signalwire.space_url');
-
-        $client = new Client(
-            $client,
-            $token,
-            $space_url
-        );
-        $message = $client->messages
+        $message = $this->client->messages
             ->create(
                 "+18888186061", // to
-                array("from" => "+18888186061", "body" => "Dear customer your payment was successfull to TingsApp due to " . $order . " Order")
+                array(
+                    "from" => $this->from,
+                    "body" => "TingsApp: Dear customer your payment was successfull due to " . $order['uniqid'] . " Order, amount: " . $order['cost']
+                )
             );
         return $message;
     }
-    public function moverPaid($phone, $earning)
+    public function moverPaid($phone, $amount)
     {
-        $client = Config::get('services.signalwire.client');
-        $token = Config::get('services.signalwire.token');
-        $space_url = Config::get('services.signalwire.space_url');
-
-        $client = new Client(
-            $client,
-            $token,
-            $space_url
-        );
-        $message = $client->messages
+        $message = $this->client->messages
             ->create(
                 "+18888186061", // to
-                array("from" => "+18888186061", "body" => "Dear partner you are paid by TingsApp due to completion of " . $earning->order_id . " Order")
+                array(
+                    "from" => $this->from, 
+                    "body" => "TingsApp: Dear partner you are paid by TingsApp due to completion of jobs, amount: ".$amount)
             );
         return $message;
     }
     public function refunded($phone, $amount)
     {
-        $client = Config::get('services.signalwire.client');
-        $token = Config::get('services.signalwire.token');
-        $space_url = Config::get('services.signalwire.space_url');
-
-        $client = new Client(
-            $client,
-            $token,
-            $space_url
-        );
-        $message = $client->messages
+        $message = $this->client->messages
             ->create(
                 "+18888186061", // to
-                array("from" => "+18888186061", "body" => "Dear customer your request to refund is completed by TingsApp amount: ".$amount)
+                array(
+                    "from" => $this->from, 
+                    "body" => "TingsApp: Dear customer your refund is completed successfully by TingsApp, amount: " . $amount)
             );
         return $message;
     }

@@ -32,7 +32,8 @@ return [
     'signalwire'=>[
         'client' => env('SIGNALWIRE_CLIENT'),
         'token' => env('SIGNALWIRE_TOKEN'),
-        'space_url' => array('signalwireSpaceUrl' => 'tingsapp.signalwire.com')
+        'space_url' => array('signalwireSpaceUrl' => 'tingsapp.signalwire.com'),
+        'from' => "+18888186061"
     ],
     'stripe' => [
         'key' => env('STRIPE_KEY'),

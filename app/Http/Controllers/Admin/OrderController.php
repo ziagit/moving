@@ -2,28 +2,16 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Carrier;
 use App\Constant;
 use App\Earning;
 use App\Http\Controllers\Controller;
 use App\Http\Services\Sms;
-use App\Item;
-use App\Job;
 use App\Mail\CustomerPaid;
 use App\Mail\OrderUpdated;
-use App\Movingsize;
 use App\Notifications\CustomerPaid as NotificationsCustomerPaid;
-use App\Notifications\JobUpdated;
-use App\Notifications\MoverPaid;
-use App\Notifications\OrderPaid;
 use App\Notifications\OrderUpdated as NotificationsOrderUpdated;
-use App\Notifications\UserJobUpdated;
-use App\Officesize;
 use App\Order;
-use App\Shipper;
-use App\Supply;
 use App\User;
-use App\Vehicle;
 use Cartalyst\Stripe\Laravel\Facades\Stripe;
 use Exception;
 use Illuminate\Http\Request;
@@ -115,13 +103,15 @@ class OrderController extends Controller
     public function createNotification($request, $order)
     {
         try {
-            $email = $request->shipper_contacts['user']['email'];
-            $user = User::where('email', $email)->first();
+            $userId = $request->shipper_contacts['user']['id'];
+            $user = User::find($userId);
             //email
-            Mail::to($user->email)->queue(new OrderUpdated($order));
+            if ($user->email) {
+                Mail::to($user->email)->queue(new OrderUpdated($order));
+            }
             //sms
             $sms = new Sms();
-            $sms->updateJob($user->phone, $order);
+            $sms->updateOrder($user->phone, $order);
             //notify
             $user->notify(new NotificationsOrderUpdated($order));
             return true;
@@ -201,15 +191,17 @@ class OrderController extends Controller
     public function paymentNotification($request)
     {
         try {
-            $email = $request->shipper_contacts['user']['email'];
-            $user = User::where('email', $email)->first();
+            $userId = $request->shipper_contacts['user']['id'];
+            $user = User::find($userId);
             //email
-            Mail::to($user->email)->queue(new CustomerPaid($request));
+            if ($user->email) {
+                Mail::to($user->email)->queue(new CustomerPaid($request));
+            }
             //sms
             $sms = new Sms();
-            $sms->customerPaid($user->phone, $request->uniqid);
+            $sms->customerPaid($user->phone, $request);
             //notify
-            $user->notify(new NotificationsCustomerPaid($request->uniqid));
+            $user->notify(new NotificationsCustomerPaid($request));
             return true;
         } catch (Exception $e) {
             return $e->getMessage();

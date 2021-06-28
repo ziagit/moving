@@ -2,6 +2,7 @@
   <div class="container d-flex">
     <div class="m-auto text-center">
       <p>Please wait...</p>
+      <p v-if="isLoaded">Redirecting to user profile</p>
       <b-spinner></b-spinner>
     </div>
   </div>
@@ -9,6 +10,9 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 export default {
+  data: () => ({
+    isLoaded: false,
+  }),
   computed: {
     ...mapGetters({
       authenticated: "auth/authenticated",
@@ -26,8 +30,15 @@ export default {
       var token = this.$route.params.token;
       if (token) {
         this.socialCallback(token).then((res) => {
-          this.$router.push("/carrier/profile/add");
-          console.log("user info", this.user);
+          this.isLoaded = true;
+          setTimeout(() => {
+            this.isLoaded = false;
+            if (this.user.phone) {
+              this.$router.push("/carrier/profile");
+            } else {
+              this.$router.push("/carrier/profile/add");
+            }
+          }, 5000);
         });
       }
     },

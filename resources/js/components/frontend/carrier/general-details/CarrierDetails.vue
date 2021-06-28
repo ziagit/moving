@@ -153,4 +153,7 @@ export default {
 .download {
   cursor: pointer;
 }
+.account {
+  min-height: calc(100vh - 50px);
+}
 </style>

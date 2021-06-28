@@ -47,7 +47,7 @@ class CustomerPaid extends Notification
         return (new MailMessage)
         ->subject('Payment proceed')
         ->greeting('Dear Customer')
-        ->line('Your payment was successfull for '.$this->order." Order")
+        ->line('Your payment was successfull for '.$this->order->uniqid." Order")
         ->line('Thanks for choosing us!')
         ->action('Do you have anything else to move?', $url);
     }
@@ -57,6 +57,12 @@ class CustomerPaid extends Notification
      * @param  mixed  $notifiable
      * @return BroadcastMessage
      */
+    public function toDatabase($notifiable)
+    {
+        return [
+            'payment' => $this->order->id
+        ];
+    }
     public function toBroadcast($notifiable)
     {
         return new BroadcastMessage([

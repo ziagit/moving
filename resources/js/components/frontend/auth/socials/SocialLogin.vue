@@ -24,6 +24,11 @@
               <span>TWITTER</span>
             </b-button>
           </div>
+          <div class="row mt-3">
+            <b-button class="col-12" variant="info" @click="test()">
+              <span>Test</span>
+            </b-button>
+          </div>
         </div>
 
         <template #footer>
@@ -57,6 +62,14 @@ export default {
           if (res.data) {
             window.location.href = res.data.url;
           }
+        })
+        .catch((err) => console.log(err));
+    },
+    test() {
+      axios
+        .get("tests")
+        .then((res) => {
+          console.log("test: ", res.data);
         })
         .catch((err) => console.log(err));
     },

@@ -1,7 +1,7 @@
 <template>
-  <div class="carrier">
+  <div>
     <Header v-on:togal-menu="$emit('togal-menu')" />
-    <div class="container mb-5 mt-5">
+    <div class="mb-5 mt-5 container">
       <router-view></router-view>
     </div>
     <Footer />
@@ -31,25 +31,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.carrier {
-  .container {
-    margin: 30px auto;
-    min-height: calc(100vh - 117px);
-  }
+.container {
+  min-height: calc(100vh - 50px) !important;
 }
-
 @media only screen and (min-width: 600px) {
-  .carrier {
-    .tablet-menu {
-      display: flex !important;
-      text-align: left !important;
-    }
-
-    .md-card {
-      margin: auto;
-      margin-top: 20px;
-      width: 90%;
-    }
-  }
 }
 </style>

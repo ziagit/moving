@@ -119,18 +119,18 @@ class PayoutController extends Controller
             $payout->carrier_id = $request->order_detail['job_with_carrier']['carrier_id'];
             $payout->save();
             $earning->payouts()->attach($payout->id);
-            $this->createNotification($request->order_detail['job_with_carrier']['carrier_detail']['id'], $payout->amount);
+            $this->createNotification($request->order_detail, $payout->amount);
         } catch (Exception $e) {
             return response()->json($e->getMessage());
         }
     }
-    public function createNotification($carrierId, $amount)
+    public function createNotification($order, $amount)
     {
+        $carrierId = $order['job_with_carrier']['carrier_detail']['id'];
         $carrier = Carrier::find($carrierId)->first();
         $user = User::find($carrier->user_id);
         try {
             //email
-            return "hi";
             Mail::to($user->email)->queue(new MoverPaid($amount));
             //sms
             $sms = new Sms();
@@ -154,7 +154,6 @@ class PayoutController extends Controller
     }
     public function search(Request $request)
     {
-        return "hi";
         $keywords = $request->keywords;
         $payouts = Payout::where('id', 'like', '%' . $keywords . '%')
             ->orWhereHas('carrier', function ($q) use ($keywords) {

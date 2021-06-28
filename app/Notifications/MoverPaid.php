@@ -50,6 +50,12 @@ class MoverPaid extends Notification
         ->line('Amount: '.$this->amount)
         ->line('Thanks for working with us!');
     }
+    public function toDatabase($notifiable)
+    {
+        return [
+            'amount' => $this->amount
+        ];
+    }
     /**
      * Get the broadcastable representation of the notification.
      *

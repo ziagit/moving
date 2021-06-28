@@ -76,9 +76,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.content {
-  min-height: calc(100vh - 50px);
-}
 @media only screen and (max-width: 600px) {
 }
 </style>

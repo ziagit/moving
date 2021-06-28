@@ -1,6 +1,6 @@
 <template>
   <div class="origin">
-    <span class="md-display-1">What is the size of office?</span>
+    <h3>What is the size of office?</h3>
     <div class="break"></div>
     <form v-if="sizes">
       <div class="break"></div>
@@ -18,8 +18,8 @@
               <img :src="'/images/uploads/unchecked.svg'" v-else width="22" alt="" />
             </div>
             <div class="text">
-              <div class="md-display-1">{{ size.title }}</div>
-              <div class="md-body-1">{{ size.employees }}</div>
+              <h6>{{ size.title }}</h6>
+              <small class="text-muted">{{ size.employees }}</small>
             </div>
           </b-card>
         </div>
@@ -110,6 +110,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.text-muted {
+  margin: 0;
+  padding: 0;
+  line-height: 1;
+}
 @media only screen and (max-width: 600px) {
   .origin {
     .options {
