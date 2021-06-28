@@ -33,6 +33,7 @@ export default {
         sessionStorage.removeItem('phone');
         sessionStorage.removeItem('me');
         sessionStorage.removeItem('editable_id');
+        sessionStorage.removeItem('carrier_id');
       return ;
     }
 }

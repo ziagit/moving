@@ -63,6 +63,42 @@ class Sms
             );
         return $message;
     }
+    public function jobChanged($phone, $order)
+    {
+        $client = Config::get('services.signalwire.client');
+        $token = Config::get('services.signalwire.token');
+        $space_url = Config::get('services.signalwire.space_url');
+
+        $client = new Client(
+            $client,
+            $token,
+            $space_url
+        );
+        $message = $client->messages
+            ->create(
+                "+18888186061", // to
+                array("from" => "+18888186061", "body" => "Dear partner your job is beeing " . $order->status. " By TingsApp")
+            );
+        return $message;
+    }
+    public function jobCanceled($phone, $order)
+    {
+        $client = Config::get('services.signalwire.client');
+        $token = Config::get('services.signalwire.token');
+        $space_url = Config::get('services.signalwire.space_url');
+
+        $client = new Client(
+            $client,
+            $token,
+            $space_url
+        );
+        $message = $client->messages
+            ->create(
+                "+18888186061", // to
+                array("from" => "+18888186061", "body" => "Dear partner your job is beeing " . $order->status. " By TingsApp")
+            );
+        return $message;
+    }
     public function customerPaid($phone, $order)
     {
         $client = Config::get('services.signalwire.client');

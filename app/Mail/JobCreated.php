@@ -31,6 +31,6 @@ class JobCreated extends Mailable
         return $this->from('support@tingsapp.com')
         ->subject('New Job')
         ->with(['job'=>$this->job])
-        ->view('mails.job');
+        ->view('mails.newjob');
     }
 }

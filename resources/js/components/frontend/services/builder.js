@@ -18,15 +18,18 @@ export default {
         order["supplies"] = this.buildSupplies();
         order["carrier"] = await localData.read("carrier");
         order['editable_id'] = await localData.read('editable_id');
+        order['old_carrier'] = await localData.read('old_carrier');
         return order;
     },
     editOrder(order) {
         var d = new Date(order.pickup_date);
         localData.save('editable_id',order.id)
+        localData.save('old_carrier',order.job_with_carrier.carrier_detail.id)
         localData.save("from", order.addresses[0]);
         localData.save("to", order.addresses[1]);
         localData.save("moving-type", order.movingtype);
         localData.save("moving-size", order.movingsize);
+        localData.save("office-size", order.officesize);
         localData.save("vehicle", order.vehicle);
         localData.save("number-of-movers", order.movernumber);
         localData.save("floors", {

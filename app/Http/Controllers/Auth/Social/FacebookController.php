@@ -19,7 +19,6 @@ class FacebookController extends Controller
     }
     public function callback(){
         $user = Socialite::driver('facebook')->stateless()->user();
-        return $user;
         if(!$user->token){
             dd('Failde');
         }

@@ -9,7 +9,7 @@ use App\Order;
 use App\Carrier;
 use App\Job;
 use App\Address;
-use App\Contact;
+use App\Http\Services\EditOrder;
 use App\Http\Services\Sms;
 use App\Mail\JobCreated;
 use App\Movernumber;
@@ -18,7 +18,6 @@ use App\Movingtype;
 use App\Notifications\JobCreated as NotificationsJobCreated;
 use App\Officesize;
 use App\Supply;
-use App\User;
 use App\Vehicle;
 use Exception;
 use Illuminate\Http\Request;
@@ -29,6 +28,10 @@ class ShipmentController extends Controller
 {
     public function store(Request $request)
     {
+        if($request->editable_id){
+            $editable = new EditOrder();
+            return $editable->update($request);
+        }
         try {
             $order = $this->createOrder($request);
             $job = $this->createNewJob($order->id, $request);
