@@ -15,14 +15,9 @@
             {{ cl.day }}
           </div>
           <div class="date">
-            {{ cl.date }}
+            <span v-if="cl.month">{{ cl.date }}</span>
+            <b-icon v-else :icon="cl.date"></b-icon>
           </div>
-        </div>
-      </div>
-      <div class="days more" @click="daysTogal = !daysTogal">
-        <div>
-          <span style="font-size: 12px">More</span>
-          <b-icon icon="chevron-down"></b-icon>
         </div>
       </div>
     </div>
@@ -65,14 +60,11 @@
         </div>
       </div>
     </div>
-    <div class="break"></div>
-    <div class="break"></div>
+    <br /><br />
     <div v-if="daysTogal">
-      <div class="md-body-1">When is your prefered time to start the move?</div>
-      <div class="break"></div>
-      <div class="break"></div>
-      <div v-if="timeLoading">loading...</div>
-      <div class="time-range" v-else>
+      <p>When is your prefered time to start the move?</p>
+      <p v-if="timeLoading">loading...</p>
+      <div class="time-range mb-4" v-else>
         <div v-for="(t, index) in myTimes" :key="index" @click="selectTime(t)">
           <div
             class="time"
@@ -196,10 +188,13 @@ export default {
       localData.save("moving-date", this.date);
     },
     select(sl) {
-      console.log(sl);
-      this.date.date = sl;
-      this.showTimes();
-      //localData.save("moving-date", this.date);
+      if (sl.month) {
+        console.log(sl);
+        this.date.date = sl;
+        this.showTimes();
+      } else {
+        this.daysTogal = !this.daysTogal;
+      }
     },
     selectDate(sl) {
       console.log("sl: ", sl);
@@ -216,7 +211,7 @@ export default {
       var daysInMonth = new Date(year, month, 0).getDate();
       var nextMonth = months[dateObject.getMonth() + 1];
       var counter = 1;
-      for (var i = dateObject.getDate(); i < dateObject.getDate() + 5; i++) {
+      for (var i = dateObject.getDate(); i < dateObject.getDate() + 6; i++) {
         if (i <= daysInMonth) {
           this.cal.push({
             day: services.getDaysName(day),
@@ -237,6 +232,12 @@ export default {
         day > 6 ? (day = 0) : day;
         date++;
       }
+      this.cal.push({
+        day: "More",
+        date: "chevron-down",
+        month: null,
+        year: null,
+      });
     },
     getAllDays() {
       var month = dateObject.getMonth() + 1;
@@ -273,11 +274,11 @@ export default {
 </script>
 <style lang="scss" scoped>
 .row1 {
-  position: relative;
-  padding: 0px;
-  display: flex;
-  max-width: 100%;
-  overflow: hidden;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 54px);
+  grid-auto-rows: 50px;
+  justify-content: center;
+  gap: 1.5rem 1.5rem;
   .days {
     width: 63px;
     min-width: 63px;
@@ -330,13 +331,11 @@ export default {
   }
 }
 .row2 {
-  padding: 0px;
   display: grid;
   grid-template-columns: repeat(auto-fit, 54px);
   grid-auto-rows: 50px;
-  justify-content: flex-start;
-  gap: 1.8rem 1.8rem;
-  padding: 3px;
+  justify-content: center;
+  gap: 1.5rem 1.5rem;
   .days {
     width: 63px;
     height: 63px;
@@ -386,9 +385,11 @@ export default {
   }
 }
 .time-range {
-  display: flex;
-  flex-wrap: wrap;
-  padding: 5px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 97px);
+  grid-auto-rows: 15px;
+  justify-content: center;
+  gap: 1.5rem 1.5rem;
   .time {
     background: #ffa5001a;
     padding: 5px;
@@ -413,9 +414,6 @@ export default {
 }
 @media only screen and (max-width: 600px) {
   .row1 {
-    .days {
-      margin: 8px !important;
-    }
   }
   .row2 {
     grid-template-columns: repeat(auto-fit, 50px);
