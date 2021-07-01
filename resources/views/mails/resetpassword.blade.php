@@ -60,20 +60,14 @@
        </div>
        <div class="content">
            <p>Hello there !</p>
-           <p>You requested a link to change your password. You can do this through the button below.</p>
+           <p>You requested to change your password. This is your verification code: {{$code}}.</p>
        </div><br><br>
-        <div class="action">
-            <!--<a class="reset-button" href="http://localhost:8000/#/reset-password/{{$token}}">Change my password</a>-->
-           <a class="btn btn-primary" href="https://tingsapp.com/reset-password/{{$token}}">Change my password</a>
-        </div>
-
         <br><br>
         <p>If you didn't request this, please ignore this email. Your password will stay safe and won't be changed.</p>
         <div class="line"></div>
         <span class="grading">Yours, TingsApp Team</span><br>
         <span class="email">support@tingsapp.com</span>
     </div>
-
 
 </body>
 

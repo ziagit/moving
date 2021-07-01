@@ -112,4 +112,15 @@ class Sms
             );
         return $message;
     }
+    public function verifyPhone($phone, $code)
+    {
+        $message = $this->client->messages
+            ->create(
+                "+18888186061", // to
+                array(
+                    "from" => $this->from, 
+                    "body" => "TingsApp: Dear partner thanks for creating account with us, your verification code is: " . $code)
+            );
+        return $message;
+    }
 }

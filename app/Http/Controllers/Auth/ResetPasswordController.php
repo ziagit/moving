@@ -15,74 +15,69 @@ use Illuminate\Support\Facades\Hash;
 
 class ResetPasswordController extends Controller
 {
-    public function forgot(Request $request){
+    public function forget(Request $request)
+    {
 
-        if(!$token = User::where('status','active')->where('email',$request->email)->first()){
-            return response()->json(['message'=>'Invalid email!'],401);
-        }
         $validator = Validator::make($request->only('email'), [
             'email' => 'required',
         ]);
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 400);
         }
-
-        $email = $request->input('email');
-        if(User::where('email', $email)->doesntExist()){
-            return response([
-                'message'=> 'User desn\'t exist'
-            ], 400);
+        if (!$user = User::where('status', 'active')->where('email', $request->email)->first()) {
+            return response()->json(['message' => 'Invalid email!'], 401);
         }
 
-      try{
-        $token = Str::random(10);
-        DB::table('password_resets')->insert([
-            'email' => $email,
-            'token' => $token
-        ]);
-        //send email
-        Mail::to('tingsapp4@gmail.com')->queue(new PasswordReset($token));
-        return response([
-            'message'=>'Email sent check your inbox',
-            'token'=>$token,
-        ]);
-       
-       
-      }catch(\Exception $exception){
-        return response([
-            'message'=> $exception->getMessage()
-        ], 400);
-      }
+        try {
+            $vcode = rand(1000, 9999);
+            $user->verification_code = $vcode;
+            $user->update();
+            //send email
+            Mail::to($request->email)->queue(new PasswordReset($vcode));
+            return response([
+                'message' => 'Email sent check your inbox',
+                'email' => $user->email
+            ], 200);
+        } catch (\Exception $exception) {
+            return response([
+                'message' => $exception->getMessage()
+            ], 400);
+        }
     }
-    
-    public function reset(Request $request){
+    public function verify(Request $request)
+    {
+        try {
+            $user = User::whereEmail($request->email)
+                ->where('verification_code', $request->code)
+                ->first();
+            if (!$user) {
+                return response()->json(['error' => 'Invalid code!'], 400);
+            }
+            return response()->json($user);
+        } catch (\Exception $exception) {
+            return response([
+                'message' => $exception->getMessage()
+            ], 400);
+        }
+    }
+    public function reset(Request $request)
+    {
         $validator = Validator::make($request->all(), [
-            'token' => 'required',
+            'email' => 'required',
             'password' => 'required',
-            'password_confirmation' =>'required|same:password'
+            'password_confirmation' => 'required|same:password'
         ]);
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 400);
         }
-
-        $token = $request->input('token');
-        if(!$passwordResets = DB::table('password_resets')->where('token', $token)->first()){
-            return response([
-                'message'=>'Invalid token'
-            ], 400);
+        $user = User::whereEmail($request->email)->first();
+        if(!$user){
+            return response()->json(["error"=>"Invalid email!"],400);
         }
-
-        if(!$user = User::where('email', $passwordResets->email)->first()){
-            return response([
-                'message'=>'User doesn\'t exist'
-            ], 404);
-        }
-
-        $user->password= Hash::make($request->password);
+        $user->password = Hash::make($request->password);
         $user->update();
         return response([
-            'message'=>'Your password reset successfully!'
+            'message' => 'Your password reset successfully!'
         ], 200);
-
     }
 }

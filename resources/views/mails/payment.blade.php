@@ -61,7 +61,7 @@
        <div class="content">
            <p>Dear customer !</p>
            <p>Your payment is proceed successfully to TingsApp!  </p>
-           <p>Amount: ${{amount}}</p>
+           <p>Amount: {{$amount}}</p>
            <p>Do you want to see your order?  </p>
        </div><br><br>
         <div class="action">

@@ -67,12 +67,13 @@
        </div>
        <div class="content">
            <p>Customer Contact Us !</p>
-           <p>Customer message here.</p>
+           <p>{{$name}} </p>
+           <p>{{$message}}</p>
        </div><br><br>
 
         <p>.</p>
         <div class="line"></div>
-        <span class="email">customer@email.com</span>
+        <span class="email">{{$email}}</span>
     </div>
 
 </body>

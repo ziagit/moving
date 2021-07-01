@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Notifications\VerifyEmail;
+use App\Http\Services\Sms;
+use App\Mail\VerifyEmail;
 use Illuminate\Http\Request;
 use App\Role;
 use App\User;
 use Exception;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class VerifyEmailController extends Controller
@@ -43,7 +45,7 @@ class VerifyEmailController extends Controller
                 ));
                 $role = Role::where('name', '=', $data->type)->first();
                 $user->roles()->attach($role);
-                $this->sms($data, $vcode);
+                $this->sms($user, $vcode);
                 return response()->json($user->id);
             }
             return response()->json("Please provide valid information!", 203);
@@ -53,22 +55,14 @@ class VerifyEmailController extends Controller
     }
     public function byEmail($data)
     {
-        $validator = Validator::make($data->only('email'), [
-            'email' => 'unique:users',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 409);
-        }
-
         $validator = Validator::make($data->all(), [
             'name' => 'required|max:50',
-            'email' => 'required|email',
+            'email' => 'required|email|unique:users',
             'password' => 'required|min:3',
             'password_confirmation' => 'required|same:password',
         ]);
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 400);
+            return response()->json(['error' => $validator->errors()], 409);
         }
         if ($data->type === "mover") {
             try {
@@ -81,6 +75,7 @@ class VerifyEmailController extends Controller
                 ));
                 $role = Role::where('name', '=', $data->type)->first();
                 $user->roles()->attach($role);
+                Mail::to($user->email)->queue(new VerifyEmail($vcode));
                 return response()->json($user->id);
             } catch (Exception $e) {
                 return $e->getCode();
@@ -89,15 +84,11 @@ class VerifyEmailController extends Controller
             return response()->json(["message" => "Don't fuck with me 🖕"]);
         }
     }
-    public function sms($data, $vcode)
+    public function sms($user, $vcode)
     {
         try {
-            $nexmo = app('Nexmo\Client');
-            return $nexmo->message()->send([
-                'to'   => $data->email,
-                'from' => '+93793778030',
-                'text' => 'TingsApp, Your Verification code is: ' . $vcode
-            ]);
+            $sms = new Sms();
+            return $sms->verifyPhone($user->phone, $vcode);
         } catch (Exception $e) {
             return response()->json($e->getMessage());
         }

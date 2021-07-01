@@ -10,7 +10,7 @@ use Illuminate\Queue\SerializesModels;
 class PasswordReset extends Mailable
 {
     use Queueable, SerializesModels;
-public $token;
+    public $code;
     /**
      * Create a new message instance.
      *
@@ -19,7 +19,7 @@ public $token;
     public function __construct($data)
     {
         //
-        $this->token = $data;
+        $this->code = $data;
     }
 
     /**
@@ -30,8 +30,8 @@ public $token;
     public function build()
     {
         return $this->from('support@tingsapp.com')
-        ->subject('Password Reset')
-        ->with(['token'=>$this->token])
-        ->view('mails.resetpassword');
+            ->subject('Password Reset')
+            ->with(['code' => $this->code])
+            ->view('mails.resetpassword');
     }
 }

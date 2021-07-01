@@ -1,13 +1,12 @@
 <template>
   <div class="">
     <Header v-on:togal-menu="$emit('togal-menu')" />
-    <div class="content w-25 mx-auto mt-5">
+    <div class="content w-50 mx-auto mt-5">
       <b-card header="You forgot your password?" class="shadow border-0">
         <b-button @click="$router.back()" class="md-icon-button close"
           ><b-icon icon="x"></b-icon
         ></b-button>
         <div>
-          <div class="message" v-if="message">{{ message }}</div>
           <form @submit.prevent="submit">
             <b-form-group>
               <b-form-input
@@ -17,8 +16,10 @@
                 placeholder="Enter your email"
               ></b-form-input>
             </b-form-group>
-            <b-spinner variant="primary" v-if="loading" />
-            <b-button v-else type="submit" variant="primary">Send reset link</b-button>
+            <div class="mt-3 text-right">
+              <b-spinner variant="primary" v-if="loading" />
+              <b-button v-else type="submit" variant="primary">Send reset link</b-button>
+            </div>
           </form>
         </div>
       </b-card>
@@ -34,25 +35,24 @@ import { mapActions, mapGetters } from "vuex";
 import Toaster from "../../shared/Toaster";
 import Header from "../../shared/Header";
 import Footer from "../../shared/Footer";
+import localData from "../services/localData";
 export default {
   name: "Login",
   data: () => ({
     form: {
       email: null,
     },
-    message: null,
     loading: false,
   }),
   methods: {
     submit() {
       this.loading = true;
       axio
-        .post("forgot-password", this.form)
+        .post("password/forget", this.form)
         .then((res) => {
-          this.message = res.data.message;
-          this.errMessage = null;
           this.loading = false;
-          console.log("forgot pass res ", res.data);
+          localData.save("temp", res.data.email);
+          this.$router.push("/password/reset");
         })
         .catch((err) => {
           this.$refs.toaster.show(

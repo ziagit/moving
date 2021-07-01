@@ -181,12 +181,12 @@ export default new VueRouter({
                 { name: "verify", path: "verify", component: VerifyContact },
                 { name: "password", path: "password", component: Password },
                 {
-                    path: "/reset-password/:token",
+                    path: "/password/reset",
                     component: ResetPassword
                 },
                 {
                     name: "forget-password",
-                    path: "/forgot-password",
+                    path: "/password/forget",
                     component: ForgotPassword
                 },
                 { name: "welcome", path: "welcome", component: Welcome },

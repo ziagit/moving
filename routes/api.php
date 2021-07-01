@@ -21,8 +21,9 @@ use Spatie\GoogleCalendar\Event;
 Route::get('/moving/auth/facebook/callback', 'Auth\Social\FacebookController@callback'); */
 
 Route::group(['prefix' => 'moving'], function () {
-  Route::post('forgot-password', 'Auth\ResetPasswordController@forgot');
-  Route::post('reset-password', 'Auth\ResetPasswordController@reset');
+  Route::post('password/forget', 'Auth\ResetPasswordController@forget');
+  Route::post('password/verify', 'Auth\ResetPasswordController@verify');
+  Route::post('password/reset', 'Auth\ResetPasswordController@reset');
   Route::group(['prefix' => 'auth', 'namespace' => 'Auth'], function () {
     Route::group(['namespace'=>'Social'], function(){
       Route::get('google', 'GoogleController@redirect');

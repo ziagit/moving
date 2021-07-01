@@ -60,7 +60,7 @@
        </div>
        <div class="content">
            <p>Dear customer !</p>
-           <p>Your order is been {{status}}.</p>
+           <p>Your order is been {{$status}}.</p>
        </div><br><br>
         <div class="action">
             <a class="btn btn-primary" href="http://localhost:8000/shipper/orders/details/{{$order}}">My Dashboard (local)</a>

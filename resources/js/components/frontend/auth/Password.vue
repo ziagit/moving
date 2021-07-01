@@ -31,7 +31,7 @@
           </div>
         </form>
         <template #footer>
-          <b-button variant="light" size="sm" @click="$router.push('/forgot-password')"
+          <b-button variant="light" size="sm" @click="$router.push('/password/forget')"
             >Reset Password</b-button
           >
         </template>

@@ -61,7 +61,7 @@
        <div class="content">
            <p>Dear partner,</p>
            <p>Your are paid by TingsApp due to completion of Jobs </p>
-           <p>Amount: ${{amount}}</p>
+           <p>Amount: {{$amount}}</p>
            <p>Do you want to see your dashboard?  </p>
        </div><br><br>
         <div class="action">
