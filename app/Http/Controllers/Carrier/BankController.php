@@ -26,13 +26,13 @@ class BankController extends Controller
     {
         $carrierId = User::with('carrier')->find(Auth::id())->carrier->id;
         $bank = Bank::where('carrier_id', $carrierId)->first();
-        return $bank;
+        return response()->json($bank);
     }
     public function payments()
     {
         $user = Auth::id();
         $carrier = Carrier::where('user_id',$user)->first();
-        $payouts = Payout::where('carrier_id',$carrier->id)->get();
+        $payouts = Payout::where('carrier_id',$carrier->id)->paginate(10);
         return response()->json($payouts);
     }
     /**

@@ -15,10 +15,13 @@ use Illuminate\Http\Request;
 
 class CalculatorController extends Controller
 {
+
     public function calculator(Request $request)
     {
         $availableCarriers = array();
         $i = 0;
+        $isFound = false;
+
         $baseFare = $this->baseFare($request); //get the truck fair
 
         $distance = Constant::where('code', 'distance')->first()->value; //get distance charge
@@ -30,11 +33,11 @@ class CalculatorController extends Controller
         $stairTime = $this->stairTime($request); // get the time if stair used
         $suppliesCost = $this->suppliesCost($request); //get supplies cost
         $carriers = Carrier::with('calendars')->get();
-
         foreach ($carriers as $carrier) {
             //match carrier's available calendar that requested
             $matchedCalendar = $this->checkCalendar($carrier->calendars, $request->moving_date);
             if ($matchedCalendar) {
+                $isFound = true;
                 //find travel cost
                 $travelCost = ($baseFare + $distanceCharge + ($carrier->hourly_rate / 60) * $request->duration); // by 60, is because duration is in minut not hour
                 //add 10% service fee
@@ -87,6 +90,9 @@ class CalculatorController extends Controller
                 $availableCarriers[$i]['votes'] = $carrier->votes;
                 $i++;
             }
+        }
+        if (!$isFound) {
+            return response()->json(["message" => "We can't move you at the selected date. Please select a different date!"], 404);
         }
         //return response()->json($availableCarriers);
 

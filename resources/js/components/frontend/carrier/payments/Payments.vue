@@ -16,10 +16,6 @@
             <span class="col-8">{{ bank.institution_number }}</span>
           </div>
           <div class="row">
-            <span class="col-4">Currency:</span>
-            <span class="col-8">{{ bank.account_number }}</span>
-          </div>
-          <div class="row">
             <span class="col-4">Account number:</span>
             <span class="col-8">{{ bank.account_number }}</span>
           </div>

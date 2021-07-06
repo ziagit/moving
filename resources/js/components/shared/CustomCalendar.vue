@@ -2,7 +2,12 @@
   <div class="calendar">
     <!-- edit dialog -->
     <div class="row1" v-if="daysTogal">
-      <div class="days" v-for="(cl, index) in cal" :key="index" @click="select(cl)">
+      <div
+        class="days"
+        v-for="(cl, index) in cal"
+        :key="index"
+        @click="selectFromCurrentMonth(cl)"
+      >
         <div
           class="content"
           v-bind:class="{
@@ -26,7 +31,7 @@
         class="days"
         v-for="(cl, index) in allDays"
         :key="index"
-        @click="selectDate(cl)"
+        @click="selectFromNextMonth(cl)"
       >
         <div
           class="content"
@@ -187,17 +192,18 @@ export default {
       this.date.time = sl;
       localData.save("moving-date", this.date);
     },
-    select(sl) {
+    selectFromCurrentMonth(sl) {
       if (sl.month) {
-        console.log(sl);
+        console.log("selected from current month", sl);
         this.date.date = sl;
+        localData.save("moving-date", this.date);
         this.showTimes();
       } else {
         this.daysTogal = !this.daysTogal;
       }
     },
-    selectDate(sl) {
-      console.log("sl: ", sl);
+    selectFromNextMonth(sl) {
+      console.log("selected from next month: ", sl);
       this.date.date = sl;
       localData.save("moving-date", this.date);
       this.daysTogal = !this.daysTogal;

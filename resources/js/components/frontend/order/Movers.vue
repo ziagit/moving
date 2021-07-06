@@ -3,7 +3,7 @@
     <div v-show="dataLoading" class="loading">
       <b-spinner variant="primary" />
       <h1>Calculating...</h1>
-      <div class="md-display-body">Your price will here soon. please wait</div>
+      <div class="md-display-body">Your price will be showing here soon. please wait</div>
     </div>
 
     <div v-show="!dataLoading">
@@ -21,6 +21,11 @@
           </div>
         </div>
         <p><span>Damage protection included.</span> <br /></p>
+      </b-card>
+      <b-card v-else class="price-container border-0 shadow">
+        <div class="prime">
+          <span>{{ notFoundMessage }}</span>
+        </div>
       </b-card>
       <div class="break"></div>
       <div class="break"></div>
@@ -64,6 +69,7 @@ export default {
     loginTogal: false,
     priceToggle: false,
     infoTogal: false,
+    notFoundMessage: null,
   }),
   watch: {
     carrier(data) {
@@ -101,7 +107,9 @@ export default {
           this.dataLoading = false;
         })
         .catch((err) => {
+          console.log("err", err.response.data.message);
           this.dataLoading = false;
+          this.notFoundMessage = err.response.data.message;
           this.$refs.toaster.show(
             "danger",
             "b-toaster-top-center",

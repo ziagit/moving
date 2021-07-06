@@ -32,7 +32,7 @@ class JobController extends Controller
     public function index()
     {
         $carrierId = User::with('carrier')->find(Auth::id())->carrier->id;
-        $jobs = Job::with('orderDetail')->where('carrier_id', $carrierId)->orderBy('id', 'DESC')->paginate(5);
+        $jobs = Job::with('orderDetail')->where('carrier_id', $carrierId)->orderBy('id', 'DESC')->paginate(10);
         return response()->json($jobs);
     }
 
@@ -110,7 +110,7 @@ class JobController extends Controller
             if ($user) {
                 //email
                 if($user->email){
-                    Mail::to($user->email)->queue(new OrderUpdated($order->id));
+                    Mail::to($user->email)->queue(new OrderUpdated($order));
                 }
                 //sms
                 $sms = new Sms();

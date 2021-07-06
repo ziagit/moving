@@ -6,6 +6,8 @@ use App\Carrier;
 use App\Events\NewMessage;
 use App\Http\Services\Services;
 use App\Http\Services\Sms;
+use App\Mail\JobCanceled;
+use App\Mail\OrderUpdated;
 use App\Notifications\VerifyEmail;
 use App\Test;
 use App\User;
@@ -16,16 +18,19 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Str;
 use Illuminate\Mail\Message;
 use SignalWire\Rest\Client;
+
 class TestController extends Controller
 {
     public function index()
     {
-            $sms = new Sms();
-            $res= $sms->verify("+16049876543","1234");
-            if($res->status == 'failed'){
-                return response()->json($res->errorMessage,400);
-            }
-            return $res->status;
+        Mail::to('zia.googl@gmail.com')->queue(new JobCanceled(1));
+        return "email sent";
+        $sms = new Sms();
+        $res = $sms->verify("+16049876543", "1234");
+        if ($res->status == 'failed') {
+            return response()->json($res->errorMessage, 400);
+        }
+        return $res->status;
     }
 
     public function testEvent()

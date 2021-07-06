@@ -22,7 +22,7 @@ class EarningController extends Controller
         $earnings = Earning::with('order')
             ->where('carrier_id', $carrierId)
             ->where('status', 'unpaid')
-            ->paginate(5);
+            ->paginate(10);
         return response()->json($earnings);
     }
     public function paid()

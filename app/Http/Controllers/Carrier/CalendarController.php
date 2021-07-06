@@ -55,7 +55,7 @@ class CalendarController extends Controller
         $calendar->day = $request->day;
         $calendar->carrier_id = $carrierId;
         $calendar->save();
-        return response()->json(Calendar::all());
+        return response()->json("Updated successfully!!",200);
     }
 
     /**
