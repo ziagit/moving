@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Services\Sms;
 use App\Role;
 use App\User;
 use Exception;
@@ -13,7 +14,6 @@ class VerifyPhoneController extends Controller
 {
     public function __invoke(Request $data)
     {
-        
         $user = User::where('phone', $data->phone)->first();
         if ($user) {
             if ($user->status == 'Active') {
@@ -41,16 +41,11 @@ class VerifyPhoneController extends Controller
     }
     public function sms($data, $vcode)
     {
-        try{
-            $nexmo = app('Nexmo\Client');
-            return $nexmo->message()->send([
-                'to'   => $data->phone,
-                'from' => '+93793778030',
-                'text' => 'TingsApp, Your Verification code is: ' . $vcode
-            ]);
-        }catch(Exception $e){
+        try {
+            $sms = new Sms();
+            $sms->verify($data->phone, $vcode);
+        } catch (Exception $e) {
             return response()->json($e->getMessage());
         }
-   
     }
 }
