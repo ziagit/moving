@@ -21,16 +21,27 @@ use SignalWire\Rest\Client;
 
 class TestController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        Mail::to('zia.googl@gmail.com')->queue(new JobCanceled(1));
-        return "email sent";
-        $sms = new Sms();
-        $res = $sms->verify("+16049876543", "1234");
-        if ($res->status == 'failed') {
-            return response()->json($res->errorMessage, 400);
+        $carrier = Carrier::find($request->refrence);
+        if ($_FILES['file']) {
+            $destination_dir = public_path('images/pub/');
+            $base_filename = basename($_FILES["file"]["name"]);
+            $temp = explode(".", $base_filename);
+            $file_name = round(microtime(true)) . '.' . end($temp);
+            $target_file = $destination_dir . $file_name;
+            move_uploaded_file($_FILES["file"]["tmp_name"], $target_file);
+            if ($request->type == "insurance") {
+                $carrier->insurance_papers = $file_name;
+            }
+            if ($request->type == "license") {
+                $carrier->business_license = $file_name;
+            }
+            $carrier->update();
+            return response()->json("Uploaded successfully!", 200);
+        } else {
+            return response()->json("File not exist");
         }
-        return $res->status;
     }
 
     public function testEvent()

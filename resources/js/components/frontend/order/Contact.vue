@@ -2,7 +2,7 @@
   <div class="origin">
     <div>
       <div v-if="me">
-        <span class="md-display-1">Enter verification code</span>
+        <h3>Enter verification code</h3>
         <div class="break"></div>
         <div class="break"></div>
         <b-card class="border-0 shadow my-card">
@@ -29,7 +29,7 @@
         <div class="book"></div>
       </div>
       <div v-else>
-        <span class="md-display-1">What is your phone number?</span>
+        <h3>What is your phone number?</h3>
         <div class="break"></div>
         <div class="break"></div>
         <b-card class="shadow border-0">

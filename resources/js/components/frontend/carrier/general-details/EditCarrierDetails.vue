@@ -217,9 +217,10 @@ export default {
       axios
         .post("carrier/details/" + this.$route.params.id, fd)
         .then((res) => {
+          console.log("xx", res.data);
           this.isSubmitting = false;
           this.$refs.toast.show("success", "My body", "my title");
-          this.$router.push("/carrier/profile");
+          //this.$router.push("/carrier/profile");
         })
         .catch((error) => {
           console.log("eerrr: ", error);

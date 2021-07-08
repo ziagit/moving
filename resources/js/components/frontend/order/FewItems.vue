@@ -1,6 +1,6 @@
 <template>
   <div class="origin">
-    <span class="md-display-1">Add your items</span>
+    <h3>Add your items</h3>
     <div class="break"></div>
     <div class="break"></div>
     <div class="break"></div>

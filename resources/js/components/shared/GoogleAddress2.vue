@@ -2,7 +2,7 @@
   <div class="google-address2">
     <!-- current location popover -->
     <b-popover target="popover-target-info" triggers="hover" placement="top">
-      <template #title>Current Location</template>
+      <template #title>More info</template>
       <div>
         - Please select pickup location and <br />
         destination in the same city or metro <br />

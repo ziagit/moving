@@ -5,7 +5,7 @@
       id="payment-form"
       enctype="multipart/form-data"
     >
-      <span class="md-display-1">Add your card information</span>
+      <h3>Add your card information</h3>
       <div class="break"></div>
       <div class="break"></div>
       <div

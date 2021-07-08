@@ -25,7 +25,7 @@ Route::group(['prefix' => 'moving'], function () {
   Route::post('password/verify', 'Auth\ResetPasswordController@verify');
   Route::post('password/reset', 'Auth\ResetPasswordController@reset');
   Route::group(['prefix' => 'auth', 'namespace' => 'Auth'], function () {
-    Route::group(['namespace'=>'Social'], function(){
+    Route::group(['namespace' => 'Social'], function () {
       Route::get('google', 'GoogleController@redirect');
       Route::get('google/callback', 'GoogleController@callback');
       Route::get('facebook', 'FacebookController@redirect');
@@ -43,7 +43,7 @@ Route::group(['prefix' => 'moving'], function () {
       Route::get('me', 'MeController');
       Route::post('signout', 'SignOutController');
       Route::get('read-notification/{id}', 'NotificationController@read');
-      Route::get("notifications","NotificationController@index");
+      Route::get("notifications", "NotificationController@index");
     });
     Route::group(['namespace' => 'Carrier', 'prefix' => 'carrier'], function () {
       Route::resource('details', 'CarrierDetailsController');
@@ -152,6 +152,7 @@ Route::group(['prefix' => 'moving'], function () {
     Route::group(['namespace' => 'Order'], function () {
       Route::post('charge-customer', 'CheckoutController@chargeCustomer');
     });
+    Route::post("upload", "UploadFileController@upload");
   });
 
   Route::group(['namespace' => 'Order'], function () {
@@ -201,7 +202,7 @@ Route::group(['prefix' => 'moving'], function () {
     return response()->json(['message' => 'You are unauthorized!'], 401);
   })->name('unauthorized');
 
-  Route::get('tests', 'TestController@index');
+  Route::post('test', 'TestController@index');
 
   Route::get('pages/privacy', function () {
     $page = PrivacyPage::first();
