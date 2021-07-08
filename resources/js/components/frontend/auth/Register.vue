@@ -22,7 +22,6 @@
             <b-form-input
               id="input-1"
               v-model="form.email"
-              type="email"
               placeholder="Email/phone"
               required
             ></b-form-input>
@@ -128,21 +127,21 @@ export default {
             }
           })
           .catch((err) => {
-            console.log(err.response.data);
+            console.log("--", err.response.status);
             this.isSubmitting = false;
-            if (err.response.status === 409) {
+            if (err.response.status == 409) {
               this.$refs.toaster.show(
                 "danger",
                 "b-toaster-top-center",
                 "Conflict",
-                err.response.data.error.email[0]
+                err.response.data
               );
             } else {
               this.$refs.toaster.show(
                 "danger",
                 "b-toaster-top-center",
                 "Faild",
-                err.response.data.error
+                err.response.data
               );
             }
           });

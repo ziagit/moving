@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class NotificationController extends Controller
 {
@@ -14,7 +16,8 @@ class NotificationController extends Controller
      */
     public function index()
     {
-        //
+        $nots = DB::table('notifications')->where('notifiable_id', Auth::id())->get();
+        return response()->json($nots);
     }
 
     /**

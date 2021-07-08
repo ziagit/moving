@@ -13,6 +13,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+
 class CarrierDetailsController extends Controller
 {
     /**
@@ -24,7 +25,7 @@ class CarrierDetailsController extends Controller
     public function index()
     {
         $userId = JWTAuth::user()->id;
-        $carrier = Carrier::with('address','user')->where('user_id', $userId)->first();
+        $carrier = Carrier::with('address', 'user')->where('user_id', $userId)->first();
         return response()->json($carrier);
     }
 
@@ -49,7 +50,6 @@ class CarrierDetailsController extends Controller
         $validator = Validator::make($request->all(), [
             'first_name' => 'required',
             'last_name' => 'required',
-            'phone'=>'required|unique:users',
             'country' => 'required',
             'state' => 'required',
             'city' => 'required',
@@ -60,7 +60,8 @@ class CarrierDetailsController extends Controller
             'hourly_rate' => 'required',
             'company' => 'required',
         ]);
-        if($validator->failed()){
+
+        if ($validator->failed()) {
             return response()->json($validator->errors());
         }
         $addressId = $this->storeAddress($request);
@@ -74,8 +75,9 @@ class CarrierDetailsController extends Controller
                 $insurance_papers_name = "undefined";
             }
         } catch (Exception $e) {
-            die('File did not upload: ' . $e->getMessage());
+            return response()->json($e->getMessage());
         }
+
         try {
             if ($request->hasFile('business_license')) {
                 $file = $request->file('business_license');
@@ -85,40 +87,42 @@ class CarrierDetailsController extends Controller
                 $business_license_name = "undefined";
             }
         } catch (Exception $e) {
-            die('File did not upload: ' . $e->getMessage());
+            return response()->json($e->getMessage());
         }
 
-        $carrier = new Carrier();
-        $rate = new Rate();
-
-        $carrier->first_name = $request->first_name;
-        $carrier->last_name = $request->last_name;
-        $carrier->year_established = $request->year_established;
-        $carrier->employees = $request->employees;
-        $carrier->vehicles = $request->vehicles;
-        $carrier->hourly_rate = $request->hourly_rate;
-        $carrier->insurance_papers = $insurance_papers_name;
-        $carrier->business_license = $business_license_name;
-        $carrier->website = $request->website;
-        $carrier->company = $request->company;
-        $carrier->detail = $request->detail;
-        $carrier->address_id = $addressId;
-        $carrier->user_id = JWTAuth::user()->id;
-        $carrier->save();
-        $this->updateUser($request);
-        return response()->json(["message" => "Saved successfully!"], 200);
+        try {
+            $carrier = new Carrier();
+            $carrier->first_name = $request->first_name;
+            $carrier->last_name = $request->last_name;
+            $carrier->year_established = $request->year_established;
+            $carrier->employees = $request->employees;
+            $carrier->vehicles = $request->vehicles;
+            $carrier->hourly_rate = $request->hourly_rate;
+            $carrier->insurance_papers = $insurance_papers_name;
+            $carrier->business_license = $business_license_name;
+            $carrier->website = $request->website;
+            $carrier->company = $request->company;
+            $carrier->detail = $request->detail;
+            $carrier->address_id = $addressId;
+            $carrier->user_id = JWTAuth::user()->id;
+            $carrier->save();
+            $this->updateUser($request);
+            return response()->json(["message" => "Saved successfully!"], 200);
+        } catch (Exception $e) {
+            return response()->json($e->getMessage());
+        }
     }
 
     public function updateUser($request)
     {
         $user = User::find(Auth::user()->id);
-        if ($request->email != 'null') {
+        if ($request->email!='null') {
             $user->email = $request->email;
-            $user->update();
-        } else {
-            $user->phone = $request->phone;
-            $user->update();
         }
+        if ($request->phone!='null') {
+            $user->phone = $request->phone;
+        }
+        $user->update();
         return true;
     }
     public function storeAddress($request)
@@ -163,7 +167,6 @@ class CarrierDetailsController extends Controller
      */
     public function update(Request $request, $id)
     {
-
         $this->validate($request, [
             'first_name' => 'required',
             'last_name' => 'required',
@@ -225,7 +228,6 @@ class CarrierDetailsController extends Controller
         $user = User::find(JWTAuth::user()->id);
         $user->name = $request->last_name;
         $user->phone = $request->phone;
-        $user->phone = JWTAuth::user()->phone;
         $user->update();
     }
     public function updateAddress($request)

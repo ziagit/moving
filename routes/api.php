@@ -43,6 +43,7 @@ Route::group(['prefix' => 'moving'], function () {
       Route::get('me', 'MeController');
       Route::post('signout', 'SignOutController');
       Route::get('read-notification/{id}', 'NotificationController@read');
+      Route::get("notifications","NotificationController@index");
     });
     Route::group(['namespace' => 'Carrier', 'prefix' => 'carrier'], function () {
       Route::resource('details', 'CarrierDetailsController');

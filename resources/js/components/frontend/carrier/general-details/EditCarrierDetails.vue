@@ -46,11 +46,7 @@
             required
             placeholder="Year established"
           ></b-form-input>
-          <b-form-input
-            v-model="form.website"
-            required
-            placeholder="Company name"
-          ></b-form-input>
+          <b-form-input v-model="form.website" placeholder="Website"></b-form-input>
         </b-input-group>
         <b-input-group class="mb-3">
           <b-form-input

@@ -11,11 +11,7 @@
                 @click="open(not)"
                 :class="{ selected: selectedNot == not.id }"
               >
-                <span class="not-id">{{ not.id.substring(0, 10) }}</span>
-                <span>{{ not.notifiable_type }}</span>
-                <p>
-                  {{ not.created_at.substring(0, 10) }}
-                </p>
+                <span>{{ index + 1 }} : {{ not.type.substring(18) }}</span>
               </b-list-group-item>
             </div>
           </b-list-group>
@@ -23,19 +19,22 @@
         <div class="content col-9">
           <div v-if="details">
             <div v-if="details.type == 'App\\Notifications\\JobCreated'">
-              <p>This Order is created at: {{ details.created_at }}</p>
+              <p>This Order is created at: {{ format(details.created_at) }}</p>
+              <br />
               <b-button class="md-primary" @click="readMore(details.data.job.id)"
                 >Read more</b-button
               >
             </div>
             <div v-else-if="details.type == 'App\\Notifications\\JobUpdated'">
-              <p>An Order is updated at: {{ details.created_at }}</p>
+              <p>An Order is updated at: {{ format(details.created_at) }}</p>
+              <br />
               <b-button class="md-primary" @click="readMore(details.data.job.id)"
                 >Read more</b-button
               >
             </div>
             <div v-else-if="details.type == 'App\\Notifications\\CarrierPaid'">
-              <p>A mover paid at: {{ details.created_at }}</p>
+              <p>A mover paid at: {{ format(details.created_at) }}</p>
+              <br />
               <b-button class="md-primary" @click="readPayment(details)"
                 >Read more</b-button
               >
@@ -47,6 +46,8 @@
   </div>
 </template>
 <script>
+import axios from "axios";
+import dateFormatter from "../../services/dateFormatter";
 import { mapGetters, mapActions } from "vuex";
 export default {
   data: () => ({
@@ -64,17 +65,15 @@ export default {
     }),
   },
   methods: {
-    ...mapActions({
-      setNotification: "shared/setNotification",
-    }),
     getNotifications() {
-      if (this.authenticated) {
-        this.notifications = this.user.notifications;
-        Echo.private("App.User." + this.user.id).notification((res) => {
-          this.notifications.push(res.notification);
-          console.log("notifications ", this.notifications);
-        });
-      }
+      this.notifications = this.user.notifications;
+      Echo.private("App.User." + this.user.id).notification((res) => {
+        this.notifications.push(res.notification);
+        console.log("notifications ", this.notifications);
+      });
+    },
+    format(date) {
+      return dateFormatter.format(date);
     },
     open(not) {
       this.selectedNot = not.id;

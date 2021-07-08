@@ -17,6 +17,14 @@
             placeholder="Last name"
           ></b-form-input>
           <b-form-input
+            v-if="user.phone"
+            placeholder="Email"
+            v-model="form.email"
+            required
+            type="email"
+          ></b-form-input>
+          <b-form-input
+            v-else
             placeholder="Phone number"
             v-model="form.phone"
             required

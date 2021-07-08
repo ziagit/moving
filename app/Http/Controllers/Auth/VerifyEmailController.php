@@ -32,7 +32,7 @@ class VerifyEmailController extends Controller
     {
         $user=User::where('phone',$data->email)->first();
         if($user){
-            return response()->json(['error' => "This phone number is already taken!"], 409);
+            return response()->json("This phone number is already been taken!", 409);
         }
         try {
             if ($this->validate_phone_number($data->email) == true) {
@@ -48,7 +48,7 @@ class VerifyEmailController extends Controller
                 $this->sms($user, $vcode);
                 return response()->json($user->id);
             }
-            return response()->json("Please provide valid information!", 203);
+            return response()->json("Please provide valid data!", 203);
         } catch (Exception $e) {
             return response()->json($e->getMessage());
         }
@@ -62,7 +62,7 @@ class VerifyEmailController extends Controller
             'password_confirmation' => 'required|same:password',
         ]);
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 409);
+            return response()->json($validator->errors(), 409);
         }
         if ($data->type === "mover") {
             try {
