@@ -166,7 +166,6 @@ return [
          * Package Service Providers...
          */
         Cartalyst\Stripe\Laravel\StripeServiceProvider::class,
-        Nexmo\Laravel\NexmoServiceProvider::class,
         /*
          * Application Service Providers...
          */
@@ -229,7 +228,6 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
         'Stripe' => Cartalyst\Stripe\Laravel\Facades\Stripe::class,
-        'Nexmo' => Nexmo\Laravel\Facade\Nexmo::class,
 
     ],
 

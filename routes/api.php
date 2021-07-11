@@ -32,6 +32,7 @@ Route::group(['prefix' => 'moving'], function () {
       Route::get('facebook/callback', 'FacebookController@callback');
       Route::get('twitter', 'TwitterController@redirect');
       Route::get('twitter/callback', 'TwitterController@callback');
+      Route::post('mobile/signin','MobileSocialLoginController@login');
     });
     Route::post('verify', 'VerifyPhoneController');
     Route::post('verify-email', 'VerifyEmailController');
