@@ -10,7 +10,8 @@
         shadow
       >
         <div class="px-3 py-2">
-          <SideMenu />
+          <Admin v-if="user.role[0].name == 'admin'" />
+          <SupportMenu v-else />
         </div>
       </b-sidebar>
     </div>
@@ -22,7 +23,9 @@
 </template>
 
 <script>
-import SideMenu from "./AdminSideMenu";
+import { mapGetters, mapActions } from "vuex";
+import AdminMenu from "./AdminSideMenu";
+import SupportMenu from "./SupportSideMenu";
 import Footer from "../shared/Footer";
 import Header from "../shared/Header";
 export default {
@@ -30,7 +33,14 @@ export default {
   components: {
     Header,
     Footer,
-    SideMenu,
+    AdminMenu,
+    SupportMenu,
+  },
+  computed: {
+    ...mapGetters({
+      authenticated: "auth/authenticated",
+      user: "auth/user",
+    }),
   },
   data: () => ({
     variant: "dark",
