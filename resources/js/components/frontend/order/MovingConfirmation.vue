@@ -165,6 +165,7 @@
         <b-spinner variant="primary" />
       </div>
     </div>
+    <Toaster ref="toaster" />
     <Footer />
   </div>
 </template>
@@ -174,7 +175,7 @@ import builder from "../services/builder";
 import TermsAndConditions from "../../shared/TermsAndConditions";
 import Header from "../../shared/Header";
 import Footer from "../../shared/Footer";
-import localData from "../services/localData";
+import Toaster from "../../shared/Toaster";
 export default {
   name: "Confirmation",
   data: () => ({
@@ -210,6 +211,7 @@ export default {
     TermsAndConditions,
     Header,
     Footer,
+    Toaster,
   },
 };
 </script>

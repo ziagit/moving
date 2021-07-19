@@ -19,21 +19,21 @@ class UserSeeder extends Seeder
         $users =  [
             [
                 'name' => 'Admin',
-                'email' => 'admin@tingsapp.com',
+                'email' => 'admin@gmail.com',
                 'phone' => '+12501000000',
                 'phone_verified_at' => $today,
                 'password' => Hash::make('123'),
             ],
             [
                 'name' => 'Support A',
-                'email' => 'support@tingsapp.com',
+                'email' => 'support@gmail.com',
                 'phone' => '+12502000000',
                 'phone_verified_at' => $today,
                 'password' => Hash::make('123'),
             ],
             [
                 'name' => 'Mover A',
-                'email' => 'zia.googl@gmail.com',
+                'email' => 'mover@gmail.com',
                 'phone' => '+12504000000',
                 'phone_verified_at' => $today,
                 'password' => Hash::make('123')

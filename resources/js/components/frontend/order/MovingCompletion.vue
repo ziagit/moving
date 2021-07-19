@@ -5,7 +5,7 @@
       <b-card class="border-0 shadow px-0">
         <b-alert show variant="success" class="mb-0">
           <h4 class="alert-heading">Well done!</h4>
-          <p>Your order is placed with us;</p>
+          <p>Your order is placed with us</p>
           <p>Your confirmation number is: {{ $route.params.id }}</p>
           <hr />
           <p class="mb-0">

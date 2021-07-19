@@ -21,9 +21,7 @@ class CalculatorController extends Controller
         $availableCarriers = array();
         $i = 0;
         $isFound = false;
-
         $baseFare = $this->baseFare($request); //get the truck fair
-
         $distance = Constant::where('code', 'distance')->first()->value; //get distance charge
         $taxCharge = Constant::where('code', 'tax')->first()->value; //get tax 
         $serviceFee = Constant::where('code', 'servicecharge')->first()->value; //get service charge
@@ -33,15 +31,18 @@ class CalculatorController extends Controller
         $stairTime = $this->stairTime($request); // get the time if stair used
         $suppliesCost = $this->suppliesCost($request); //get supplies cost
         $carriers = Carrier::with('calendars')->get();
+
         foreach ($carriers as $carrier) {
             //match carrier's available calendar that requested
             $matchedCalendar = $this->checkCalendar($carrier->calendars, $request->moving_date);
+
             if ($matchedCalendar) {
                 $isFound = true;
                 //find travel cost
                 $travelCost = ($baseFare + $distanceCharge + ($carrier->hourly_rate / 60) * $request->duration); // by 60, is because duration is in minut not hour
                 //add 10% service fee
                 $travelCost = $travelCost + $travelCost * $serviceFee / 100;
+
                 //return $request->number_of_movers['number'];
                 if ($request->moving_type['code'] == 'few_items' || $request->moving_type['code'] == 'junk_removal') {
                     //few items case
@@ -51,6 +52,7 @@ class CalculatorController extends Controller
                     $movingCost = $movingCost + $movingCost * $serviceFee / 100;
                 } else {
                     if ($request->number_of_movers['code'] == '1mover') {
+
                         // 1 mover case
                         $movingCost = ($hoursToMove + 1 + $stairTime) * (($carrier->hourly_rate * 67) / 100);
                         //add 10% service fee
@@ -61,19 +63,22 @@ class CalculatorController extends Controller
                         //add 10% service fee
                         $movingCost = $movingCost + $movingCost * $serviceFee / 100;
                     } else {
+
                         // standard case
                         $movingCost = ($hoursToMove + $stairTime) * $carrier->hourly_rate;
                         //add 10% service fee
                         $movingCost = $movingCost + $movingCost * $serviceFee / 100;
+
                     }
                 }
                 //add 5% tax 
                 $tax = ($travelCost + $movingCost + $suppliesCost) * $taxCharge / 100;
                 $total = $travelCost + $movingCost + $suppliesCost + $tax;
                 $availableCarriers[$i]['id'] = $carrier->id;
-                $availableCarriers[$i]['name'] = $carrier->name;
+                $availableCarriers[$i]['first_name'] = $carrier->first_name;
+                $availableCarriers[$i]['last_name'] = $carrier->last_name;
                 $availableCarriers[$i]['company'] = $carrier->company;
-                $availableCarriers[$i]['emplyees'] = $carrier->emplyees;
+                $availableCarriers[$i]['emplyees'] = $carrier->employees;
                 $availableCarriers[$i]['vehicles'] = $carrier->vehicles;
                 $availableCarriers[$i]['year_established'] = $carrier->year_established;
                 $availableCarriers[$i]['logo'] = $carrier->logo;
@@ -89,14 +94,17 @@ class CalculatorController extends Controller
                 $availableCarriers[$i]['tax'] = round($tax, 2);
                 $availableCarriers[$i]['votes'] = $carrier->votes;
                 $i++;
+
             }
         }
+
         if (!$isFound) {
             return response()->json(["message" => "We can't move you at the selected date. Please select a different date!"], 404);
         }
         //return response()->json($availableCarriers);
 
         $lowest = $this->getMin($availableCarriers);
+
         return response()->json($lowest);
     }
 

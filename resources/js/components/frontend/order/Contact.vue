@@ -106,7 +106,7 @@ export default {
     addPhone() {
       if (!this.form.phone) {
         this.$refs.toaster.show(
-          "danger",
+          "warning",
           "b-toaster-top-center",
           "Invalid",
           "Provide a valid phone!"
@@ -123,7 +123,6 @@ export default {
               this.isSubmitting = false;
               this.me = res.data;
               localData.save("me", res.data);
-              console.log("from Vonage", res.data);
             })
             .catch((err) => {
               console.log(err.response);

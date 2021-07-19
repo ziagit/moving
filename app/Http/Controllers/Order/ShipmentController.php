@@ -34,6 +34,7 @@ class ShipmentController extends Controller
         }
         $order = $this->createOrder($request);
         $job = $this->createNewJob($order->id, $request);
+
         $this->createNotification($job,  $order, $request);
         return response()->json($order);
     }
@@ -42,7 +43,9 @@ class ShipmentController extends Controller
         try {
             $floor_from = 0;
             $floor_to = 0;
+            
             $addressIds = $this->storeAddress($request);
+
             $shipperId = $this->shipper();
             if ($request->floors) {
                 $floor_from = $request->floors['pickup'];
@@ -73,7 +76,9 @@ class ShipmentController extends Controller
             $order->vehicle_id = $vehicle;
 
             $order->cost = $request->carrier['price'];
+
             $order->travel_cost = $request->carrier['travel'];
+
             $order->moving_cost = $request->carrier['moving'];
             $order->service_fee = $request->carrier['service_fee'];
             $order->disposal_fee = $request->carrier['disposal_fee'];

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Carrier;
 use App\Calendar;
 use App\Http\Controllers\Controller;
 use App\User;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -18,7 +19,7 @@ class CalendarController extends Controller
     public function index()
     {
         $carrierId = User::with('carrier')->find(Auth::id())->carrier->id;
-        $calendars = Calendar::where('carrier_id',$carrierId)->get();
+        $calendars = Calendar::where('carrier_id', $carrierId)->get();
         return response()->json($calendars);
     }
 
@@ -40,22 +41,24 @@ class CalendarController extends Controller
      */
     public function store(Request $request)
     {
-        $carrierId = User::with('carrier')->find(Auth::id())->carrier->id;
-        $day = Calendar::where('day',$request->day)->where('carrier_id',$carrierId)->first();
-        if($day){
-            $day->delete();
-            return response()->json(Calendar::all());
+        try {
+            $carrierId = User::with('carrier')->find(Auth::id())->carrier->id;
+            $day = Calendar::where('day', $request->day)->where('carrier_id', $carrierId)->first();
+            if ($day) {
+                $day->delete();
+                return response()->json(Calendar::all());
+            }
+            $carrierId = User::with('carrier')->find(Auth::id())->carrier->id;
+            $calendar = new Calendar();
+            $calendar->year = $request->year;
+            $calendar->month = $request->month;
+            $calendar->day = $request->day;
+            $calendar->carrier_id = $carrierId;
+            $calendar->save();
+            return response()->json("Updated successfully!!", 200);
+        } catch (Exception $e) {
+            return response()->json($e->getMessage());
         }
-
-        $carrierId = User::with('carrier')->find(Auth::id())->carrier->id;
-        $calendar = new Calendar();
-
-        $calendar->year = $request->year;
-        $calendar->month = $request->month;
-        $calendar->day = $request->day;
-        $calendar->carrier_id = $carrierId;
-        $calendar->save();
-        return response()->json("Updated successfully!!",200);
     }
 
     /**
@@ -90,6 +93,7 @@ class CalendarController extends Controller
     public function update(Request $request, $id)
     {
         //
+
     }
 
     /**

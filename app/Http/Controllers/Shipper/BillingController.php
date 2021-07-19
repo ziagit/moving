@@ -28,22 +28,25 @@ class BillingController extends Controller
             $card = Stripe::cards()->all($customerId);
             return response()->json($card);
         } else {
-            return null;
+            return response()->json(null);
         }
     }
     public function getCustomer()
     {
-        $id = Auth::user()->id;
-        $shipper = Shipper::where('user_id', $id)->first();
-        if ($shipper) {
-            if ($shipper->stripe_customer_id) {
-                $card = Stripe::cards()->all($shipper->stripe_customer_id);
-                return response()->json($card);
-            } else {
-                return null;
+        try {
+            $shipper = Shipper::where('user_id', Auth::id())->first();
+            if ($shipper) {
+                if ($shipper->stripe_customer_id) {
+                    $card = Stripe::cards()->all($shipper->stripe_customer_id);
+                    return response()->json($card);
+                } else {
+                    return response()->json('undefined');
+                }
             }
+            return response()->json('undefined');
+        } catch (Exception $e) {
+            return response()->json($e->getMessage());
         }
-        return null;
     }
 
     public function getCharges()
@@ -80,7 +83,8 @@ class BillingController extends Controller
                 'name' => $request->name_oncard,
                 'description' => "Payment for moving",
             ]);
-            if($customer){
+            
+            if ($customer) {
                 $shipper = $this->createShipper($request, $customer['id']);
                 return [
                     'message' => 'Thank you! your card added successfully.',
@@ -89,10 +93,9 @@ class BillingController extends Controller
                     'email' => $request->email
                 ];
             }
-            return response()->json(['message'=>'Could not create Strip customer'],400);
-        
+            return response()->json(['message' => 'Could not create Strip customer'], 400);
         } catch (Exception $e) {
-            return response()->json($e->getMessage());
+            return response()->json($e->getMessage(), 400);
         }
     }
 

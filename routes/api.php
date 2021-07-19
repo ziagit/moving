@@ -169,6 +169,7 @@ Route::group(['prefix' => 'moving'], function () {
     Route::get('moving-types', 'OrderController@movingTypes');
     Route::get('moving-supplies', 'OrderController@movingSupplies');
     Route::get('search-item', 'OrderController@searchItem');
+    Route::get('items', 'OrderController@items');
     Route::post('carriers-rate', 'CalculatorController@calculator');
     Route::post('confirm', 'ShipmentController@store');
     Route::get('shipment-details/{id}', 'ShipmentController@show');

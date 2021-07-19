@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Order;
+
 use App\Http\Controllers\Controller;
 use App\Item;
 use App\order;
@@ -131,8 +132,12 @@ class OrderController extends Controller
     {
         $keywords = $request->keywords;
         $results = Item::where('name', 'like', '%' . $keywords . '%')
-        ->paginate(5);
+            ->paginate(5);
         return $results;
     }
-
+    public function items()
+    {
+        $items = Item::all();
+        return response()->json($items);
+    }
 }

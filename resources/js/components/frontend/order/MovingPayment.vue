@@ -57,13 +57,13 @@ export default {
       axios
         .get("shipper/card-details")
         .then((res) => {
-          if (res.data) {
+          if (res.data == "undefined") {
+            this.checkingCard = false;
+            console.log("card not exist", res.data);
+          } else {
             this.isCardAdded = true;
             this.checkingCard = false;
             console.log("card exist", res.data);
-          } else {
-            this.checkingCard = false;
-            console.log("card not exist", res.data);
           }
         })
         .catch((err) => {
